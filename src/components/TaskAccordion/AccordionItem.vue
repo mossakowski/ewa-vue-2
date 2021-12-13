@@ -11,7 +11,7 @@
         <b-collapse :id='statusTask + "-" + indexAccordion' :data-index='indexAccordion' accordion="my-accordion" role="tabpanel">
             <b-card-body>
                 <b-form-group label="Rodzaj pracy:">
-                    <b-form-select @change="updateSelectedTypeWork(indexAccordion, statusTask)" v-model="selectedTypeWork" :options="optionsTypeWork"></b-form-select>
+                    <b-form-select @change="updateSelectedTypeWork(indexAccordion, statusTask)" v-model="selectedTypeWork" :options="optionsTypeWork" data-test="elo"></b-form-select>
                 </b-form-group>
 
             <b-form-group label="Imię i nazwisko klienta/ nazwa firmy/ miejsce:">
@@ -38,9 +38,6 @@
                   <b-input-group v-if="paidTask" size="sm" append="zł">
                         <b-form-input v-model="paidCost" @keyup="updatePaidTask(indexAccordion, statusTask)"></b-form-input>
                     </b-input-group>
-                    {{paidCost}}
-
-
             </b-card-body>
         </b-collapse>
         </b-card>
@@ -72,7 +69,7 @@ export default {
                     label: 'Serwis',
                     options: [
                         { value: 'Serwis', text: 'Serwis' },
-                        { value: 'Awaria', text: 'Awaria' }
+                        { value: { foo: 'bar', baz: true } , text: 'Awaria' }
                     ]
                 },
                 {
@@ -105,12 +102,12 @@ export default {
             })
         },
         updatePaidTask(indexAccordion, statusTask) {
-            // @keyup="updateInput($event, indexAccordion, statusTask, paidCost)
             this.$store.commit('updatePaidTask', {
                 'indexAccordion' : indexAccordion,
                 'statusTask' : statusTask,                
                 'paidCost' : this.paidCost
             })
+            console.log(this.$store.state.accordionDoneTask);
         },
         resetPaidCost() {
             this.paidCost = '0'

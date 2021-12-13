@@ -9,26 +9,27 @@
             :hour-interval="1"
             :minute-interval="5"
             autocomplete="on" 
-            auto-scroll>
+            auto-scroll
+            hide-clear-button>
         </VueTimepicker>
         <br>
         <label>Koniec pracy: </label>
         <VueTimepicker
             v-model="endWork"
-            @change="changedWorkTime(); eloelo()"
+            @change="changedWorkTime"
             :hour-interval="1"
             :minute-interval="5"         
             autocomplete="on" 
-            auto-scroll>
+            auto-scroll
+            hide-clear-button>
         </VueTimepicker>
         <p>Czas pracy: {{durationWork}}</p>  
         </div>
         <div>
             Spóźnienie? 
-            <toggle-button
+            <toggle-button 
                 @change="changedLateWork"                
                 v-model="lateWork" 
-                :value="false"
                 :sync="true"
                 :color="toggleColor"
                 :labels="toggleText"/>
@@ -36,7 +37,6 @@
             <toggle-button
                 @change="changedOvertimeWork"  
                 v-model="overtimeWork" 
-                :value="false"
                 :sync="true"
                 :color="toggleColor"
                 :labels="toggleText" />                
@@ -61,7 +61,7 @@ export default {
             startWork : '09:00',
             endWork : '17:00',
             durationWork : '08:00',
-            formatTime : "HH:mm",
+            formatTime : "hh:mm",
             lateWork : false,
             overtimeWork : false,
             toggleColor : '#ffc107',
@@ -69,26 +69,26 @@ export default {
         }
     },
     methods: {
-        eloelo() {
-            console.log('siema');
-        },
         changedWorkTime() {
             let endWork = moment(this.endWork, this.formatTime)
             let startWork = moment(this.startWork, this.formatTime)
+            //Change value on true in toggle lateWork
+            if(startWork.isAfter(moment('09:00', this.formatTime))) {
+                this.lateWork = true
+            }
+
+            //Change value on true in toggle overtimeWork
+            if(endWork.isAfter(moment('17:00', this.formatTime))) {
+                this.overtimeWork = true
+            }
 
             let durationWork = moment.duration(endWork.diff(startWork));
-            // let durationWork2 = moment(durationWork,this.formatTime)
-            
-            // let timeAfter  = moment("08:01", this.formatTime)
-
 
             let hoursWork = parseInt(durationWork.asHours());
             let minutesWork = parseInt(durationWork.asMinutes()) - hoursWork * 60;
 
             this.durationWork = `${moment(hoursWork, 'HH').format('HH')}:${moment(minutesWork, 'mm').format('mm') }`
-
-            // console.log(durationWork + ' ' + timeAfter);
-            // console.log(durationWork.isBefore(timeAfter));
+            this.$store.state.durationWork = this.durationWork
 
             },
         changedOvertimeWork() {

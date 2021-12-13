@@ -5,6 +5,13 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
+    selectedWorker: null,
+    durationWork : '08:00',
+    dutyInfo: {
+      activeWeek : false,
+      activeHoliday: false,
+      holidayRangeDate : []
+    },
     accordionDoneTask : [
       {typeWork: 'Serwis', nameCustomer: '', description: '', paidCost : '0'},
     ],
@@ -18,8 +25,7 @@ export default new Vuex.Store({
         {
           typeWork : payload.typeWork,
           nameCustomer: payload.nameCustomer,
-          description: payload.description,
-          paid: payload.paid
+          description: payload.description
         }
       )
     },
@@ -34,6 +40,10 @@ export default new Vuex.Store({
     },
     updatePaidTask(state,payload) {
       state[payload.statusTask][payload.indexAccordion]['paidCost'] = payload.paidCost;    
+    },
+    updateSelectedWorker(state,payload) {
+      state.selectedWorker = payload.nameWorker
+      console.log(state.selectedWorker);
     }
   }
 })

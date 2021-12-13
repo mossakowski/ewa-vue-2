@@ -1,12 +1,6 @@
 <template>
 <div>
-    <b-button @click="sendRaport" class="bg-success">Wyślij raport!</b-button>
-    <br>
-    {{this.$store.state.accordionDoneTask}}
-    <br>
-    {{this.$store.state.accordionProgressTask}}
-    <br>
-    {{this.$store.state.accordionNotDoneTask}}
+    <b-button :disabled="!$store.state.selectedWorker" @click="sendRaport" class="bg-success">Wyślij raport!</b-button>
     </div>
 </template>
 

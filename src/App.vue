@@ -44,13 +44,19 @@
         :key="index"
         :nameCustomer="item.nameCustomer"
         :typeWork="item.typeWork"
-        :indexAccordion="index"
         statusTask="accordionNotDoneTask"
       ></accordion-item>
       <btn-add-accordion kindTask="accordionNotDoneTask"></btn-add-accordion>
     </div>
 
+    <duty-components></duty-components>
+    <summary-components></summary-components>
+  
+
+
   <btn-send-raport></btn-send-raport>
+  <btn-reset-raport></btn-reset-raport>
+
 
   </b-container>
 </template>
@@ -62,6 +68,9 @@ import TimeWorker from './components/WorkerInfo/TimeWorker.vue'
 import AccordionItem from './components/TaskAccordion/AccordionItem.vue'
 import BtnAddAccordion from './components/TaskAccordion/BtnAddTask.vue'
 import BtnSendRaport from './components/Btn/BtnSendRaport.vue'
+import BtnResetRaport from './components/Btn/BtnResetRaport.vue'
+import SummaryComponents from './components/Layout/SummaryComponents.vue'
+import DutyComponents from './components/Layout/DutyComponents.vue'
 
 export default {
   name: 'App',
@@ -71,7 +80,10 @@ export default {
     TimeWorker,
     AccordionItem,
     BtnAddAccordion,
-    BtnSendRaport
+    BtnSendRaport,
+    BtnResetRaport,
+    SummaryComponents,
+    DutyComponents
   }
 }
 </script>

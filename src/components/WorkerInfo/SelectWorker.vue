@@ -1,8 +1,9 @@
 <template>
   <b-row>
-      <b-form-select :class="(selectedWorker === null) ? 'border-danger' : ''" v-model="selectedWorker" :options="arrWorkers"></b-form-select>
-      <label v-if="selectedWorker === null" class="text-danger">Wybierz pracownika</label>
+      <b-form-select :class="($store.state.selectedWorker === null) ? 'border-danger' : ''" v-model="$store.state.selectedWorker" :options="arrWorkers"></b-form-select>
+      <label v-if="$store.state.selectedWorker === null" class="text-danger">Wybierz pracownika</label>
   </b-row>
+  
 </template>
 
 <script>
@@ -20,6 +21,6 @@ export default {
                 {text : 'Alojzy Walczak', value : 'Alojzy Walczak'},
             ]
         }
-    },
+    }
 }
 </script>
