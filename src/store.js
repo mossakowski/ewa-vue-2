@@ -16,7 +16,13 @@ export default new Vuex.Store({
       {typeWork: 'Serwis', nameCustomer: '', description: '', paidCost : '0'},
     ],
     accordionProgressTask : [],
-    accordionNotDoneTask : []        
+    accordionNotDoneTask : [],
+    widthHeigthComponents: {
+      toggle: {
+        width: 55,
+        heigth : 25        
+      }
+    }        
   },
   mutations: {
     addAccordion(state,payload) {
