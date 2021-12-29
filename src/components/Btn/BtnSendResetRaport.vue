@@ -13,7 +13,9 @@ export default {
     name: 'BtnSendResetRaport',
     methods : {
         sendRaport() {
-            console.log(this.$store.state.accordionDoneTask);
+            this.$socket.client.emit('SEND_RAPORT', { data : this.$store.state }, (arg) => {
+                console.log(arg)
+            })
         },
         resetRaport() {
             this.$store.state.accordionDoneTask = [];
