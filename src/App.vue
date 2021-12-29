@@ -1,8 +1,7 @@
 <template>
-  <div>
-    <navbar-components/>    
-    <b-container>    
-      <WorkerComponents />
+    <b-container>
+      <navbar-components/>     
+      <WorkerComponents class="mb-2"/>
       <time-worker />
       
       <div class="accordion mt-2" role="tablist">
@@ -61,7 +60,6 @@
 
 
     </b-container>
-  </div>
 </template>
 
 <script>
@@ -72,7 +70,8 @@ import AccordionItem from './components/TaskAccordion/AccordionItem.vue'
 import BtnAddAccordion from './components/TaskAccordion/BtnAddTask.vue'
 import BtnSendResetRaport from './components/Btn/BtnSendResetRaport.vue'
 import SummaryComponents from './components/Layout/SummaryComponents.vue'
-import DutyComponents from './components/Layout/DutyComponents.vue'
+import DutyComponents from './components/Duty/DutyComponents.vue'
+// import moment from 'moment'
 
 export default {
   name: 'App',
@@ -85,6 +84,9 @@ export default {
     BtnSendResetRaport,
     SummaryComponents,
     DutyComponents
+  },
+  mounted() {
+    
   }
 }
 </script>

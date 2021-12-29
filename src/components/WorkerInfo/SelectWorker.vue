@@ -3,7 +3,13 @@
       <h2>1. Wybierz informacje o pracowniku</h2>
       <b-row>
         <b-col>
-            <b-form-select :class="($store.state.selectedWorker === null) ? 'border-danger' : ''" v-model="$store.state.selectedWorker" :options="arrWorkers"></b-form-select>
+            <label>Wybierz pracownika</label>
+            <b-form-select 
+                :class="($store.state.selectedWorker === null) ? 'border-danger' : ''" 
+                v-model="selectedWorker" 
+                :options="arrWorkers"
+                @change="onChangedSelectedWorker">                
+            </b-form-select>
             <label v-if="$store.state.selectedWorker === null" class="text-danger">Wybierz pracownika</label>
         </b-col>
       </b-row>
@@ -25,6 +31,13 @@ export default {
                 {text : 'Dariusz Borkowski', value : 'Dariusz Borkowski'},
                 {text : 'Alojzy Walczak', value : 'Alojzy Walczak'},
             ]
+        }
+    },
+    methods: {
+        onChangedSelectedWorker() {
+            this.$store.commit('updateSelectedWorker',{
+                nameWorker: this.selectedWorker
+            })
         }
     }
 }

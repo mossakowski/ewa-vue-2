@@ -3,9 +3,10 @@
         <b-row>
             <b-col md="4">
                 <label>Rozpoczęcie pracy: </label>
+                <ValidationProvider :rules="{required: true, regex: /^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/}" v-slot="{ errors }"> 
                 <VueTimepicker
                     v-model="startWork"                    
-                    @change="changedWorkTime"
+                    @change="onChangedWorkTime"
                     class="ml-1"
                     hour-interval="1"
                     minute-interval="5"
@@ -14,12 +15,16 @@
                     auto-scroll
                     hide-clear-button>
                 </VueTimepicker>
+                <br>
+                <span class="text-danger">{{ errors[0] }}</span>
+                </ValidationProvider>                
             </b-col>
             <b-col md="4">
                 <label>Koniec pracy: </label>
+                <ValidationProvider :rules="{required: true, regex: /^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/}" v-slot="{ errors }"> 
                 <VueTimepicker
                     v-model="endWork"
-                    @change="changedWorkTime"
+                    @change="onChangedWorkTime"
                     class="ml-1"
                     hour-interval="1"
                     minute-interval="5"         
@@ -28,9 +33,25 @@
                     auto-scroll
                     hide-clear-button>
                 </VueTimepicker>
+                <br>
+                <span class="text-danger">{{ errors[0] }}</span>
+                </ValidationProvider>
             </b-col>
             <b-col md="4">
-                <i>(Czas pracy: {{durationWork}})</i>
+                Data:
+                <ValidationProvider :rules="{required: true}" v-slot="{ errors }">                 
+                <date-picker
+                    v-model="dateWork"
+                    @change="onChangedDateWork"
+                    :format="formatDate"
+                    value-type="format"              
+                    type="date"
+                    class="ml-2"
+                    placeholder="Wybierz datę"
+                ></date-picker>
+                <br>
+                <span class="text-danger">{{ errors[0] }}</span>
+                </ValidationProvider>                   
             </b-col>  
         </b-row>
 
@@ -38,8 +59,8 @@
             <b-col md="2">
             Spóźnienie?
             <toggle-button 
-                @change="changedLateWork"                
-                v-model="lateWork"
+                @change="changedLateovertimeWorker"                
+                v-model="lateWorker"
                 :width="$store.state.widthHeigthComponents.toggle.width" 
                 :height="$store.state.widthHeigthComponents.toggle.heigth" 
                 :sync="true"
@@ -47,15 +68,18 @@
                 :labels="toggleText"/>
             </b-col>
             <b-col md="2">
-            Nadgodziny? 
+            Nadgodziny?
             <toggle-button
-                @change="changedOvertimeWork"  
-                v-model="overtimeWork"
+                @change="changedLateovertimeWorker"  
+                v-model="overtimeWorker"
                 :width="$store.state.widthHeigthComponents.toggle.width" 
                 :height="$store.state.widthHeigthComponents.toggle.heigth"                 
                 :sync="true"
                 :color="toggleColor"
                 :labels="toggleText" /> 
+            </b-col>
+            <b-col md="2">
+                Czas pracy: {{(durationWork === 'undefined:undefined') ? 'Popraw czas' : durationWork}}
             </b-col>               
         </b-row>
     </div>
@@ -65,58 +89,97 @@
 //Autocomplete jest spoko
 //changeEvent
 import VueTimepicker from 'vue2-timepicker/src/vue-timepicker.vue'
-import moment from 'moment'
-import { ToggleButton } from 'vue-js-toggle-button'
+import DatePicker from 'vue2-datepicker';
+import moment from 'moment';
+import { ToggleButton } from 'vue-js-toggle-button';
+import { ValidationProvider, extend } from 'vee-validate';
+import { required, regex } from 'vee-validate/dist/rules';
+
+extend('required', {
+    ...required,
+    message: 'Pole wymagane!'
+})
+
+extend('regex', {
+    ...regex,
+    message: 'Niepoprawny format!'
+})
+
 export default {
     name: 'TimeWorker',
     components : {
         VueTimepicker,
-        ToggleButton
+        ToggleButton,
+        DatePicker,
+        ValidationProvider
     },
     data(){
         return {
+            dateWork : moment().format('DD-MM-YYYY'),
             startWork : '09:00',
             endWork : '17:00',
             durationWork : '08:00',
             formatTime : "hh:mm",
-            lateWork : false,
-            overtimeWork : false,
+            formatDate: 'DD-MM-YYYY',
+            lateWorker : false,
+            overtimeWorker : false,
             toggleColor : '#ffc107',
             toggleText : {checked: 'Tak', unchecked: 'Nie'},
             inputWidth: '100px'
         }
     },
     methods: {
-        changedWorkTime() {
+        onChangedDateWork() {
+            this.$store.commit('updateDateWork',{date: this.dateWork});
+        },
+        onChangedWorkTime() {
+
             let endWork = moment(this.endWork, this.formatTime)
             let startWork = moment(this.startWork, this.formatTime)
-            //Change value on true in toggle lateWork
+
+            //Change value on true in toggle lateWorker
             if(startWork.isAfter(moment('09:00', this.formatTime))) {
-                this.lateWork = true
+                this.lateWorker = true
             }
-
-            //Change value on true in toggle overtimeWork
+            //Change value on true in toggle overtimeWorker
             if(endWork.isAfter(moment('17:00', this.formatTime))) {
-                this.overtimeWork = true
+                this.overtimeWorker = true
             }
 
+            //Calculate duration time
             let durationWork = moment.duration(endWork.diff(startWork));
-
             let hoursWork = parseInt(durationWork.asHours());
             let minutesWork = parseInt(durationWork.asMinutes()) - hoursWork * 60;
-
             this.durationWork = `${moment(hoursWork, 'HH').format('HH')}:${moment(minutesWork, 'mm').format('mm') }`
-            this.$store.state.durationWork = this.durationWork
+            
+            let checkStartWork = this.startWork.split(':')
+            let checkEndWork = this.endWork.split(':')
+
+            if(checkStartWork[0] === 'HH' || checkStartWork[1] === 'mm' || checkEndWork[0] === 'HH' || checkEndWork[1] === 'mm') {
+                this.$store.commit('updateTimeWork',{
+                    startWork : '',
+                    endWork : '',
+                    durationWork: ''
+                })                
+            } else {
+                this.$store.commit('updateTimeWork',{
+                    startWork : this.startWork,
+                    endWork : this.endWork,
+                    durationWork: this.durationWork
+                })                
+            }            
 
             },
-        changedOvertimeWork() {
-            this.overtimeWork != this.overtimeWork
+        changedLateovertimeWorker() {
+            this.$store.commit('updateOvertimeLateWorker', {
+                late: this.lateWorker,
+                overtime: this.overtimeWorker
+            })
         },
-        changedLateWork() {
-            this.lateWork != this.lateWork
-        }
-        
-
+    },
+    mounted() {
+        moment.updateLocale(moment.locale(), { invalidDate: null })
+        this.$store.commit('updateDateWork',{date: moment().format('DD-MM-YYYY')});
     }
 }
 </script>

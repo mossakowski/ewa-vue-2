@@ -6,11 +6,19 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     selectedWorker: null,
-    durationWork : '08:00',
+    timeDateWork: {
+      startWork: '09:00',
+      endWork: '17:00',
+      durationWork: '08:00',  
+      dateWork : '',
+      late: false,
+      overtime: false          
+    },
     dutyInfo: {
       activeWeek : false,
       activeHoliday: false,
-      holidayRangeDate : []
+      holidayRangeDate : [],
+      additionalTimeInLastDuty : '00:00'
     },
     accordionDoneTask : [
       {typeWork: 'Serwis', nameCustomer: '', description: '', paidCost : '0'},
@@ -25,8 +33,41 @@ export default new Vuex.Store({
     }        
   },
   mutations: {
+
+    //Mutations from DutyComponents
+    updateDuty(state,payload) {
+      state.dutyInfo.activeHoliday = payload.dutyHoliday;
+      state.dutyInfo.activeWeek = payload.dutyWeek;
+      state.dutyInfo.holidayRangeDate = payload.dutyHolidayRange;
+      state.dutyInfo.additionalTimeInLastDuty = payload.additionalTimeInLastDuty;
+      console.log(state.dutyInfo);
+    },
+
+    //Mutations from SelectWorker
+    updateSelectedWorker(state,payload) {
+      state.selectedWorker = payload.nameWorker
+    },
+
+    //Mutations from TimeWorker
+
+    updateOvertimeLateWorker(state,payload) {
+      state.timeDateWork.late = payload.late;
+      state.timeDateWork.overtime = payload.overtime;
+    },
+
+    updateTimeWork(state,payload) {
+      state.timeDateWork.startWork = payload.startWork;
+      state.timeDateWork.endWork = payload.endWork;
+      state.timeDateWork.durationWork = payload.durationWork
+    },
+
+    updateDateWork(state,payload) {
+      state.timeDateWork.dateWork = payload.date;
+    },
+
+
+    //Mutations from task
     addAccordion(state,payload) {
-      console.log(payload);
       state[payload.kindTask].push(
         {
           typeWork : payload.typeWork,
@@ -46,10 +87,17 @@ export default new Vuex.Store({
     },
     updatePaidTask(state,payload) {
       state[payload.statusTask][payload.indexAccordion]['paidCost'] = payload.paidCost;    
-    },
-    updateSelectedWorker(state,payload) {
-      state.selectedWorker = payload.nameWorker
-      console.log(state.selectedWorker);
+    }
+  },
+  getters: {
+    stateBtnSend: state => {
+      console.log(state.timeDateWork);
+      if(state.timeDateWork.dateWork === null || state.timeDateWork.startWork === '' || state.timeDateWork.endWork === '' || state.selectedWorker === null)
+      {
+        return true
+      } else {
+        return false
+      } 
     }
   }
 })

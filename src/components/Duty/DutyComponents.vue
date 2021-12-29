@@ -9,7 +9,8 @@
             <b-col sm="12">
             Dyżur tygodniowy:
                 <toggle-button
-                    v-model="$store.state.dutyInfo.activeWeek"
+                    v-model="dutyWeek"
+                    @change="onChangedUpdateDuty"
                     :width="$store.state.widthHeigthComponents.toggle.width" 
                     :height="$store.state.widthHeigthComponents.toggle.heigth"                     
                     :labels="{checked: 'Tak', unchecked: 'Nie'}"/>
@@ -17,14 +18,15 @@
             <b-col sm="12">
             Dyżur świąteczny:
                 <toggle-button
-                    v-model="$store.state.dutyInfo.activeHoliday"
-                    @change="resetDutyHoliday"
+                    v-model="dutyHoliday"
+                    @change="onChangedUpdateDuty"
                     :width="$store.state.widthHeigthComponents.toggle.width" 
                     :height="$store.state.widthHeigthComponents.toggle.heigth"                     
                     :labels="{checked: 'Tak', unchecked: 'Nie'}"/>
                 <date-picker
-                    v-if="$store.state.dutyInfo.activeHoliday"
-                    v-model="$store.state.dutyInfo.holidayRangeDate"                    
+                    v-if="dutyHoliday"
+                    @change="onChangedUpdateDuty"
+                    v-model="dutyDateRange"                    
                     type="date"
                     class="ml-2"
                     range
@@ -33,13 +35,19 @@
             </b-col>
             <b-col sm="12">
                 Dodatkowy czas pracy z ostatniego dyżuru: 
-                <VueTimepicker :format="formatTimePicker" v-model="defaultTime" input-width="85px" hide-clear-button/>
+                <VueTimepicker 
+                    :format="formatTimePicker" 
+                    @change="onChangedUpdateDuty"
+                    v-model="additionalTimeInLastDuty" 
+                    input-width="85px" 
+                    hide-clear-button/>
             </b-col>                
         </b-row>
     </div>
 </template>
 
 <script>
+import moment from 'moment'
 import { ToggleButton } from 'vue-js-toggle-button'
 import VueTimepicker from 'vue2-timepicker/src/vue-timepicker.vue'
 import DatePicker from 'vue2-datepicker';
@@ -57,17 +65,23 @@ export default {
         return {
             dutyWeek: false,
             dutyHoliday: false,
+            dutyDateRange : [],
+            additionalTimeInLastDuty : '00:00',
             formatTimePicker: 'HH:mm',
             defaultTime: {
                 HH: '00',
                 mm: '00'
-            },
-            dateRange : []                      
+            },                      
         }
     },
     methods: {
-        resetDutyHoliday() {
-            this.$store.state.dutyInfo.holidayRangeDate = []
+        onChangedUpdateDuty() {
+            this.$store.commit('updateDuty', {
+                dutyWeek : this.dutyWeek,
+                dutyHoliday : this.dutyHoliday,
+                dutyHolidayRange : (this.dutyHoliday) ? moment(this.dutyDateRange[0]).format('DD-MM-YYYY') + ' - ' + moment(this.dutyDateRange[1]).format('DD-MM-YYYY') : '',
+                additionalTimeInLastDuty : this.additionalTimeInLastDuty
+            })
         }
     }
 }
