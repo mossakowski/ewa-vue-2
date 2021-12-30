@@ -14,7 +14,7 @@ Vue.use(require('vue-moment'));
 Vue.use(Vuex)
 
 Vue.config.productionTip = false
-
+console.log(process.env.VUE_APP_SOCKETIOORIGIN);
 Vue.use(VueSocketIOExt, io(process.env.VUE_APP_SOCKETIOORIGIN,{ origins: process.env.VUE_APP_SOCKETIOORIGIN }), { store });
 
 new Vue({

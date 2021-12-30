@@ -14,9 +14,7 @@ const fs = require('fs');
 module.exports = (templatePdf, dataRaport) => {
     let splitSelectedWorker = dataRaport.data.selectedWorker.split(' ');
     let fileName = `Raport_Dzienny_${splitSelectedWorker[0]}_${splitSelectedWorker[1]}_${dataRaport.data.timeDateWork.dateWork}.pdf`;
-    console.log(fileName);
     let pdfDoc = printer.createPdfKitDocument(templatePdf);
-    console.log(__dirname);
     pdfDoc.pipe(fs.createWriteStream(`${__dirname}/` + fileName));
 	pdfDoc.end();
 }

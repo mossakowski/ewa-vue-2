@@ -31,7 +31,7 @@
                     </b-form-input>
                 </b-form-group>
 
-                <b-form-group v-if="showToggleClient" label="Nowy klient?">
+                <b-form-group label="Nowy klient?">
                     <toggle-button 
                         v-model="toggleNewClient" 
                         :width="$store.state.widthHeigthComponents.toggle.width" 
