@@ -1,7 +1,7 @@
 require('dotenv').config({
 	path: `${__dirname}/../.env.local`
 });
-console.log(process.env.EMAIL_SERVER);
+
 const express = require('express');
 
 const app = express();

@@ -1,4 +1,5 @@
 module.exports = (dataRaport) => {
+    console.log(dataRaport);
     console.log(dataRaport.data.dutyInfo.holidayRangeDate);
     let docDefinition = {
         content: [{
@@ -9,7 +10,7 @@ module.exports = (dataRaport) => {
                 bold: true
             },
             {
-                style: 'tableExample',
+                style: 'tableRaport',
                 table: {
                     widths: ['*', '*', '*'],
                     body: [
@@ -31,7 +32,7 @@ module.exports = (dataRaport) => {
                                 alignment: 'center'
                             },
                             {
-                                text: `${dataRaport.data.timeDateWork.startWork} - ${dataRaport.data.timeDateWork.endWork} (${dataRaport.data.timeDateWork.durationWork})` ,
+                                text: `${dataRaport.data.timeDateWork.startWork} - ${dataRaport.data.timeDateWork.endWork} (${dataRaport.data.timeDateWork.durationWork}) ${(dataRaport.data.timeDateWork.late) ? 'SPÓŹNIENIE!' : ''} ${(dataRaport.data.timeDateWork.overtime) ? 'NADGODZINY!' : ''}` ,
                                 italics: true,
                                 alignment: 'center'
                             }, {
@@ -181,7 +182,7 @@ module.exports = (dataRaport) => {
                 bold: true
             },
             {
-                style: 'tableExample',
+                style: 'tableRaport',
                 table: {
                     widths: ['*', '*'],
                     body: [

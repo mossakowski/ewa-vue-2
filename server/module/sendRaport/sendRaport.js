@@ -1,7 +1,6 @@
 const nodemailer = require("nodemailer");
 
 module.exports = async (fileName) => {
-
   let transporter = nodemailer.createTransport({
     host: process.env.EMAIL_SERVER,
     port: 587,
@@ -17,8 +16,10 @@ module.exports = async (fileName) => {
     from: '"Ewa system" <foo@example.com>', // sender address
     to: "mosakamil@gmail.com", // list of receivers
     subject: "Hello ✔", // Subject line
-    text: "Hello world?", // plain text body
-    html: "<b>Hello world?</b>", // html body
+    attachments: [{
+      filename: fileName,
+      path : `${__dirname}/../createPdf/${fileName}`
+    }]
   });  
 
   console.log("Message sent: %s", info.messageId);

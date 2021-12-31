@@ -17,4 +17,5 @@ module.exports = (templatePdf, dataRaport) => {
     let pdfDoc = printer.createPdfKitDocument(templatePdf);
     pdfDoc.pipe(fs.createWriteStream(`${__dirname}/` + fileName));
 	pdfDoc.end();
+	return fileName;
 }
