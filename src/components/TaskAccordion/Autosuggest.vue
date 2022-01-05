@@ -43,17 +43,37 @@ export default {
           {
               data: [
                   { name: 'Serwis', type: 'serwis', paid: true, newClient: false },
-                  { name: 'Awaria', type: 'serwis', paid: true, newClient: false }
+                  { name: 'Awaria', type: 'serwis', paid: true, newClient: false },
+                  { name: 'Przedłużenie umowy', type: 'serwis', paid: true, newClient: false }
               ],
               name: 'serwis'
           },
           {
               data : [
-                  { name: 'Instalacja światłowodowa', type: 'installation', paid: true, newClient: true },
-                  { name: 'instalacja radiowa', type: 'installation', paid: true, newClient: true }
+                  { name: 'Instalacja Światłowodowa', type: 'installation', paid: true, newClient: true },
+                  { name: 'instalacja Radiowa', type: 'installation', paid: true, newClient: true },
+                  { name: 'instalacja Blok', type: 'installation', paid: true, newClient: true },
+                  { name: 'instalacja Zbiorcza', type: 'installation', paid: true, newClient: true },
+                  { name: 'instalacja TV', type: 'installation', paid: true, newClient: false },
               ],
               name: 'instalacje'
-          }
+          },
+          {
+              data : [
+                  { name: 'Budowa sieci', type: 'network-bulding', paid: false, newClient: false },
+                  { name: 'Przebudowa sieci', type: 'network-bulding', paid: false, newClient: false },
+                  { name: 'Wywiad techniczny (napisz czy są możliwości)', type: 'network-bulding', paid: false, newClient: false },
+              ],
+              name: 'Budowa sieci'
+          },
+          {
+              data : [
+                  { name: 'Prace biurowe', type: 'office-working', paid: false, newClient: false },
+                  { name: 'Sprzątanie', type: 'office-working', paid: false, newClient: false },
+                  { name: 'Inne', type: 'office-working', paid: false, newClient: false },
+              ],
+              name: 'Biuro'
+          },
       ],
       sectionConfigs: {
         instalacje: {

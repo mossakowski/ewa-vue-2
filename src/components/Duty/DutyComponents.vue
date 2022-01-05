@@ -16,22 +16,25 @@
                     :labels="{checked: 'Tak', unchecked: 'Nie'}"/>
             </b-col>
             <b-col sm="12">
-            Dyżur świąteczny:
+            Dyżur świąteczny: {{dutyDateRange}}
                 <toggle-button
                     v-model="dutyHoliday"
                     @change="onChangedUpdateDuty"
                     :width="$store.state.widthHeigthComponents.toggle.width" 
                     :height="$store.state.widthHeigthComponents.toggle.heigth"                     
                     :labels="{checked: 'Tak', unchecked: 'Nie'}"/>
-                <date-picker
-                    v-if="dutyHoliday"
-                    @change="onChangedUpdateDuty"
-                    v-model="dutyDateRange"                    
-                    type="date"
-                    class="ml-2"
-                    range
-                    placeholder="Wybierz przedział czasowy"
-                ></date-picker>
+                <ValidationProvider immediate :rules="{required: true}" v-slot="{ errors }"> 
+                    <date-picker
+                        v-if="dutyHoliday"
+                        @change="onChangedUpdateDuty"
+                        v-model="dutyDateRange"                    
+                        type="date"
+                        class="ml-2"
+                        range
+                        placeholder="Wybierz przedział czasowy"
+                    ></date-picker>
+                    <span class="text-danger">{{ errors[0] }}</span>
+                </ValidationProvider>
             </b-col>
             <b-col sm="12">
                 Dodatkowy czas pracy z ostatniego dyżuru: 
@@ -53,19 +56,27 @@ import VueTimepicker from 'vue2-timepicker/src/vue-timepicker.vue'
 import DatePicker from 'vue2-datepicker';
 import 'vue2-datepicker/index.css';
 import 'vue2-datepicker/locale/pl';
+import { ValidationProvider, extend } from 'vee-validate';
+import { required } from 'vee-validate/dist/rules';
+
+extend('required', {
+    ...required,
+    message: 'Pole wymagane!'
+})
 
 export default {
     name: 'DutyComponents',
     components: {
         ToggleButton,
         VueTimepicker,
-        DatePicker
+        DatePicker,
+        ValidationProvider
     },
     data() {
         return {
             dutyWeek: false,
             dutyHoliday: false,
-            dutyDateRange : [],
+            dutyDateRange : '',
             additionalTimeInLastDuty : '00:00',
             formatTimePicker: 'HH:mm',
             defaultTime: {

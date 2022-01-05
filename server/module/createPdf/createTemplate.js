@@ -1,6 +1,4 @@
 module.exports = (dataRaport) => {
-    console.log(dataRaport);
-    console.log(dataRaport.data.dutyInfo.holidayRangeDate);
     let docDefinition = {
         content: [{
                 text: 'RAPORT DZIENNY Z WYKONANYCH PRAC',

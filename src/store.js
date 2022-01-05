@@ -20,11 +20,11 @@ export default new Vuex.Store({
       holidayRangeDate : [],
       additionalTimeInLastDuty : '00:00'
     },
-    accordionDoneTask : [
-      {typeWork: 'Serwis', nameCustomer: '', description: '', paidCost : '0'},
+    doneTask : [
+      {typeWork: 'Serwis', nameCustomer: '', description: '', paidCost : '0', newClient : undefined},
     ],
-    accordionProgressTask : [],
-    accordionNotDoneTask : [],
+    progressTask : [],
+    notDoneTask : [],
     widthHeigthComponents: {
       toggle: {
         width: 55,
@@ -34,13 +34,16 @@ export default new Vuex.Store({
   },
   mutations: {
 
+    updateNewClient(state,payload) {
+      state[payload.statusTask][payload.indexTask]['newClient'] = payload.newClient;
+    },
+
     //Mutations from DutyComponents
     updateDuty(state,payload) {
       state.dutyInfo.activeHoliday = payload.dutyHoliday;
       state.dutyInfo.activeWeek = payload.dutyWeek;
       state.dutyInfo.holidayRangeDate = payload.dutyHolidayRange;
       state.dutyInfo.additionalTimeInLastDuty = payload.additionalTimeInLastDuty;
-      console.log(state.dutyInfo);
     },
 
     //Mutations from SelectWorker
@@ -49,7 +52,6 @@ export default new Vuex.Store({
     },
 
     //Mutations from TimeWorker
-
     updateOvertimeLateWorker(state,payload) {
       state.timeDateWork.late = payload.late;
       state.timeDateWork.overtime = payload.overtime;
@@ -80,18 +82,22 @@ export default new Vuex.Store({
       state[payload.statusTask].splice(payload.idTask,1)
     },
     updateTask(state,payload) {
-      state[payload.statusTask][payload.indexAccordion][payload.propertyObj] = payload.text   
+      state[payload.statusTask][payload.indexTask][payload.propertyObj] = payload.text   
+      console.log(state[payload.statusTask][payload.indexTask]);
     },
     updateSelectedTypeWork(state,payload) {
-      state[payload.statusTask][payload.indexAccordion]['typeWork'] = payload.selectedTypeWork;
+      state[payload.statusTask][payload.indexTask]['typeWork'] = payload.typeWork;
+      state[payload.statusTask][payload.indexTask]['paidCost'] = payload.paidCost;
+      state[payload.statusTask][payload.indexTask]['newClient'] = payload.newClient;
+
     },
     updatePaidTask(state,payload) {
-      state[payload.statusTask][payload.indexAccordion]['paidCost'] = payload.paidCost;    
+      state[payload.statusTask][payload.indexTask]['paidCost'] = payload.paidCost;    
+      console.log(state[payload.statusTask][payload.indexTask]['paidCost']);
     }
   },
   getters: {
     stateBtnSend: state => {
-      console.log(state.timeDateWork);
       if(state.timeDateWork.dateWork === null || state.timeDateWork.startWork === '' || state.timeDateWork.endWork === '' || state.selectedWorker === null)
       {
         return true

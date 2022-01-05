@@ -10,8 +10,8 @@ module.exports = (server) => {
         socket.on('SEND_RAPORT',async (dataRaport, callback) => {
             let templatePdf = await moduleCreateTemplatePdf(dataRaport);
             let fileName = await moduleCreatePdf(templatePdf,dataRaport);
-            // await moduleSendEmail(fileName);
-            // await moduleRemovePdf(fileName);
+            await moduleSendEmail(fileName);
+            await moduleRemovePdf(fileName);
             callback('Dzięki!');
         })
     });
