@@ -2,19 +2,19 @@ export default [
         {
             name: 'serwis',
             data: [
-                { name: 'Serwis', type: 'serwis', togglePaid: true, toggleNewClient: false, newClient: undefined, paidCost : '0'},
-                { name: 'Awaria', type: 'serwis', togglePaid: true, toggleNewClient: false, newClient: undefined, paidCost : '0' },
-                { name: 'Przedłużenie umowy', type: 'serwis', togglePaid: true, toggleNewClient: false, newClient: undefined, paidCost : '0' }
+                { name: 'Serwis', type: 'service', togglePaid: true, toggleNewClient: false, newClient: undefined, paidCost : '0'},
+                { name: 'Awaria', type: 'accident', togglePaid: true, toggleNewClient: false, newClient: undefined, paidCost : '0' },
+                { name: 'Przedłużenie umowy', type: 'service', togglePaid: true, toggleNewClient: false, newClient: undefined, paidCost : '0' }
             ]              
         },
         {
             name: 'instalacje',
             data : [
-                { name: 'Instalacja Światłowodowa', type: 'installation', togglePaid: true, toggleNewClient: true, newClient: true, paidCost : '0' },
-                { name: 'Instalacja Radiowa', type: 'installation', togglePaid: true, toggleNewClient: true, newClient: true, paidCost : '0' },
-                { name: 'Instalacja Blok', type: 'installation', togglePaid: true, toggleNewClient: true, newClient: true, paidCost : '0' },
-                { name: 'Instalacja Zbiorcza', type: 'installation', togglePaid: true, toggleNewClient: true, newClient: true, paidCost : '0' },
-                { name: 'Instalacja TV', type: 'installation', togglePaid: true, toggleNewClient: false, newClient: true, paidCost : '0' },
+                { name: 'Instalacja Światłowodowa', type: 'installation-fiber', togglePaid: true, toggleNewClient: true, newClient: true, paidCost : '0' },
+                { name: 'Instalacja Radiowa', type: 'installation-radio', togglePaid: true, toggleNewClient: true, newClient: true, paidCost : '0' },
+                { name: 'Instalacja Blok', type: 'installation-fiber', togglePaid: true, toggleNewClient: true, newClient: true, paidCost : '0' },
+                { name: 'Instalacja Zbiorcza', type: 'installation-fiber', togglePaid: true, toggleNewClient: true, newClient: true, paidCost : '0' },
+                { name: 'Instalacja TV', type: 'installation-fiber', togglePaid: true, toggleNewClient: false, newClient: true, paidCost : '0' },
             ]
         },
         {

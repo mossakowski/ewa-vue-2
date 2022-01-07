@@ -12,7 +12,7 @@
           v-for="(item,index) in $store.state.doneTask" 
           :key="index"
           :nameCustomer="item.nameCustomer"
-          :typeWork="item.typeWork"
+          :typeWorkTitle="item.typeWorkTitle"
           :indexTask="index"
           statusTask="doneTask"
         ></accordion-item>
@@ -28,8 +28,8 @@
           v-for="(item,index) in $store.state.progressTask" 
           :key="index"
           :nameCustomer="item.nameCustomer"
-          :typeWork="item.typeWork"
-          :indexAccordion="index"
+          :typeWorkTitle="item.typeWorkTitle"
+          :indexTask="index"
           statusTask="progressTask"
         ></accordion-item>
         <btn-add-accordion kindTask="progressTask"></btn-add-accordion>
@@ -44,8 +44,8 @@
           v-for="(item,index) in $store.state.notDoneTask" 
           :key="index"
           :nameCustomer="item.nameCustomer"
-          :typeWork="item.typeWork"
-          :indexAccordion="index"
+          :typeWorkTitle="item.typeWorkTitle"
+          :indexTask="index"
           statusTask="notDoneTask"
         ></accordion-item>
         <btn-add-accordion kindTask="notDoneTask"></btn-add-accordion>
@@ -71,7 +71,6 @@ import BtnAddAccordion from './components/TaskAccordion/BtnAddTask.vue'
 import BtnSendResetRaport from './components/Btn/BtnSendResetRaport.vue'
 import SummaryComponents from './components/Layout/SummaryComponents.vue'
 import DutyComponents from './components/Duty/DutyComponents.vue'
-// import moment from 'moment'
 
 export default {
   name: 'App',

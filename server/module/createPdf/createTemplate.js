@@ -1,4 +1,54 @@
 module.exports = (dataRaport) => {
+    console.log(dataRaport.data);
+    function newClientInfo(item) {
+        console.log(item);
+        let clientStatus;
+        switch(item) {
+            case true:
+                clientStatus = 'Nowy klient';
+                break;
+            case false:
+                clientStatus = 'Obecny klient';
+                break;
+            case undefined:
+                clientStatus = '';
+                break;                                        
+        }
+        return clientStatus;
+    }
+
+    function paidInfo(cost) {
+        if(parseInt(cost) > 0) {
+            return `Płatne ${cost} zł`;
+        } else {
+            return '';
+        }
+    }
+
+    function createListTask(dataRaport, statusTask) {
+        
+        let ulList = [];
+        for(let item of dataRaport.data[statusTask]) {
+            let ulElArr = [];
+            for(let [property, value] of Object.entries(item)) {
+                if(property != 'typeTask') {
+                    if(property === 'paidCost') {
+                        ulElArr.push(paidInfo(value));
+                    }
+                    else if(property === 'newClient') {
+                        ulElArr.push(newClientInfo(value));
+                    }
+                    else {
+                        ulElArr.push(value)
+                    }
+                }
+            }
+            ulElArr = ulElArr.filter(item => item);
+            let ulEl = ulElArr.join(' - ');
+            ulList.push(ulEl);
+        }
+        return ulList;
+    }
     let docDefinition = {
         content: [{
                 text: 'RAPORT DZIENNY Z WYKONANYCH PRAC',
@@ -51,10 +101,8 @@ module.exports = (dataRaport) => {
                 bold: true
             },
             {
-                //work done
-                ul: [
-
-                ]
+                //done task
+                ul: createListTask(dataRaport, 'doneTask')
             },
 
             {
@@ -65,10 +113,8 @@ module.exports = (dataRaport) => {
                 bold: true
             },
             {
-                //work continues
-                ul: [
-
-                ]
+                //progress task
+                ul: createListTask(dataRaport, 'progressTask')
             },
 
             {
@@ -79,10 +125,8 @@ module.exports = (dataRaport) => {
                 bold: true
             },
             {
-                //work unrealized
-                ul: [
-
-                ],
+                //not done task
+                ul: createListTask(dataRaport, 'notDoneTask')
             },
             {
                 text: 'Dyżur',
@@ -137,16 +181,16 @@ module.exports = (dataRaport) => {
                                 alignment: 'center'
                             },
                             {
-                                text: '',
+                                text: dataRaport.summary['numberNewClientFiber'],
                                 italics: true,
                                 alignment: 'center'
                             }, {
-                                text: '',
+                                text: dataRaport.summary['numberCurrentClientFiber'],
                                 italics: true,
                                 alignment: 'center'
                             },
                             {
-                                text: '',
+                                text: dataRaport.summary['numberInstallationFiber'],
                                 italics: true,
                                 alignment: 'center'
                             }
@@ -156,16 +200,16 @@ module.exports = (dataRaport) => {
                                 alignment: 'center'
                             },
                             {
-                                text: '',
+                                text: dataRaport.summary['numberNewClientRadio'],
                                 italics: true,
                                 alignment: 'center'
                             }, {
-                                text: '',
+                                text: dataRaport.summary['numberCurrentClientRadio'],
                                 italics: true,
                                 alignment: 'center'
                             },
                             {
-                                text: '',
+                                text: dataRaport.summary['numberInstallationRadio'],
                                 italics: true,
                                 alignment: 'center'
                             }
@@ -198,7 +242,7 @@ module.exports = (dataRaport) => {
                                 alignment: 'center'
                             },
                             {
-                                text: '',
+                                text: dataRaport.summary['numberService'],
                                 italics: true,
                                 alignment: 'center'
                             },
@@ -208,7 +252,7 @@ module.exports = (dataRaport) => {
                                 alignment: 'center'
                             },
                             {
-                                text: '',
+                                text: dataRaport.summary['numberAccident'],
                                 italics: true,
                                 alignment: 'center'
                             },
@@ -218,7 +262,7 @@ module.exports = (dataRaport) => {
                                 alignment: 'center'
                             },
                             {
-                                text: '',
+                                text: dataRaport.summary['numberNetworkBulding'],
                                 italics: true,
                                 alignment: 'center'
                             },

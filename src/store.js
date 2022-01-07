@@ -21,10 +21,13 @@ export default new Vuex.Store({
       additionalTimeInLastDuty : '00:00'
     },
     doneTask : [
-      {typeWork: 'Serwis', nameCustomer: '', description: '', paidCost : '0', newClient : undefined},
+      {typeWorkTitle: 'Serwis', typeTask: 'service', nameCustomer: '', description: '', paidCost : '0', newClient : undefined},
     ],
     progressTask : [],
     notDoneTask : [],
+    numberTasks : {
+      
+    },
     widthHeigthComponents: {
       toggle: {
         width: 55,
@@ -72,9 +75,11 @@ export default new Vuex.Store({
     addAccordion(state,payload) {
       state[payload.kindTask].push(
         {
-          typeWork : payload.typeWork,
+          typeWorkTitle : payload.typeWorkTitle,
+          typeTask : payload.typeWork,
           nameCustomer: payload.nameCustomer,
-          description: payload.description
+          description: payload.description,
+          paidCost : '0'
         }
       )
     },
@@ -82,14 +87,13 @@ export default new Vuex.Store({
       state[payload.statusTask].splice(payload.idTask,1)
     },
     updateTask(state,payload) {
-      state[payload.statusTask][payload.indexTask][payload.propertyObj] = payload.text   
-      console.log(state[payload.statusTask][payload.indexTask]);
+      state[payload.statusTask][payload.indexTask][payload.propertyObj] = payload.text;
     },
     updateSelectedTypeWork(state,payload) {
-      state[payload.statusTask][payload.indexTask]['typeWork'] = payload.typeWork;
+      state[payload.statusTask][payload.indexTask]['typeWorkTitle'] = payload.typeWorkTitle;
       state[payload.statusTask][payload.indexTask]['paidCost'] = payload.paidCost;
-      state[payload.statusTask][payload.indexTask]['newClient'] = payload.newClient;
-
+      Vue.set(state[payload.statusTask][payload.indexTask],'newClient', payload.newClient);
+      state[payload.statusTask][payload.indexTask]['typeTask'] = payload.typeTask;
     },
     updatePaidTask(state,payload) {
       state[payload.statusTask][payload.indexTask]['paidCost'] = payload.paidCost;    
@@ -98,12 +102,75 @@ export default new Vuex.Store({
   },
   getters: {
     stateBtnSend: state => {
-      if(state.timeDateWork.dateWork === null || state.timeDateWork.startWork === '' || state.timeDateWork.endWork === '' || state.selectedWorker === null)
-      {
+      console.log(state.dutyInfo.holidayRangeDate);
+      if(state.timeDateWork.dateWork === null || state.timeDateWork.startWork === '' || state.timeDateWork.endWork === '' || state.selectedWorker === null) {
         return true
       } else {
-        return false
+        if(state.dutyInfo.holidayRangeDate.length === 0 && state.dutyInfo.activeHoliday) {
+          return true //disabled btn
+        } else {
+          return false
+        }        
       } 
+    },
+    calcNumberOfInstallation: state => {
+      let numberInstallationFiber = 0;
+      let numberCurrentClientFiber = 0;
+      let numberNewClientFiber = 0;
+
+      let numberNewClientRadio = 0;
+      let numberInstallationRadio = 0;
+      let numberCurrentClientRadio = 0;
+      
+      let numberService = 0;
+      let numberAccident = 0;
+      let numberNetworkBulding = 0;
+      
+
+      for(let item of state.doneTask) {
+        if(item.typeTask === 'service') {
+          numberService++;
+        }
+        if(item.typeTask === 'installation-fiber') {
+          numberInstallationFiber++;
+          if(item.newClient) {
+            numberNewClientFiber++
+          }
+        }
+
+        if(item.typeTask === 'installation-radio') {
+          numberInstallationRadio++;
+          if(item.newClient) {
+            numberNewClientRadio++
+          }          
+        }
+
+        if(item.typeTask === 'accident') {
+          numberAccident++;
+        }
+
+        if(item.typeTask === 'network-bulding') {
+          numberNetworkBulding++;
+        }
+      }
+
+      numberCurrentClientFiber = numberInstallationFiber - numberNewClientFiber;
+      numberCurrentClientRadio = numberInstallationRadio - numberNewClientRadio;
+
+      return  {
+              'numberInstallationFiber' : numberInstallationFiber,
+              'numberNewClientFiber' : numberNewClientFiber,
+              'numberCurrentClientFiber' : numberCurrentClientFiber, 
+
+              'numberInstallationRadio' : numberInstallationRadio,
+              'numberNewClientRadio' : numberNewClientRadio,
+              'numberCurrentClientRadio' : numberCurrentClientRadio, 
+
+              'numberService' : numberService,
+              'numberAccident' : numberAccident,
+              'numberNetworkBulding' : numberNetworkBulding
+      };
     }
+
   }
 })

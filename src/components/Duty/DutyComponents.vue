@@ -16,25 +16,25 @@
                     :labels="{checked: 'Tak', unchecked: 'Nie'}"/>
             </b-col>
             <b-col sm="12">
-            Dyżur świąteczny: {{dutyDateRange}}
+            Dyżur świąteczny:
                 <toggle-button
                     v-model="dutyHoliday"
                     @change="onChangedUpdateDuty"
                     :width="$store.state.widthHeigthComponents.toggle.width" 
                     :height="$store.state.widthHeigthComponents.toggle.heigth"                     
                     :labels="{checked: 'Tak', unchecked: 'Nie'}"/>
-                <ValidationProvider immediate :rules="{required: true}" v-slot="{ errors }"> 
-                    <date-picker
-                        v-if="dutyHoliday"
-                        @change="onChangedUpdateDuty"
-                        v-model="dutyDateRange"                    
-                        type="date"
-                        class="ml-2"
-                        range
-                        placeholder="Wybierz przedział czasowy"
-                    ></date-picker>
-                    <span class="text-danger">{{ errors[0] }}</span>
-                </ValidationProvider>
+                    <span v-if="dutyHoliday">
+                        <date-picker                        
+                            @change="onChangedUpdateDuty"
+                            v-model="dutyDateRange"                    
+                            type="date"
+                            class="ml-2"
+                            range
+                            :clearable="false"
+                            placeholder="Wybierz przedział czasowy">
+                        </date-picker>
+                        <span class="text-danger" v-if="(dutyDateRange.length === 0 || dutyDateRange[0] === null || dutyDateRange[1] === null)">Uzupełnij pole</span>
+                    </span>
             </b-col>
             <b-col sm="12">
                 Dodatkowy czas pracy z ostatniego dyżuru: 
@@ -56,27 +56,19 @@ import VueTimepicker from 'vue2-timepicker/src/vue-timepicker.vue'
 import DatePicker from 'vue2-datepicker';
 import 'vue2-datepicker/index.css';
 import 'vue2-datepicker/locale/pl';
-import { ValidationProvider, extend } from 'vee-validate';
-import { required } from 'vee-validate/dist/rules';
-
-extend('required', {
-    ...required,
-    message: 'Pole wymagane!'
-})
 
 export default {
     name: 'DutyComponents',
     components: {
         ToggleButton,
         VueTimepicker,
-        DatePicker,
-        ValidationProvider
+        DatePicker
     },
     data() {
         return {
             dutyWeek: false,
             dutyHoliday: false,
-            dutyDateRange : '',
+            dutyDateRange : [],
             additionalTimeInLastDuty : '00:00',
             formatTimePicker: 'HH:mm',
             defaultTime: {
@@ -87,10 +79,22 @@ export default {
     },
     methods: {
         onChangedUpdateDuty() {
+            let rangeDutyHoliday = [];
+            if(this.dutyHoliday) {
+                if(this.dutyDateRange.length === 0 || this.dutyDateRange[0] === null) {                    
+                    rangeDutyHoliday = [];
+                } else {
+                    rangeDutyHoliday= moment(this.dutyDateRange[0]).format('DD-MM-YYYY') + ' - ' + moment(this.dutyDateRange[1]).format('DD-MM-YYYY');
+                }
+            } else {
+                this.rangeDutyHoliday = [];
+                rangeDutyHoliday = [];
+            }
+
             this.$store.commit('updateDuty', {
                 dutyWeek : this.dutyWeek,
                 dutyHoliday : this.dutyHoliday,
-                dutyHolidayRange : (this.dutyHoliday) ? moment(this.dutyDateRange[0]).format('DD-MM-YYYY') + ' - ' + moment(this.dutyDateRange[1]).format('DD-MM-YYYY') : '',
+                dutyHolidayRange : rangeDutyHoliday,
                 additionalTimeInLastDuty : this.additionalTimeInLastDuty
             })
         }

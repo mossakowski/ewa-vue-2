@@ -12,11 +12,11 @@ export default {
     addAccordion() {
       this.$store.commit('addAccordion', {
         kindTask : this.kindTask,
-        typeWork: 'Serwis',
+        typeWorkTitle: 'Serwis',
+        typeWork : 'service',
         nameCustomer: '',
-        description: ''   
+        description: '',   
       })
-      // console.log(this.$store.state.accordionDoneTask);
     }
   }
 
