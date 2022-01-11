@@ -13,9 +13,20 @@ export default {
       this.$store.commit('addAccordion', {
         kindTask : this.kindTask,
         typeWorkTitle: 'Serwis',
+
         typeWork : 'service',
+      
         nameCustomer: '',
-        description: '',   
+        description: '',
+        paidCost: '0',
+
+        paidTask: false,
+        togglePaid: true,
+
+        newClient: undefined,
+        toggleNewClient: false,
+        
+        query: 'Serwis'
       })
     }
   }

@@ -10,10 +10,10 @@ export default {
         idTask: Number
     },
     methods: {
-        removeTask(e) {
+        removeTask() {
             this.$store.commit('removeTask',
-                {'idTask' : e.target.dataset.idTask,
-                'statusTask' : e.target.dataset.statusTask})
+                {'idTask' : this.idTask,
+                'statusTask' : this.statusTask})
         },
     }
 }

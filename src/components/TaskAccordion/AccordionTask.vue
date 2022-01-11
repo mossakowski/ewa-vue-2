@@ -2,15 +2,16 @@
     <div class="b-card-container">
         <b-card no-body class="mb-1">
             <b-card-header v-b-toggle='statusTask + "-" + indexTask' header-tag="header" style="cursor: pointer" class="bg-info hover-pointer text-light p-1 px-3 d-flex align-items-center justify-content-between" role="tab">
-                <span>#{{indexTask +1}} {{typeWork}}</span>
+                <span>#{{indexTask +1}} {{$store.state[statusTask][indexTask].typeWorkTitle}}</span>
                 <btn-remove-task :statusTask="statusTask" :idTask="indexTask"></btn-remove-task>
             </b-card-header>
-            <b-collapse :id='statusTask + "-" + indexTask' visible :data-index='indexTask' accordion="my-accordion" role="tabpanel">
+            <b-collapse :id='statusTask + "-" + indexTask' visible :data-index='indexTask' :accordion="myAccordion" role="tabpanel">
                 <b-card-body>
+                    {{query}}
                     <b-form-group label="Rodzaj pracy:">
                             <vue-autosuggest
+                                :ref="refTest"                        
                                 @input="filterResults"      
-                                ref="autocomplete"
                                 v-model="query"
                                 :suggestions="suggestionsDisplay"
                                 :inputProps="inputProps"
@@ -26,23 +27,25 @@
                             @keyup="updateTask($event, indexTask, statusTask, 'nameCustomer')"
                             type="text"
                             placeholder="Wpisz dane"
+                            :value="$store.state[statusTask][indexTask].nameCustomer"
                         >
                         </b-form-input>
                     </b-form-group>
-
                     <b-form-group v-if="showToggleNewClient" label="Nowy klient?">
-                        <toggle-button 
+                        <toggle-button
+                            ref="toggle-button" 
                             v-model="newClient"
                             @change="updateNewClient" 
                             :width="$store.state.widthHeigthComponents.toggle.width" 
                             :height="$store.state.widthHeigthComponents.toggle.heigth" 
                             :labels="{checked: 'Tak', unchecked: 'Nie'}"/> 
                     </b-form-group>
-
+                    <b-btn @click="refClick">klik</b-btn>
                     <b-form-group label="Opis zdarzenia">
                         <b-form-textarea
                             @keyup="updateTask($event, indexTask, statusTask, 'description')"
                             placeholder="Opisz zdarzenie"
+                            :value="$store.state[statusTask][indexTask].description"
                             rows="3"
                             max-rows="6"
                         ></b-form-textarea>                
@@ -57,7 +60,7 @@
                             :labels="{checked: 'Tak', unchecked: 'Nie'}"/>             
                     </b-form-group>
                     <b-input-group v-if="paidTask" size="sm" append="zł">
-                            <b-form-input type="number" @keyup="updatePaidTask($event)"></b-form-input>
+                            <b-form-input v-model="paidCost" type="number" @keyup="updatePaidTask($event)"></b-form-input>
                         </b-input-group>
                 </b-card-body>
             </b-collapse>
@@ -69,37 +72,35 @@
 import BtnRemoveTask from './BtnRemoveTask.vue';
 import { ToggleButton } from 'vue-js-toggle-button';
 import { VueAutosuggest } from "vue-autosuggest";
-import typeWork from './typeWork'
+import typeWorksArr from './typeWorksArr'
 export default {
-    name : 'AccordionItem',
+    name : 'AccordionTask',
     components : {
         BtnRemoveTask,
         ToggleButton,
         VueAutosuggest
     },
     props: {
-        nameCustomer: String,
-        typeWork: String,
-        description: String,
-        paid: Boolean,
         indexTask: Number,
         statusTask: String
     },
     data() {
         return {
-            query: "Serwis",
-            newClient : true,
-            showToggleNewClient : false,
-            showTogglePaid : true,
-            paidTask : false,
+            refTest: `autosuggest-${this.indexTask}`,
+            myAccordion: `my-accordion-${this.indexTask}`,
+            query: 'Serwis',
+            newClient : this.$store.state[this.statusTask][this.indexTask].newClient,
+            showToggleNewClient : this.$store.state[this.statusTask][this.indexTask].toggleNewClient,
+            showTogglePaid : this.$store.state[this.statusTask][this.indexTask].togglePaid,
+            paidTask : this.$store.state[this.statusTask][this.indexTask].paidTask,
+            paidCost : this.$store.state[this.statusTask][this.indexTask].paidCost,
             selected: null,
             inputProps: {
-                id: "autosuggest__input",
+                id: `autosuggest__input_${this.indexTask}`,
                 placeholder: "Wybierz rodzaj pracy",
-                class: "form-control",
-                name: "hello"
+                class: "form-control"
             },
-            suggestions: typeWork,
+            suggestions: typeWorksArr,
             suggestionsDisplay: [],
             sectionConfigs: {
                 instalacje: {
@@ -135,16 +136,17 @@ export default {
     },
     methods: {
         onSelectedTypeWork(selected) {
-            console.log(selected);
             this.toggleNewClient = selected.item.toggleNewClient;
             this.showToggleNewClient = selected.item.toggleNewClient;
             this.showTogglePaid = selected.item.togglePaid;
             this.$store.commit('updateSelectedTypeWork', {
-                'typeWork' : selected.item.name,
+                'typeWorkTitle' : selected.item.name,
+                'typeWork' : selected.item.type,
                 'indexTask' :  this.indexTask,
                 'statusTask' : this.statusTask,
-                'paidCost' : selected.item.paidCost,
-                'newClient' : selected.item.newClient
+
+                'togglePaid' : selected.item.togglePaid,
+                'toggleNewClient' : selected.item.toggleNewClient
             })
 
         },
@@ -180,6 +182,7 @@ export default {
             }
         },
         filterResults() {
+
             this.suggestionsDisplay = [];
             this.suggestions.filter(itemSuggestions => {
                 let obj = {};                
@@ -193,7 +196,11 @@ export default {
                 })
                 obj.data.length && this.suggestionsDisplay.push(obj);
             })
-        }   
+        },
+        refClick() {
+            console.log(this.$refs[this.refTest]);
+            this.$destroy(this.refTest)
+        }
     },
     mounted() {
         this.suggestionsDisplay = this.suggestions;

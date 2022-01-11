@@ -7,19 +7,14 @@
       <div class="accordion mt-2" role="tablist">
         <h2>2. Prace zakończone</h2>
         <p v-if="$store.state.doneTask.length === 0">Dodaj zadanie</p>
-        <accordion-item
-          v-else 
+        <AccordionTask
           v-for="(item,index) in $store.state.doneTask" 
           :key="index"
-          :nameCustomer="item.nameCustomer"
-          :typeWorkTitle="item.typeWorkTitle"
           :indexTask="index"
-          statusTask="doneTask"
-        ></accordion-item>
+          statusTask="doneTask" />
         <btn-add-accordion kindTask="doneTask"></btn-add-accordion>
       </div>
 
-    
       <div class="accordion mt-2" role="tablist">
         <h2>3. Prace do dokończena</h2>
         <p v-if="$store.state.progressTask.length === 0">Dodaj zadanie</p>
@@ -66,7 +61,7 @@
 import NavbarComponents from './components/Layout/NavbarComponents.vue'
 import WorkerComponents from './components/WorkerInfo/SelectWorker.vue'
 import TimeWorker from './components/WorkerInfo/TimeWorker.vue'
-import AccordionItem from './components/TaskAccordion/AccordionItem.vue'
+import AccordionTask from './components/TaskAccordion/AccordionTask.vue'
 import BtnAddAccordion from './components/TaskAccordion/BtnAddTask.vue'
 import BtnSendResetRaport from './components/Btn/BtnSendResetRaport.vue'
 import SummaryComponents from './components/Layout/SummaryComponents.vue'
@@ -78,14 +73,11 @@ export default {
     NavbarComponents,
     WorkerComponents,
     TimeWorker,
-    AccordionItem,
+    AccordionTask,
     BtnAddAccordion,
     BtnSendResetRaport,
     SummaryComponents,
     DutyComponents
-  },
-  mounted() {
-    
   }
 }
 </script>
