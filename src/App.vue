@@ -9,7 +9,7 @@
         <p v-if="$store.state.doneTask.length === 0">Dodaj zadanie</p>
         <AccordionTask
           v-for="(item,index) in $store.state.doneTask" 
-          :key="index"
+          :key="$store.state.doneTask[index].indexTask"
           :indexTask="index"
           statusTask="doneTask" />
         <btn-add-accordion kindTask="doneTask"></btn-add-accordion>

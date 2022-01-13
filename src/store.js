@@ -21,6 +21,7 @@ export default new Vuex.Store({
       additionalTimeInLastDuty: '00:00'
     },
     doneTask: [{
+      indexTask: 0,
       typeWorkTitle: 'Serwis',
       typeTask: 'service',
       nameCustomer: '',
@@ -29,8 +30,7 @@ export default new Vuex.Store({
       paidTask: false,
       togglePaid: true,
       newClient: undefined,
-      toggleNewClient: false,
-      query: 'Serwis'
+      toggleNewClient: false
     }, ],
     progressTask: [],
     notDoneTask: [],
@@ -86,6 +86,7 @@ export default new Vuex.Store({
     //Mutations from task
     addAccordion(state, payload) {
       state[payload.kindTask].push({
+        indexTask : payload.indexTask,
         typeWorkTitle: payload.typeWorkTitle,
         typeTask: payload.typeWork,
         nameCustomer: payload.nameCustomer,
@@ -118,7 +119,6 @@ export default new Vuex.Store({
   },
   getters: {
     stateBtnSend: state => {
-      console.log(state.dutyInfo.holidayRangeDate);
       if (state.timeDateWork.dateWork === null || state.timeDateWork.startWork === '' || state.timeDateWork.endWork === '' || state.selectedWorker === null) {
         return true
       } else {

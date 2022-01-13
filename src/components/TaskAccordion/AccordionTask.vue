@@ -9,8 +9,7 @@
                 <b-card-body>
                     {{query}}
                     <b-form-group label="Rodzaj pracy:">
-                            <vue-autosuggest
-                                :ref="refTest"                        
+                            <vue-autosuggest                      
                                 @input="filterResults"      
                                 v-model="query"
                                 :suggestions="suggestionsDisplay"
@@ -40,7 +39,7 @@
                             :height="$store.state.widthHeigthComponents.toggle.heigth" 
                             :labels="{checked: 'Tak', unchecked: 'Nie'}"/> 
                     </b-form-group>
-                    <b-btn @click="refClick">klik</b-btn>
+
                     <b-form-group label="Opis zdarzenia">
                         <b-form-textarea
                             @keyup="updateTask($event, indexTask, statusTask, 'description')"
@@ -86,7 +85,6 @@ export default {
     },
     data() {
         return {
-            refTest: `autosuggest-${this.indexTask}`,
             myAccordion: `my-accordion-${this.indexTask}`,
             query: 'Serwis',
             newClient : this.$store.state[this.statusTask][this.indexTask].newClient,
@@ -196,10 +194,6 @@ export default {
                 })
                 obj.data.length && this.suggestionsDisplay.push(obj);
             })
-        },
-        refClick() {
-            console.log(this.$refs[this.refTest]);
-            this.$destroy(this.refTest)
         }
     },
     mounted() {

@@ -8,9 +8,16 @@ export default {
   props: {
     kindTask: String
   },
+  data() {
+    return {
+      countTask : 0,
+    }
+  },
   methods : {
     addAccordion() {
       this.$store.commit('addAccordion', {
+        indexTask: ++this.countTask,
+
         kindTask : this.kindTask,
         typeWorkTitle: 'Serwis',
 
