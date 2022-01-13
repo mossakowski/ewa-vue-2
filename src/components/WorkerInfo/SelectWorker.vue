@@ -24,7 +24,7 @@ export default {
         return {
             selectedWorker: null,
             arrWorkers : [
-                {text : 'Wybierz użytkownika', value: null},
+                {text : 'Wybierz pracownika', value: null},
                 {text : 'Marian Zakrzewska', value : 'Marian Zakrzewska'},
                 {text : 'Kamil Mossakowski', value : 'Kamil Mossakowski'},
                 {text : 'Mirosław Wojciechowski', value : 'Mirosław Wojciechowski'},

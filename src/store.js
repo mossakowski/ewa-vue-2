@@ -84,6 +84,12 @@ export default new Vuex.Store({
     },
 
     //Mutations from task
+    resetRaport(state) {
+      state.doneTask = [];
+      state.progressTask = [];
+      state.notDoneTask = [];
+    },
+
     addAccordion(state, payload) {
       state[payload.kindTask].push({
         indexTask : payload.indexTask,
@@ -95,10 +101,9 @@ export default new Vuex.Store({
         paidTask : false,
         togglePaid : true,
         newClient : undefined,
-        toggleNewClient : false,
-        query: payload.query
-
+        toggleNewClient : false
       })
+      console.log(state[payload.kindTask]);
     },
     removeTask(state, payload) {
       state[payload.statusTask].splice(payload.idTask, 1)

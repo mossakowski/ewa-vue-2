@@ -8,7 +8,7 @@
                 <b-icon-check v-if="showCheckSendText"></b-icon-check>
                 <span v-if="showCheckSendText" class="ml-1">Wysłano!</span>                
             </b-button>
-            <b-button class="bg-danger" @click="resetRaport">Zresetuj cały raport</b-button>
+            <b-button class="bg-danger mr-1" @click="resetRaport">Zresetuj cały raport</b-button>
             <span class="text-danger">{{($store.getters.stateBtnSend) ? 'Popraw wprowadzone dane!' : ''}}</span>
         </b-col>
     </b-row>
@@ -45,9 +45,7 @@ export default {
                     })            
         },
         resetRaport() {
-            this.$store.state.accordionDoneTask = [];
-            this.$store.state.accordionProgressTask = [];
-            this.$store.state.accordionNotDoneTask = [];
+            this.$store.commit('resetRaport');
         }        
     }
 }

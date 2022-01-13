@@ -86,8 +86,6 @@
 </template>
 
 <script>
-//Autocomplete jest spoko
-//changeEvent
 import VueTimepicker from 'vue2-timepicker/src/vue-timepicker.vue'
 import DatePicker from 'vue2-datepicker';
 import moment from 'moment';

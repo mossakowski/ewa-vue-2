@@ -1,13 +1,12 @@
 <template>
     <div class="b-card-container">
         <b-card no-body class="mb-1">
-            <b-card-header v-b-toggle='statusTask + "-" + indexTask' header-tag="header" style="cursor: pointer" class="bg-info hover-pointer text-light p-1 px-3 d-flex align-items-center justify-content-between" role="tab">
+            <b-card-header v-b-toggle='"accordion-" + statusTask + "-" + indexTask' header-tag="header" style="cursor: pointer" class="bg-info hover-pointer text-light p-1 px-3 d-flex align-items-center justify-content-between" role="tab">
                 <span>#{{indexTask +1}} {{$store.state[statusTask][indexTask].typeWorkTitle}}</span>
                 <btn-remove-task :statusTask="statusTask" :idTask="indexTask"></btn-remove-task>
             </b-card-header>
-            <b-collapse :id='statusTask + "-" + indexTask' visible :data-index='indexTask' :accordion="myAccordion" role="tabpanel">
+            <b-collapse :id='"accordion-" + statusTask + "-" + indexTask' visible :data-index='indexTask' :accordion="myAccordion" role="tabpanel">
                 <b-card-body>
-                    {{query}}
                     <b-form-group label="Rodzaj pracy:">
                             <vue-autosuggest                      
                                 @input="filterResults"      
@@ -85,7 +84,7 @@ export default {
     },
     data() {
         return {
-            myAccordion: `my-accordion-${this.indexTask}`,
+            myAccordion: `my-accordion-${this.statusTask}`,
             query: 'Serwis',
             newClient : this.$store.state[this.statusTask][this.indexTask].newClient,
             showToggleNewClient : this.$store.state[this.statusTask][this.indexTask].toggleNewClient,

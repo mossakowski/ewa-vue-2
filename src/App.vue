@@ -8,6 +8,7 @@
         <h2>2. Prace zakończone</h2>
         <p v-if="$store.state.doneTask.length === 0">Dodaj zadanie</p>
         <AccordionTask
+          v-else
           v-for="(item,index) in $store.state.doneTask" 
           :key="$store.state.doneTask[index].indexTask"
           :indexTask="index"
@@ -17,16 +18,13 @@
 
       <div class="accordion mt-2" role="tablist">
         <h2>3. Prace do dokończena</h2>
-        <p v-if="$store.state.progressTask.length === 0">Dodaj zadanie</p>
-        <accordion-item
-          v-else 
+        <p v-if="$store.state.progressTask.length === 0">Dodaj zadanie</p>      
+        <AccordionTask
+          v-else
           v-for="(item,index) in $store.state.progressTask" 
-          :key="index"
-          :nameCustomer="item.nameCustomer"
-          :typeWorkTitle="item.typeWorkTitle"
+          :key="$store.state.progressTask[index].indexTask"
           :indexTask="index"
-          statusTask="progressTask"
-        ></accordion-item>
+          statusTask="progressTask" />
         <btn-add-accordion kindTask="progressTask"></btn-add-accordion>
       </div>
 
@@ -34,15 +32,12 @@
       <div class="accordion mt-2" role="tablist">
         <h2>4. Prace niezrealizowane</h2>
         <p v-if="$store.state.notDoneTask.length === 0">Dodaj zadanie</p>
-        <accordion-item
-          v-else 
-          v-for="(item,index) in $store.state.notDoneTask" 
-          :key="index"
-          :nameCustomer="item.nameCustomer"
-          :typeWorkTitle="item.typeWorkTitle"
-          :indexTask="index"
-          statusTask="notDoneTask"
-        ></accordion-item>
+          <AccordionTask
+            v-else
+            v-for="(item,index) in $store.state.notDoneTask" 
+            :key="$store.state.notDoneTask[index].indexTask"
+            :indexTask="index"
+            statusTask="notDoneTask" />
         <btn-add-accordion kindTask="notDoneTask"></btn-add-accordion>
       </div>
 
@@ -53,8 +48,8 @@
 
       <btn-send-reset-raport/>
 
-
-    </b-container>
+    <TheFooter />
+  </b-container>
 </template>
 
 <script>
@@ -66,6 +61,7 @@ import BtnAddAccordion from './components/TaskAccordion/BtnAddTask.vue'
 import BtnSendResetRaport from './components/Btn/BtnSendResetRaport.vue'
 import SummaryComponents from './components/Layout/SummaryComponents.vue'
 import DutyComponents from './components/Duty/DutyComponents.vue'
+import TheFooter from './components/Layout/TheFooter.vue'
 
 export default {
   name: 'App',
@@ -77,7 +73,8 @@ export default {
     BtnAddAccordion,
     BtnSendResetRaport,
     SummaryComponents,
-    DutyComponents
+    DutyComponents,
+    TheFooter
   }
 }
 </script>

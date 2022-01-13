@@ -33,7 +33,6 @@ export default {
         newClient: undefined,
         toggleNewClient: false,
         
-        query: 'Serwis'
       })
     }
   }

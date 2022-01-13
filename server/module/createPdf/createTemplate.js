@@ -1,5 +1,5 @@
 module.exports = (dataRaport) => {
-    console.log(dataRaport.data);
+    console.log(dataRaport.data.dutyInfo.holidayRangeDate);
     function newClientInfo(item) {
         console.log(item);
         let clientStatus;
@@ -31,7 +31,7 @@ module.exports = (dataRaport) => {
         for(let item of dataRaport.data[statusTask]) {
             let ulElArr = [];
             for(let [property, value] of Object.entries(item)) {
-                if(property != 'typeTask') {
+                if(property != 'typeTask' && property != 'indexTask' && property != 'togglePaid' && property != 'toggleNewClient') {
                     if(property === 'paidCost') {
                         ulElArr.push(paidInfo(value));
                     }
@@ -138,7 +138,7 @@ module.exports = (dataRaport) => {
             {
                 ul: [
                     `Tygodniowy: ${(dataRaport.data.dutyInfo.activeWeek) ? 'TAK' : 'NIE'}`,
-                    `Świąteczny: ${(dataRaport.data.dutyInfo.activeHoliday) ? 'TAK' : 'NIE'} ${(dataRaport.data.dutyInfo.holidayRangeDate) ? '(' + dataRaport.data.dutyInfo.holidayRangeDate + ')' : ''} `
+                    `Świąteczny: ${(dataRaport.data.dutyInfo.activeHoliday) ? 'TAK' : 'NIE'} ${(dataRaport.data.dutyInfo.holidayRangeDate.length > 0) ? '(' + dataRaport.data.dutyInfo.holidayRangeDate + ')' : ''} `
                 ]
             },
 
