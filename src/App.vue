@@ -6,39 +6,39 @@
       
       <div class="accordion mt-2" role="tablist">
         <h2>2. Prace zakończone</h2>
-        <p v-if="$store.state.doneTask.length === 0">Dodaj zadanie</p>
+        <p v-if="$store.state.doneTasks.length === 0">Dodaj zadanie</p>
         <AccordionTask
           v-else
-          v-for="(item,index) in $store.state.doneTask" 
-          :key="$store.state.doneTask[index].indexTask"
+          v-for="(item,index) in $store.state.doneTasks" 
+          :key="$store.state.doneTasks[index].indexTask"
           :indexTask="index"
-          statusTask="doneTask" />
-        <btn-add-accordion kindTask="doneTask"></btn-add-accordion>
+          statusTask="doneTasks" />
+        <btn-add-accordion stageWork="doneTasks"></btn-add-accordion>
       </div>
 
       <div class="accordion mt-2" role="tablist">
         <h2>3. Prace do dokończena</h2>
-        <p v-if="$store.state.progressTask.length === 0">Dodaj zadanie</p>      
+        <p v-if="$store.state.progressTasks.length === 0">Dodaj zadanie</p>      
         <AccordionTask
           v-else
-          v-for="(item,index) in $store.state.progressTask" 
-          :key="$store.state.progressTask[index].indexTask"
+          v-for="(item,index) in $store.state.progressTasks" 
+          :key="$store.state.progressTasks[index].indexTask"
           :indexTask="index"
-          statusTask="progressTask" />
-        <btn-add-accordion kindTask="progressTask"></btn-add-accordion>
+          statusTask="progressTasks" />
+        <btn-add-accordion stageWork="progressTasks"></btn-add-accordion>
       </div>
 
     
       <div class="accordion mt-2" role="tablist">
         <h2>4. Prace niezrealizowane</h2>
-        <p v-if="$store.state.notDoneTask.length === 0">Dodaj zadanie</p>
+        <p v-if="$store.state.unrealizedTasks.length === 0">Dodaj zadanie</p>
           <AccordionTask
             v-else
-            v-for="(item,index) in $store.state.notDoneTask" 
-            :key="$store.state.notDoneTask[index].indexTask"
+            v-for="(item,index) in $store.state.unrealizedTasks" 
+            :key="$store.state.unrealizedTasks[index].indexTask"
             :indexTask="index"
-            statusTask="notDoneTask" />
-        <btn-add-accordion kindTask="notDoneTask"></btn-add-accordion>
+            statusTask="unrealizedTasks" />
+        <btn-add-accordion stageWork="unrealizedTasks"></btn-add-accordion>
       </div>
 
       <duty-components></duty-components>

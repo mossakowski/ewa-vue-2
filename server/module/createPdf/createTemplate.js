@@ -102,7 +102,7 @@ module.exports = (dataRaport) => {
             },
             {
                 //done task
-                ul: createListTask(dataRaport, 'doneTask')
+                ul: createListTask(dataRaport, 'doneTasks')
             },
 
             {
@@ -114,7 +114,7 @@ module.exports = (dataRaport) => {
             },
             {
                 //progress task
-                ul: createListTask(dataRaport, 'progressTask')
+                ul: createListTask(dataRaport, 'progressTasks')
             },
 
             {
@@ -126,7 +126,7 @@ module.exports = (dataRaport) => {
             },
             {
                 //not done task
-                ul: createListTask(dataRaport, 'notDoneTask')
+                ul: createListTask(dataRaport, 'unrealizedTasks')
             },
             {
                 text: 'Dyżur',

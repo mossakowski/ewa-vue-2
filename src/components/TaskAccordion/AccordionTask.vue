@@ -2,7 +2,7 @@
     <div class="b-card-container">
         <b-card no-body class="mb-1">
             <b-card-header v-b-toggle='"accordion-" + statusTask + "-" + indexTask' header-tag="header" style="cursor: pointer" class="bg-info hover-pointer text-light p-1 px-3 d-flex align-items-center justify-content-between" role="tab">
-                <span>#{{indexTask +1}} {{$store.state[statusTask][indexTask].typeWorkTitle}}</span>
+                <span>#{{indexTask +1}} {{$store.state[statusTask][indexTask].typeTaskTitle}}</span>
                 <btn-remove-task :statusTask="statusTask" :idTask="indexTask"></btn-remove-task>
             </b-card-header>
             <b-collapse :id='"accordion-" + statusTask + "-" + indexTask' visible :data-index='indexTask' :accordion="myAccordion" role="tabpanel">
@@ -31,11 +31,11 @@
                     </b-form-group>
                     <b-form-group v-if="showToggleNewClient" label="Nowy klient?">
                         <toggle-button
-                            ref="toggle-button" 
-                            v-model="newClient"
+                            :value="$store.state[statusTask][indexTask].newClient"
                             @change="updateNewClient" 
                             :width="$store.state.widthHeigthComponents.toggle.width" 
                             :height="$store.state.widthHeigthComponents.toggle.heigth" 
+                            :sync="true"
                             :labels="{checked: 'Tak', unchecked: 'Nie'}"/> 
                     </b-form-group>
 
@@ -70,7 +70,7 @@
 import BtnRemoveTask from './BtnRemoveTask.vue';
 import { ToggleButton } from 'vue-js-toggle-button';
 import { VueAutosuggest } from "vue-autosuggest";
-import typeWorksArr from './typeWorksArr'
+import typeTasksArr from './typeTasksArr'
 export default {
     name : 'AccordionTask',
     components : {
@@ -86,7 +86,7 @@ export default {
         return {
             myAccordion: `my-accordion-${this.statusTask}`,
             query: 'Serwis',
-            newClient : this.$store.state[this.statusTask][this.indexTask].newClient,
+            newClient2 : this.$store.state[this.statusTask][this.indexTask].newClient,
             showToggleNewClient : this.$store.state[this.statusTask][this.indexTask].toggleNewClient,
             showTogglePaid : this.$store.state[this.statusTask][this.indexTask].togglePaid,
             paidTask : this.$store.state[this.statusTask][this.indexTask].paidTask,
@@ -97,53 +97,53 @@ export default {
                 placeholder: "Wybierz rodzaj pracy",
                 class: "form-control"
             },
-            suggestions: typeWorksArr,
+            suggestions: typeTasksArr,
             suggestionsDisplay: [],
             sectionConfigs: {
                 instalacje: {
                 limit: 6,
                 label: "Instalacje",
                 onSelected: selected => {
-                    this.onSelectedTypeWork(selected)
+                    this.onSelectedtypeTask(selected)
                     }
                 },
                 networkBulding: {
                 limit: 6,
                 label: "Budowa sieci",
                 onSelected: selected => {
-                    this.onSelectedTypeWork(selected)
+                    this.onSelectedtypeTask(selected)
                     }
                 },
                 office: {
                 limit: 6,
                 label: "Biuro",
                 onSelected: selected => {
-                    this.onSelectedTypeWork(selected)
+                    this.onSelectedtypeTask(selected)
                     }
                 },
                 serwis: {
                 limit: 6,
                 label: "Serwis",
                 onSelected: selected => {
-                    this.onSelectedTypeWork(selected)
+                    this.onSelectedtypeTask(selected)
                     }
                 }
             }        
         }
     },
     methods: {
-        onSelectedTypeWork(selected) {
+        onSelectedtypeTask(selected) {
             this.toggleNewClient = selected.item.toggleNewClient;
             this.showToggleNewClient = selected.item.toggleNewClient;
             this.showTogglePaid = selected.item.togglePaid;
-            this.$store.commit('updateSelectedTypeWork', {
-                'typeWorkTitle' : selected.item.name,
-                'typeWork' : selected.item.type,
+            this.$store.commit('updateSelectedtypeTask', {
+                'typeTaskTitle' : selected.item.name,
+                'typeTask' : selected.item.type,
                 'indexTask' :  this.indexTask,
                 'statusTask' : this.statusTask,
-
                 'togglePaid' : selected.item.togglePaid,
-                'toggleNewClient' : selected.item.toggleNewClient
+                'toggleNewClient' : selected.item.toggleNewClient,
+                'newClient' : selected.item.newClient
             })
 
         },
@@ -162,11 +162,11 @@ export default {
                 'paidCost' : e.target.value
             })
         },
-        updateNewClient() {
+        updateNewClient(e) {
             this.$store.commit('updateNewClient', {
                 'indexTask' : this.indexTask,
                 'statusTask' : this.statusTask,                
-                'newClient' : this.newClient
+                'newClient' : e.value
             })            
         },
         resetPaidCost() {

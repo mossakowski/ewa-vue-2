@@ -6,7 +6,7 @@
 export default {
   name: 'BtnAddAccordion',
   props: {
-    kindTask: String
+    stageWork: String
   },
   data() {
     return {
@@ -18,10 +18,10 @@ export default {
       this.$store.commit('addAccordion', {
         indexTask: ++this.countTask,
 
-        kindTask : this.kindTask,
-        typeWorkTitle: 'Serwis',
+        stageWork : this.stageWork,
+        typeTaskTitle: 'Serwis',
 
-        typeWork : 'service',
+        typeTask : 'service',
       
         nameCustomer: '',
         description: '',

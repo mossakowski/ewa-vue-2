@@ -5,7 +5,7 @@
                 <label>Rozpoczęcie pracy: </label>
                 <ValidationProvider :rules="{required: true, regex: /^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/}" v-slot="{ errors }"> 
                 <VueTimepicker
-                    v-model="startWork"                    
+                    v-model="startWork"                  
                     @change="onChangedWorkTime"
                     class="ml-1"
                     hour-interval="1"
@@ -59,8 +59,7 @@
             <b-col md="2">
             Spóźnienie?
             <toggle-button 
-                @change="changedLateovertimeWorker"                
-                v-model="lateWorker"
+                @change="onChangeLateovertimeWorker"
                 :width="$store.state.widthHeigthComponents.toggle.width" 
                 :height="$store.state.widthHeigthComponents.toggle.heigth" 
                 :sync="true"
@@ -70,7 +69,7 @@
             <b-col md="2">
             Nadgodziny?
             <toggle-button
-                @change="changedLateovertimeWorker"  
+                @change="onChangeLateovertimeWorker"  
                 v-model="overtimeWorker"
                 :width="$store.state.widthHeigthComponents.toggle.width" 
                 :height="$store.state.widthHeigthComponents.toggle.heigth"                 
@@ -114,7 +113,7 @@ export default {
     data(){
         return {
             dateWork : moment().format('DD-MM-YYYY'),
-            startWork : '09:00',
+            startWork : this.$store.state.timeDateWork.startWork,
             endWork : '17:00',
             durationWork : '08:00',
             formatTime : "hh:mm",
@@ -168,7 +167,7 @@ export default {
             }            
 
             },
-        changedLateovertimeWorker() {
+        onChangeLateovertimeWorker() {
             this.$store.commit('updateOvertimeLateWorker', {
                 late: this.lateWorker,
                 overtime: this.overtimeWorker
