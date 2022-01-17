@@ -3,14 +3,23 @@
       <h2>1. Wybierz informacje o pracowniku</h2>
       <b-row>
         <b-col>
-            <label>Wybierz pracownika</label>
-            <b-form-select 
-                :class="($store.state.selectedWorker === null) ? 'border-danger' : ''" 
-                v-model="selectedWorker" 
-                :options="arrWorkers"
-                @change="onChangedSelectedWorker">                
-            </b-form-select>
-            <label v-if="$store.state.selectedWorker === null" class="text-danger">Wybierz pracownika</label>
+            <b-form-group>
+                <label>Wybierz pracownika</label>
+                <b-form-select 
+                    :class="($store.state.selectedWorker === null) ? 'border-danger' : ''" 
+                    :value="$store.state.selectedWorker" 
+                    :options="arrWorkers"
+                    @change="onChangeSelectedWorker">                
+                </b-form-select>
+                <label v-if="$store.state.selectedWorker === null" class="text-danger">Wybierz pracownika</label>
+            </b-form-group>
+            <b-form-group>
+                <label>Podaj adres email</label>
+                <ValidationProvider ref="refValidationEmail" rules="email|required" immediate v-slot="{ errors }">
+                    <b-form-input @keyup="inputEmailWorker" v-model="emailWorker" type="email"></b-form-input>
+                    <span class="text-danger">{{ errors[0] }} </span>
+                </ValidationProvider>
+            </b-form-group>
         </b-col>
       </b-row>
   </div>
@@ -18,11 +27,29 @@
 </template>
 
 <script>
+import { ValidationProvider } from 'vee-validate';
+import { email,required } from 'vee-validate/dist/rules';
+import { extend } from 'vee-validate';
+
+extend('required', {
+    ...required,
+    message: 'Pole wymagane'
+})
+
+extend('email', {
+    ...email,
+    message: 'Proszę podać poprawny adres email'
+})
+
+
 export default {
     name: 'WorkerComponents',
+    components: {
+        ValidationProvider
+    },
     data() {
         return {
-            selectedWorker: null,
+            emailWorker : '',
             arrWorkers : [
                 {text : 'Wybierz pracownika', value: null},
                 {text : 'Marian Zakrzewska', value : 'Marian Zakrzewska'},
@@ -34,9 +61,17 @@ export default {
         }
     },
     methods: {
-        onChangedSelectedWorker() {
+        onChangeSelectedWorker(value) {            
             this.$store.commit('updateSelectedWorker',{
-                nameWorker: this.selectedWorker
+                nameWorker: value
+            })
+        },
+        async inputEmailWorker() {
+            let validationEmail = await this.$refs.refValidationEmail.validate();
+            
+            this.$store.commit('updateEmailWorker', {
+                validate : validationEmail.valid,
+                email: this.emailWorker
             })
         }
     }

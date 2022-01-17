@@ -1,6 +1,7 @@
 const nodemailer = require("nodemailer");
 
-module.exports = async (fileName) => {
+module.exports = async (fileName, addressEmail, dateWork, worker) => {
+  console.log(fileName + ' ' + addressEmail + ' ' + dateWork + ' ' + worker);
   let transporter = nodemailer.createTransport({
     host: process.env.EMAIL_SERVER,
     port: 587,
@@ -13,9 +14,9 @@ module.exports = async (fileName) => {
   
   // send mail with defined transport object
   let info = await transporter.sendMail({
-    from: '"Ewa system" <foo@example.com>', // sender address
-    to: "mosakamil@gmail.com", // list of receivers
-    subject: "Hello ✔", // Subject line
+    from: '"RAPORT DZIENNY"', // sender address
+    to: addressEmail, // list of receivers
+    subject: `[RAPORT DZIENNY ${dateWork}] ${worker}`, // Subject line
     attachments: [{
       filename: fileName,
       path : `${__dirname}/../createPdf/${fileName}`

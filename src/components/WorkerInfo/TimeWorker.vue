@@ -5,8 +5,8 @@
                 <label>Rozpoczęcie pracy: </label>
                 <ValidationProvider :rules="{required: true, regex: /^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/}" v-slot="{ errors }"> 
                 <VueTimepicker
-                    v-model="startWork"                  
-                    @change="onChangedWorkTime"
+                    :value="$store.state.timeDateWork.startWork"                
+                    @change="onChangeStartWork"
                     class="ml-1"
                     hour-interval="1"
                     minute-interval="5"
@@ -23,8 +23,8 @@
                 <label>Koniec pracy: </label>
                 <ValidationProvider :rules="{required: true, regex: /^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/}" v-slot="{ errors }"> 
                 <VueTimepicker
-                    v-model="endWork"
-                    @change="onChangedWorkTime"
+                    :value="$store.state.timeDateWork.endWork"
+                    @change="onChangeEndWork"
                     class="ml-1"
                     hour-interval="1"
                     minute-interval="5"         
@@ -40,17 +40,17 @@
             <b-col md="4">
                 Data:
                 <ValidationProvider :rules="{required: true}" v-slot="{ errors }">                 
-                <date-picker
-                    v-model="dateWork"
-                    @change="onChangedDateWork"
-                    :format="formatDate"
-                    value-type="format"              
-                    type="date"
-                    class="ml-2"
-                    placeholder="Wybierz datę"
-                ></date-picker>
-                <br>
-                <span class="text-danger">{{ errors[0] }}</span>
+                    <date-picker
+                        :value="$store.state.timeDateWork.dateWork"
+                        @change="onChangeDateWork"
+                        :format="formatDate"
+                        value-type="format"              
+                        type="date"
+                        class="ml-2"
+                        placeholder="Wybierz datę"
+                    ></date-picker>
+                    <br>
+                    <span class="text-danger">{{ errors[0] }}</span>
                 </ValidationProvider>                   
             </b-col>  
         </b-row>
@@ -58,7 +58,9 @@
         <b-row class="mt-2">
             <b-col md="2">
             Spóźnienie?
-            <toggle-button 
+            <toggle-button
+                id="toggleLate"                
+                :value="$store.state.timeDateWork.late" 
                 @change="onChangeLateovertimeWorker"
                 :width="$store.state.widthHeigthComponents.toggle.width" 
                 :height="$store.state.widthHeigthComponents.toggle.heigth" 
@@ -69,8 +71,9 @@
             <b-col md="2">
             Nadgodziny?
             <toggle-button
+                id="toggleOvertime"
+                :value="$store.state.timeDateWork.overtime"
                 @change="onChangeLateovertimeWorker"  
-                v-model="overtimeWorker"
                 :width="$store.state.widthHeigthComponents.toggle.width" 
                 :height="$store.state.widthHeigthComponents.toggle.heigth"                 
                 :sync="true"
@@ -112,36 +115,68 @@ export default {
     },
     data(){
         return {
-            dateWork : moment().format('DD-MM-YYYY'),
-            startWork : this.$store.state.timeDateWork.startWork,
-            endWork : '17:00',
+            dateWork : this.$store.state.timeDateWork.dateWork,
             durationWork : '08:00',
             formatTime : "hh:mm",
             formatDate: 'DD-MM-YYYY',
-            lateWorker : false,
-            overtimeWorker : false,
             toggleColor : '#ffc107',
             toggleText : {checked: 'Tak', unchecked: 'Nie'},
             inputWidth: '100px'
         }
     },
     methods: {
-        onChangedDateWork() {
-            this.$store.commit('updateDateWork',{date: this.dateWork});
+        onChangeDateWork(dateWork) {
+            this.$store.commit('updateDateWork',{date: dateWork});
         },
-        onChangedWorkTime() {
+        onChangeStartWork(e) {
+            let validateStartWork = e.displayTime.split(':');
+            if(validateStartWork[0] === 'HH' || validateStartWork[1] === 'mm') {
+                this.$store.commit('updateTimeWork',{
+                    startWork : '',
+                    endWork : this.$store.state.timeDateWork.endWork
+                })                
+            } else {
+                this.$store.commit('updateTimeWork',{
+                    startWork : e.displayTime,
+                    endWork : this.$store.state.timeDateWork.endWork,
+                })                
+            }
 
+            let startWorkTime = moment(this.$store.state.timeDateWork.startWork, this.formatTime);
+            //Change value on true in toggle lateWorker when late's worker
+            if(startWorkTime.isAfter(moment('09:00', this.formatTime))) {
+                this.$store.commit('updateOvertimeLateWorker', {
+                    late: true,
+                    overtime: this.$store.state.timeDateWork.overtime
+                })                
+            }            
+        },
+        onChangeEndWork(e) {
+            let valdiateEndWork = e.displayTime.split(':');
+            if(valdiateEndWork[0] === 'HH' || valdiateEndWork[1] === 'mm') {
+                this.$store.commit('updateTimeWork',{
+                    startWork : this.$store.state.timeDateWork.startWork,
+                    endWork : ''
+                })                
+            } else {
+                this.$store.commit('updateTimeWork',{
+                    startWork : this.$store.state.timeDateWork.startWork,
+                    endWork : e.displayTime,
+                })
+                    let endWorkTime = moment(this.$store.state.timeDateWork.endWork, this.formatTime)
+                    //Change value on true in toggle overtimeWorker when overtime's worker
+                    if(endWorkTime.isAfter(moment('17:00', this.formatTime))) {
+                    this.$store.commit('updateOvertimeLateWorker', {
+                        late: this.$store.state.timeDateWork.late,
+                        overtime: true
+                        })                        
+                    }                                
+            }             
+        },
+        onChangeWorkTime() {
+            //Convert to moment format
             let endWork = moment(this.endWork, this.formatTime)
             let startWork = moment(this.startWork, this.formatTime)
-
-            //Change value on true in toggle lateWorker
-            if(startWork.isAfter(moment('09:00', this.formatTime))) {
-                this.lateWorker = true
-            }
-            //Change value on true in toggle overtimeWorker
-            if(endWork.isAfter(moment('17:00', this.formatTime))) {
-                this.overtimeWorker = true
-            }
 
             //Calculate duration time
             let durationWork = moment.duration(endWork.diff(startWork));
@@ -161,17 +196,25 @@ export default {
             } else {
                 this.$store.commit('updateTimeWork',{
                     startWork : this.startWork,
-                    endWork : this.endWork,
+                    endWork : '17:11',
                     durationWork: this.durationWork
                 })                
             }            
 
             },
-        onChangeLateovertimeWorker() {
-            this.$store.commit('updateOvertimeLateWorker', {
-                late: this.lateWorker,
-                overtime: this.overtimeWorker
-            })
+        onChangeLateovertimeWorker(e) {
+            if(e.srcEvent.target.parentElement.id === 'toggleLate') {
+                this.$store.commit('updateOvertimeLateWorker', {
+                    late: !this.$store.state.timeDateWork.late,
+                    overtime: this.$store.state.timeDateWork.overtime
+                })                
+            }
+            if(e.srcEvent.target.parentElement.id === 'toggleOvertime') {
+                this.$store.commit('updateOvertimeLateWorker', {
+                    late: this.$store.state.timeDateWork.late,
+                    overtime: !this.$store.state.timeDateWork.overtime
+                })                
+            }
         },
     },
     mounted() {

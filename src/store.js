@@ -1,20 +1,25 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import moment from 'moment'
 
 Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
     selectedWorker: null,
+    emailProperties: {
+      validate: false,
+      email: ''
+    },
     timeDateWork: {
       startWork: '09:00',
       endWork: '17:00',
       durationWork: '08:00',
-      dateWork: '',
+      dateWork: moment().format('DD-MM-YYYY'),
       late: false,
       overtime: false
     },
-    dutyInfo: {
+    dutyProperties: {
       activeWeek: false,
       activeHoliday: false,
       holidayRangeDate: [],
@@ -43,16 +48,30 @@ export default new Vuex.Store({
   },
   mutations: {
 
+    updateDutyDateRange(state,payload) {
+      console.log(moment(payload.holidayRangeDateStart).year());
+      state.dutyProperties.holidayRangeDate = [];
+      state.dutyProperties.holidayRangeDate.push(new Date(moment(payload.holidayRangeDateStart).year(),moment(payload.holidayRangeDateStart).month() + 1, moment(payload.holidayRangeDateStart).date()));
+      state.dutyProperties.holidayRangeDate.push(new Date(moment(payload.holidayRangeDateEnd).year(),moment(payload.holidayRangeDateEnd).month() + 1, moment(payload.holidayRangeDateEnd).date()));
+
+    },
+    updateAdditionalTimeInDuty(state,payload) {
+      state.dutyProperties.additionalTimeInLastDuty = payload.additionalTimeInLastDuty;
+    },
+
+    updateEmailWorker(state,payload) {
+      state.emailProperties.validate = payload.validate;
+      state.emailProperties.email = payload.email;
+    },
+
     updateNewClient(state, payload) {
       state[payload.statusTask][payload.indexTask]['newClient'] = payload.newClient;
     },
 
     //Mutations from DutyComponents
     updateDuty(state, payload) {
-      state.dutyInfo.activeHoliday = payload.dutyHoliday;
-      state.dutyInfo.activeWeek = payload.dutyWeek;
-      state.dutyInfo.holidayRangeDate = payload.dutyHolidayRange;
-      state.dutyInfo.additionalTimeInLastDuty = payload.additionalTimeInLastDuty;
+      state.dutyProperties.activeHoliday = payload.dutyHoliday;
+      state.dutyProperties.activeWeek = payload.dutyWeek;    
     },
 
     //Mutations from SelectWorker
@@ -69,7 +88,7 @@ export default new Vuex.Store({
     updateTimeWork(state, payload) {
       state.timeDateWork.startWork = payload.startWork;
       state.timeDateWork.endWork = payload.endWork;
-      state.timeDateWork.durationWork = payload.durationWork
+      // state.timeDateWork.durationWork = payload.durationWork
     },
 
     updateDateWork(state, payload) {
@@ -82,7 +101,6 @@ export default new Vuex.Store({
 
     //Mutations from task
     resetRaport(state) {
-
       state['doneTasks'] = [];
       state['progressTasks'] = [];
       state['unrealizedTasks'] = [];
@@ -91,16 +109,16 @@ export default new Vuex.Store({
 
       state.selectedWorker = null,
       state['timeDateWork'].startWork = '09:00',
-      state['timeDateWork'].endWork = '09:00',
-      state['timeDateWork'].durationWork = '09:00',
-      state['timeDateWork'].dateWork = '09:00',
-      state['timeDateWork'].late = '09:00',
-      state['timeDateWork'].overtime = '09:00',
+      state['timeDateWork'].endWork = '17:00',
+      state['timeDateWork'].durationWork = '08:00',
+      state['timeDateWork'].dateWork = moment().format('DD-MM-YYYY'),
+      state['timeDateWork'].late = false,
+      state['timeDateWork'].overtime = false,
 
-      state['dutyInfo'].activeWeek = '09:00',
-      state['dutyInfo'].activeHoliday = '09:00',
-      state['dutyInfo'].holidayRangeDate = '09:00',
-      state['dutyInfo'].additionalTimeInLastDuty = '09:00',
+      state['dutyProperties'].activeWeek = false,
+      state['dutyProperties'].activeHoliday = false,
+      state['dutyProperties'].holidayRangeDate = [],
+      state['dutyProperties'].additionalTimeInLastDuty = '00:00',
 
       state['doneTasks'][0].indexTask = 0,
       state['doneTasks'][0].typeTaskTitle = 'Serwis',
@@ -112,7 +130,7 @@ export default new Vuex.Store({
       state['doneTasks'][0].togglePaid = true,
       state['doneTasks'][0].newClient = undefined,
       state['doneTasks'][0].toggleNewClient = false
-
+      console.log(state);
     },
 
     addAccordion(state, payload) {
@@ -148,10 +166,10 @@ export default new Vuex.Store({
   },
   getters: {
     stateBtnSend: state => {
-      if (state.timeDateWork.dateWork === null || state.timeDateWork.startWork === '' || state.timeDateWork.endWork === '' || state.selectedWorker === null) {
+      if (state.timeDateWork.dateWork === null || state.timeDateWork.startWork === '' || state.timeDateWork.endWork === '' || state.selectedWorker === null || !state.emailProperties.validate) {
         return true
       } else {
-        if (state.dutyInfo.holidayRangeDate.length === 0 && state.dutyInfo.activeHoliday) {
+        if (state.dutyProperties.holidayRangeDate.length === 0 && state.dutyProperties.activeHoliday) {
           return true //disabled btn
         } else {
           return false

@@ -1,5 +1,5 @@
 module.exports = (dataRaport) => {
-    console.log(dataRaport.data.dutyInfo.holidayRangeDate);
+    console.log(dataRaport.data.dutyProperties.holidayRangeDate);
     function newClientInfo(item) {
         console.log(item);
         let clientStatus;
@@ -137,8 +137,8 @@ module.exports = (dataRaport) => {
             },
             {
                 ul: [
-                    `Tygodniowy: ${(dataRaport.data.dutyInfo.activeWeek) ? 'TAK' : 'NIE'}`,
-                    `Świąteczny: ${(dataRaport.data.dutyInfo.activeHoliday) ? 'TAK' : 'NIE'} ${(dataRaport.data.dutyInfo.holidayRangeDate.length > 0) ? '(' + dataRaport.data.dutyInfo.holidayRangeDate + ')' : ''} `
+                    `Tygodniowy: ${(dataRaport.data.dutyProperties.activeWeek) ? 'TAK' : 'NIE'}`,
+                    `Świąteczny: ${(dataRaport.data.dutyProperties.activeHoliday) ? 'TAK' : 'NIE'} ${(dataRaport.data.dutyProperties.holidayRangeDate.length > 0) ? '(' + dataRaport.data.dutyProperties.holidayRangeDate + ')' : ''} `
                 ]
             },
 

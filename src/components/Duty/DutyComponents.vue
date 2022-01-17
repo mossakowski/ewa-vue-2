@@ -9,39 +9,45 @@
             <b-col sm="12">
             Dyżur tygodniowy:
                 <toggle-button
-                    v-model="dutyWeek"
-                    @change="onChangedUpdateDuty"
+                    :value="$store.state.dutyProperties.activeWeek"
+                    :sync="true"
+                    id="toggleDutyWeek"
+                    @change="onChangeUpdateDuty"
                     :width="$store.state.widthHeigthComponents.toggle.width" 
                     :height="$store.state.widthHeigthComponents.toggle.heigth"                     
                     :labels="{checked: 'Tak', unchecked: 'Nie'}"/>
             </b-col>
+            {{$store.state.dutyProperties.holidayRangeDate}}
             <b-col sm="12">
             Dyżur świąteczny:
                 <toggle-button
-                    v-model="dutyHoliday"
-                    @change="onChangedUpdateDuty"
+                    :value="$store.state.dutyProperties.activeHoliday"
+                    :sync="true"
+                    id="toggleDutyHoliday"
+                    @change="onChangeUpdateDuty"
                     :width="$store.state.widthHeigthComponents.toggle.width" 
                     :height="$store.state.widthHeigthComponents.toggle.heigth"                     
                     :labels="{checked: 'Tak', unchecked: 'Nie'}"/>
-                    <span v-if="dutyHoliday">
-                        <date-picker                        
-                            @change="onChangedUpdateDuty"
-                            v-model="dutyDateRange"                    
+                    <span v-if="$store.state.dutyProperties.activeHoliday">
+                        <date-picker
+                            @change="onChangeDutyDateRange"                        
+                            :value="$store.state.dutyProperties.holidayRangeDate"                   
                             type="date"
                             class="ml-2"
                             range
                             :clearable="false"
+                            :sync="true"
                             placeholder="Wybierz przedział czasowy">
                         </date-picker>
-                        <span class="text-danger" v-if="(dutyDateRange.length === 0 || dutyDateRange[0] === null || dutyDateRange[1] === null)">Uzupełnij pole</span>
+                        <span class="text-danger ml-1" v-if="(dutyDateRange.length === 0 || dutyDateRange[0] === null || dutyDateRange[1] === null)">Uzupełnij pole</span>
                     </span>
             </b-col>
             <b-col sm="12">
                 Dodatkowy czas pracy z ostatniego dyżuru: 
-                <VueTimepicker 
-                    :format="formatTimePicker" 
-                    @change="onChangedUpdateDuty"
-                    v-model="additionalTimeInLastDuty" 
+                <VueTimepicker
+                    :value="$store.state.dutyProperties.additionalTimeInLastDuty"                 
+                    :format="formatTimePicker"
+                    @change="onChangeAdditionalTimeInLastDuty"  
                     input-width="85px" 
                     hide-clear-button/>
             </b-col>                
@@ -78,25 +84,32 @@ export default {
         }
     },
     methods: {
-        onChangedUpdateDuty() {
-            let rangeDutyHoliday = [];
-            if(this.dutyHoliday) {
-                if(this.dutyDateRange.length === 0 || this.dutyDateRange[0] === null) {                    
-                    rangeDutyHoliday = [];
-                } else {
-                    rangeDutyHoliday= moment(this.dutyDateRange[0]).format('DD-MM-YYYY') + ' - ' + moment(this.dutyDateRange[1]).format('DD-MM-YYYY');
-                }
-            } else {
-                this.rangeDutyHoliday = [];
-                rangeDutyHoliday = [];
-            }
-
-            this.$store.commit('updateDuty', {
-                dutyWeek : this.dutyWeek,
-                dutyHoliday : this.dutyHoliday,
-                dutyHolidayRange : rangeDutyHoliday,
-                additionalTimeInLastDuty : this.additionalTimeInLastDuty
+        onChangeDutyDateRange(e) {
+            console.log(moment(e[0]).date());
+            this.$store.commit('updateDutyDateRange', {
+                holidayRangeDateStart : moment(e[0]),
+                holidayRangeDateEnd : moment(e[1])
+            });            
+        },
+        onChangeAdditionalTimeInLastDuty(e) {           
+            this.$store.commit('updateAdditionalTimeInDuty', {
+                additionalTimeInLastDuty : e.displayTime
             })
+        },
+        onChangeUpdateDuty(e) {
+            if(e.srcEvent.target.parentElement.id === 'toggleDutyWeek') {
+                this.$store.commit('updateDuty', {
+                    dutyWeek : !this.$store.state.dutyProperties.activeWeek,
+                    dutyHoliday : this.$store.state.dutyProperties.activeHoliday,
+                })                 
+            }
+            if(e.srcEvent.target.parentElement.id === 'toggleDutyHoliday') {
+                this.$store.commit('updateDuty', {
+                    dutyWeek : this.$store.state.dutyProperties.activeWeek,
+                    dutyHoliday : !this.$store.state.dutyProperties.activeHoliday,
+                })
+            }
+            
         }
     }
 }
