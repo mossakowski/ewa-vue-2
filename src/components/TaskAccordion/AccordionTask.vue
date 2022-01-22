@@ -25,8 +25,7 @@
                             @keyup="updateTask($event, indexTask, statusTask, 'nameCustomer')"
                             type="text"
                             placeholder="Wpisz dane"
-                            :value="$store.state[statusTask][indexTask].nameCustomer"
-                        >
+                            :value="$store.state[statusTask][indexTask].nameCustomer">
                         </b-form-input>
                     </b-form-group>
                     <b-form-group v-if="showToggleNewClient" label="Nowy klient?">
@@ -48,18 +47,22 @@
                             max-rows="6"
                         ></b-form-textarea>                
                     </b-form-group>
-
-                    <b-form-group v-if="showTogglePaid" label="Płatne?">
-                        <toggle-button 
-                            v-model="paidTask" 
-                            @change="resetPaidCost" 
+                    
+                    <b-form-group v-if="$store.state[this.statusTask][this.indexTask].togglePaid" label="Płatne?">
+                        <toggle-button                         
+                            :value="$store.state[statusTask][indexTask].paidTask"
+                            @change="onChangePaidTask" 
                             :width="$store.state.widthHeigthComponents.toggle.width" 
                             :height="$store.state.widthHeigthComponents.toggle.heigth" 
                             :labels="{checked: 'Tak', unchecked: 'Nie'}"/>             
                     </b-form-group>
-                    <b-input-group v-if="paidTask" size="sm" append="zł">
-                            <b-form-input v-model="paidCost" type="number" @keyup="updatePaidTask($event)"></b-form-input>
-                        </b-input-group>
+                    <b-input-group v-if="$store.state[this.statusTask][this.indexTask].paidTask">
+                        <ValidationProvider ref="refValidationCost" immediate rules="numeric|required" v-slot="{ errors }">
+                            Cena:
+                            <b-form-input style="width:100px" :value="$store.state[statusTask][indexTask].paidCost" @keyup="updatePaidTask($event), validateCost()"></b-form-input>
+                            <span class="text-danger">{{ errors[0] }}</span> 
+                        </ValidationProvider>
+                    </b-input-group>
                 </b-card-body>
             </b-collapse>
         </b-card>
@@ -71,12 +74,26 @@ import BtnRemoveTask from './BtnRemoveTask.vue';
 import { ToggleButton } from 'vue-js-toggle-button';
 import { VueAutosuggest } from "vue-autosuggest";
 import typeTasksArr from './typeTasksArr'
+import { ValidationProvider, extend } from 'vee-validate';
+import { numeric, required } from 'vee-validate/dist/rules';
+
+extend('numeric', {
+    ...numeric,
+    message: 'Pole musi zawierać liczbę!'
+})
+
+extend('required', {
+    ...required,
+    message: 'Pole wymagane'
+})
+
 export default {
     name : 'AccordionTask',
     components : {
         BtnRemoveTask,
         ToggleButton,
-        VueAutosuggest
+        VueAutosuggest,
+        ValidationProvider
     },
     props: {
         indexTask: Number,
@@ -88,7 +105,6 @@ export default {
             query: 'Serwis',
             newClient2 : this.$store.state[this.statusTask][this.indexTask].newClient,
             showToggleNewClient : this.$store.state[this.statusTask][this.indexTask].toggleNewClient,
-            showTogglePaid : this.$store.state[this.statusTask][this.indexTask].togglePaid,
             paidTask : this.$store.state[this.statusTask][this.indexTask].paidTask,
             paidCost : this.$store.state[this.statusTask][this.indexTask].paidCost,
             selected: null,
@@ -132,10 +148,16 @@ export default {
         }
     },
     methods: {
+        async validateCost() {
+            let validationCost = await this.$refs.refValidationCost.validate();
+                this.$store.commit('updatePaidCostValid', {
+                    paidCostValid : validationCost.valid
+                });
+        },
         onSelectedtypeTask(selected) {
+            console.log(selected.item.togglePaid);
             this.toggleNewClient = selected.item.toggleNewClient;
             this.showToggleNewClient = selected.item.toggleNewClient;
-            this.showTogglePaid = selected.item.togglePaid;
             this.$store.commit('updateSelectedtypeTask', {
                 'typeTaskTitle' : selected.item.name,
                 'typeTask' : selected.item.type,
@@ -159,7 +181,8 @@ export default {
             this.$store.commit('updatePaidTask', {
                 'indexTask' : this.indexTask,
                 'statusTask' : this.statusTask,                
-                'paidCost' : e.target.value
+                'paidCost' : e.target.value,
+                'paidTask' : this.$store.state[this.statusTask][this.indexTask].paidTask
             })
         },
         updateNewClient(e) {
@@ -169,13 +192,24 @@ export default {
                 'newClient' : e.value
             })            
         },
-        resetPaidCost() {
-            if(!this.paidTask) {
+        onChangePaidTask(e) {
+            if(e.value) {
                 this.$store.commit('updatePaidTask', {
                     'indexTask' : this.indexTask,
                     'statusTask' : this.statusTask,                
-                    'paidCost' : '0'                
-                })                
+                    'paidCost' : this.$store.state[this.statusTask][this.indexTask].paidCost,
+                    'paidTask' : true
+                })                 
+            } else {
+                this.$store.commit('updatePaidCostValid', {
+                    paidCostValid : true
+                });
+                this.$store.commit('updatePaidTask', {
+                    'indexTask' : this.indexTask,
+                    'statusTask' : this.statusTask,                
+                    'paidCost' : '0',
+                    'paidTask' : false
+                })                 
             }
         },
         filterResults() {
@@ -244,7 +278,11 @@ export default {
 .b-card-container >>> li:hover {
     cursor: pointer;
 }
- 
+
+.b-card-container >>> .form-control {
+    width: 100%;
+}
+
 .b-card-container >>> .b-card-container {
     display: flex;
     justify-content: center;
@@ -257,6 +295,8 @@ export default {
     background: #fff;
     width: 100%;
     border-radius: 10px;
+    border-left: solid 1px #ced4da;
+    border-right: solid 1px #ced4da;
 }
 
 .b-card-container >>> #autosuggest { 

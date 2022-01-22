@@ -1,7 +1,17 @@
+const moment = require('moment');
+
 module.exports = (dataRaport) => {
-    console.log(dataRaport.data.dutyProperties.holidayRangeDate);
+console.log(dataRaport.data.dutyProperties.additionalTimeInLastDuty);
+    function convertDateDutyHoliday() {
+        let date =  dataRaport.data.dutyProperties.holidayRangeDate;
+        console.log(date);
+        if(date[0] === null || date.length === 0) {
+            return '';
+        } else {
+            return `${moment(date[0]).format('DD-MM-YYYY')} - ${moment(date[1]).format('DD-MM-YYYY')}`;
+        }
+    }
     function newClientInfo(item) {
-        console.log(item);
         let clientStatus;
         switch(item) {
             case true:
@@ -31,7 +41,7 @@ module.exports = (dataRaport) => {
         for(let item of dataRaport.data[statusTask]) {
             let ulElArr = [];
             for(let [property, value] of Object.entries(item)) {
-                if(property != 'typeTask' && property != 'indexTask' && property != 'togglePaid' && property != 'toggleNewClient') {
+                if(property != 'typeTask' && property != 'indexTask' && property != 'togglePaid' && property != 'toggleNewClient' && property != 'paidTask') {
                     if(property === 'paidCost') {
                         ulElArr.push(paidInfo(value));
                     }
@@ -137,8 +147,8 @@ module.exports = (dataRaport) => {
             },
             {
                 ul: [
-                    `Tygodniowy: ${(dataRaport.data.dutyProperties.activeWeek) ? 'TAK' : 'NIE'}`,
-                    `Świąteczny: ${(dataRaport.data.dutyProperties.activeHoliday) ? 'TAK' : 'NIE'} ${(dataRaport.data.dutyProperties.holidayRangeDate.length > 0) ? '(' + dataRaport.data.dutyProperties.holidayRangeDate + ')' : ''} `
+                    `Tygodniowy: ${(dataRaport.data.dutyProperties.activeWeek) ? 'TAK' : 'NIE'} ${(dataRaport.data.dutyProperties.additionalTimeInLastDuty === '00:00') ? '' :  '(Dodatkowy czas podczas ostatniego dyżuru: ' + dataRaport.data.dutyProperties.additionalTimeInLastDuty + ')'}`,
+                    `Świąteczny: ${(dataRaport.data.dutyProperties.activeHoliday) ? 'TAK' : 'NIE'} ${convertDateDutyHoliday()} `,
                 ]
             },
 

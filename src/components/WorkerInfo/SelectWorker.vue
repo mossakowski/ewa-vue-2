@@ -66,12 +66,12 @@ export default {
                 nameWorker: value
             })
         },
-        async inputEmailWorker() {
+        async inputEmailWorker(e) {
             let validationEmail = await this.$refs.refValidationEmail.validate();
             
             this.$store.commit('updateEmailWorker', {
                 validate : validationEmail.valid,
-                email: this.emailWorker
+                email: e.target.value
             })
         }
     }

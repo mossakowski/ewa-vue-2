@@ -23,22 +23,26 @@ export default new Vuex.Store({
       activeWeek: false,
       activeHoliday: false,
       holidayRangeDate: [],
-      additionalTimeInLastDuty: '00:00'
+      additionalTimeInLastDuty: '00:00',
+      additionalTimeInLastDutyValidation : true
     },
-    doneTasks: [{
-      indexTask: 0,
-      typeTaskTitle: 'Serwis',
-      typeTask: 'service',
-      nameCustomer: '',
-      description: '',
-      paidCost: '0',
-      paidTask: false,
-      togglePaid: true,
-      newClient: undefined,
-      toggleNewClient: false
-    }, ],
+    doneTasks: [
+      {
+        indexTask: 0,
+        typeTaskTitle: 'Serwis',
+        typeTask: 'service',
+        nameCustomer: '',
+        description: '',
+        paidCost: '0',
+        paidTask: false,
+        togglePaid: true,
+        newClient: undefined,
+        toggleNewClient: false
+    }
+  ],
     progressTasks: [],
     unrealizedTasks: [],
+    paidCostValid : true,
     widthHeigthComponents: {
       toggle: {
         width: 55,
@@ -48,15 +52,17 @@ export default new Vuex.Store({
   },
   mutations: {
 
-    updateDutyDateRange(state,payload) {
-      console.log(moment(payload.holidayRangeDateStart).year());
+    updatePaidCostValid(state, payload) {
+      state.paidCostValid = payload.paidCostValid;
+    },
+    updateDutyHolidayDateRange(state,payload) {
       state.dutyProperties.holidayRangeDate = [];
-      state.dutyProperties.holidayRangeDate.push(new Date(moment(payload.holidayRangeDateStart).year(),moment(payload.holidayRangeDateStart).month() + 1, moment(payload.holidayRangeDateStart).date()));
-      state.dutyProperties.holidayRangeDate.push(new Date(moment(payload.holidayRangeDateEnd).year(),moment(payload.holidayRangeDateEnd).month() + 1, moment(payload.holidayRangeDateEnd).date()));
-
+      state.dutyProperties.holidayRangeDate.push(new Date(moment(payload.holidayRangeDateStart).year(),moment(payload.holidayRangeDateStart).month(), moment(payload.holidayRangeDateStart).date()));
+      state.dutyProperties.holidayRangeDate.push(new Date(moment(payload.holidayRangeDateEnd).year(),moment(payload.holidayRangeDateEnd).month(), moment(payload.holidayRangeDateEnd).date()));
     },
     updateAdditionalTimeInDuty(state,payload) {
       state.dutyProperties.additionalTimeInLastDuty = payload.additionalTimeInLastDuty;
+      state.dutyProperties.additionalTimeInLastDutyValidation = payload.additionalTimeInLastDutyValidation;
     },
 
     updateEmailWorker(state,payload) {
@@ -105,6 +111,9 @@ export default new Vuex.Store({
       state['progressTasks'] = [];
       state['unrealizedTasks'] = [];
 
+      state['emailProperties'].email = '';
+      state['emailProperties'].validate = false;
+      
       state['doneTasks'][0] = {};
 
       state.selectedWorker = null,
@@ -130,7 +139,6 @@ export default new Vuex.Store({
       state['doneTasks'][0].togglePaid = true,
       state['doneTasks'][0].newClient = undefined,
       state['doneTasks'][0].toggleNewClient = false
-      console.log(state);
     },
 
     addAccordion(state, payload) {
@@ -157,16 +165,24 @@ export default new Vuex.Store({
       state[payload.statusTask][payload.indexTask]['typeTaskTitle'] = payload.typeTaskTitle;
       Vue.set(state[payload.statusTask][payload.indexTask],'typeTask', payload.typeTask);
       state[payload.statusTask][payload.indexTask]['paidTask'] = payload.paidTask;
-      state[payload.statusTask][payload.indexTask]['paidTask'] = payload.paidTask;
+      state[payload.statusTask][payload.indexTask]['togglePaid'] = payload.togglePaid;
       Vue.set(state[payload.statusTask][payload.indexTask], 'newClient', payload.newClient);
     },
     updatePaidTask(state, payload) {
       state[payload.statusTask][payload.indexTask]['paidCost'] = payload.paidCost;
+      state[payload.statusTask][payload.indexTask]['paidTask'] = payload.paidTask;
     }
   },
   getters: {
     stateBtnSend: state => {
-      if (state.timeDateWork.dateWork === null || state.timeDateWork.startWork === '' || state.timeDateWork.endWork === '' || state.selectedWorker === null || !state.emailProperties.validate) {
+      console.log(state.timeDateWork.dateWork + " " +  state.timeDateWork.startWork + " " + state.timeDateWork.endWork + " " + state.selectedWorker + " " + state.emailProperties.validate + " " + state.dutyProperties.additionalTimeInLastDutyValidation + " " + state.paidCostValid)
+      if (state.timeDateWork.dateWork === null || 
+          state.timeDateWork.startWork === '' || 
+          state.timeDateWork.endWork === '' || 
+          state.selectedWorker === null || 
+          !state.emailProperties.validate ||
+          !state.dutyProperties.additionalTimeInLastDutyValidation ||
+          !state.paidCostValid) {
         return true
       } else {
         if (state.dutyProperties.holidayRangeDate.length === 0 && state.dutyProperties.activeHoliday) {

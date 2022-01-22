@@ -4,37 +4,37 @@
             <b-col md="4">
                 <label>Rozpoczęcie pracy: </label>
                 <ValidationProvider :rules="{required: true, regex: /^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/}" v-slot="{ errors }"> 
-                <VueTimepicker
-                    :value="$store.state.timeDateWork.startWork"                
-                    @change="onChangeStartWork"
-                    class="ml-1"
-                    hour-interval="1"
-                    minute-interval="5"
-                    autocomplete="on"
-                    :input-width="inputWidth"
-                    auto-scroll
-                    hide-clear-button>
-                </VueTimepicker>
-                <br>
-                <span class="text-danger">{{ errors[0] }}</span>
+                    <VueTimepicker
+                        :value="$store.state.timeDateWork.startWork"                
+                        @change="onChangeStartWork"
+                        class="ml-1"
+                        hour-interval="1"
+                        minute-interval="5"
+                        autocomplete="on"
+                        :input-width="inputWidth"
+                        auto-scroll
+                        hide-clear-button>
+                    </VueTimepicker>
+                    <br>
+                    <span class="text-danger">{{ errors[0] }}</span>
                 </ValidationProvider>                
             </b-col>
             <b-col md="4">
                 <label>Koniec pracy: </label>
                 <ValidationProvider :rules="{required: true, regex: /^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/}" v-slot="{ errors }"> 
-                <VueTimepicker
-                    :value="$store.state.timeDateWork.endWork"
-                    @change="onChangeEndWork"
-                    class="ml-1"
-                    hour-interval="1"
-                    minute-interval="5"         
-                    autocomplete="on"
-                    :input-width="inputWidth" 
-                    auto-scroll
-                    hide-clear-button>
-                </VueTimepicker>
-                <br>
-                <span class="text-danger">{{ errors[0] }}</span>
+                    <VueTimepicker
+                        :value="$store.state.timeDateWork.endWork"
+                        @change="onChangeEndWork"
+                        class="ml-1"
+                        hour-interval="1"
+                        minute-interval="5"         
+                        autocomplete="on"
+                        :input-width="inputWidth" 
+                        auto-scroll
+                        hide-clear-button>
+                    </VueTimepicker>
+                    <br>
+                    <span class="text-danger">{{ errors[0] }}</span>
                 </ValidationProvider>
             </b-col>
             <b-col md="4">
@@ -88,7 +88,7 @@
 </template>
 
 <script>
-import VueTimepicker from 'vue2-timepicker/src/vue-timepicker.vue'
+import VueTimepicker from 'vue2-timepicker/src/vue-timepicker.vue';
 import DatePicker from 'vue2-datepicker';
 import moment from 'moment';
 import { ToggleButton } from 'vue-js-toggle-button';

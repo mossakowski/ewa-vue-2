@@ -8,10 +8,9 @@ module.exports = (server) => {
     io.on('connection', function (socket) {
         console.log('connection with front end (socket io)');
         socket.on('SEND_RAPORT',async (dataRaport, callback) => {
-            console.log(dataRaport);
             let templatePdf = await moduleCreateTemplatePdf(dataRaport);
             let fileName = await moduleCreatePdf(templatePdf,dataRaport);
-            // await moduleSendEmail(fileName, dataRaport.data.emailProperties.email, dataRaport.data.timeDateWork.dateWork, dataRaport.data.selectedWorker);
+            await moduleSendEmail(fileName, dataRaport.data.emailProperties.email, dataRaport.data.timeDateWork.dateWork, dataRaport.data.selectedWorker);
             // await moduleRemovePdf(fileName);
             callback('');
         })
