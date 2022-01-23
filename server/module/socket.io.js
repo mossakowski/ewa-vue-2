@@ -11,7 +11,7 @@ module.exports = (server) => {
             let templatePdf = await moduleCreateTemplatePdf(dataRaport);
             let fileName = await moduleCreatePdf(templatePdf,dataRaport);
             await moduleSendEmail(fileName, dataRaport.data.emailProperties.email, dataRaport.data.timeDateWork.dateWork, dataRaport.data.selectedWorker);
-            // await moduleRemovePdf(fileName);
+            await moduleRemovePdf(fileName);
             callback('');
         })
     });
