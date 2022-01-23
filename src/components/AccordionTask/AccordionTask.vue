@@ -1,11 +1,11 @@
 <template>
     <div class="b-card-container">
         <b-card no-body class="mb-1">
-            <b-card-header v-b-toggle='"accordion-" + statusTask + "-" + indexTask' header-tag="header" style="cursor: pointer" class="bg-info hover-pointer text-light p-1 px-3 d-flex align-items-center justify-content-between" role="tab">
+            <b-card-header v-b-toggle='"accordion-" + statusTask + "-" + indexTask' header-tag="header" class="bg-info hover-pointer text-light p-1 px-3 d-flex align-items-center justify-content-between" role="tab">
                 <span>#{{indexTask +1}} {{$store.state[statusTask][indexTask].typeTaskTitle}}</span>
                 <btn-remove-task :statusTask="statusTask" :idTask="indexTask"></btn-remove-task>
             </b-card-header>
-            <b-collapse :id='"accordion-" + statusTask + "-" + indexTask' visible :data-index='indexTask' :accordion="myAccordion" role="tabpanel">
+            <b-collapse :id='"accordion-" + statusTask + "-" + indexTask' visible :accordion="accordionGroupName" role="tabpanel">
                 <b-card-body>
                     <b-form-group label="Rodzaj pracy:">
                             <vue-autosuggest                      
@@ -20,7 +20,7 @@
                             </vue-autosuggest>                                        
                     </b-form-group>
 
-                <b-form-group label="Imię i nazwisko klienta/ nazwa firmy/ miejsce:">
+                    <b-form-group label="Imię i nazwisko klienta/ nazwa firmy/ miejsce:">
                         <b-form-input
                             @keyup="updateTask($event, indexTask, statusTask, 'nameCustomer')"
                             type="text"
@@ -28,7 +28,8 @@
                             :value="$store.state[statusTask][indexTask].nameCustomer">
                         </b-form-input>
                     </b-form-group>
-                    <b-form-group v-if="showToggleNewClient" label="Nowy klient?">
+
+                    <b-form-group v-if="$store.state[statusTask][indexTask].toggleNewClient" label="Nowy klient?">
                         <toggle-button
                             :value="$store.state[statusTask][indexTask].newClient"
                             @change="updateNewClient" 
@@ -56,10 +57,11 @@
                             :height="$store.state.widthHeigthComponents.toggle.heigth" 
                             :labels="{checked: 'Tak', unchecked: 'Nie'}"/>             
                     </b-form-group>
+
                     <b-input-group v-if="$store.state[this.statusTask][this.indexTask].paidTask">
                         <ValidationProvider ref="refValidationCost" immediate rules="numeric|required" v-slot="{ errors }">
                             Cena:
-                            <b-form-input style="width:100px" :value="$store.state[statusTask][indexTask].paidCost" @keyup="updatePaidTask($event), validateCost()"></b-form-input>
+                            <b-form-input style="width:100px" v-model="costService" :value="$store.state[statusTask][indexTask].paidCost" @keyup="updatePaidTask($event), validateCost()"></b-form-input>
                             <span class="text-danger">{{ errors[0] }}</span> 
                         </ValidationProvider>
                     </b-input-group>
@@ -70,7 +72,7 @@
 </template>
 
 <script>
-import BtnRemoveTask from './BtnRemoveTask.vue';
+import BtnRemoveTask from './AccordionTaskBtnRemoveTask.vue';
 import { ToggleButton } from 'vue-js-toggle-button';
 import { VueAutosuggest } from "vue-autosuggest";
 import typeTasksArr from './typeTasksArr'
@@ -101,12 +103,9 @@ export default {
     },
     data() {
         return {
-            myAccordion: `my-accordion-${this.statusTask}`,
+            costService : null,
+            accordionGroupName: `my-accordion-${this.statusTask}`,
             query: 'Serwis',
-            newClient2 : this.$store.state[this.statusTask][this.indexTask].newClient,
-            showToggleNewClient : this.$store.state[this.statusTask][this.indexTask].toggleNewClient,
-            paidTask : this.$store.state[this.statusTask][this.indexTask].paidTask,
-            paidCost : this.$store.state[this.statusTask][this.indexTask].paidCost,
             selected: null,
             inputProps: {
                 id: `autosuggest__input_${this.indexTask}`,
@@ -124,25 +123,25 @@ export default {
                     }
                 },
                 networkBulding: {
-                limit: 6,
-                label: "Budowa sieci",
-                onSelected: selected => {
-                    this.onSelectedtypeTask(selected)
-                    }
+                    limit: 6,
+                    label: "Budowa sieci",
+                    onSelected: selected => {
+                        this.onSelectedtypeTask(selected)
+                        }
                 },
                 office: {
-                limit: 6,
-                label: "Biuro",
-                onSelected: selected => {
-                    this.onSelectedtypeTask(selected)
-                    }
+                    limit: 6,
+                    label: "Biuro",
+                    onSelected: selected => {
+                        this.onSelectedtypeTask(selected)
+                        }
                 },
                 serwis: {
-                limit: 6,
-                label: "Serwis",
-                onSelected: selected => {
-                    this.onSelectedtypeTask(selected)
-                    }
+                    limit: 6,
+                    label: "Serwis",
+                    onSelected: selected => {
+                        this.onSelectedtypeTask(selected)
+                        }
                 }
             }        
         }
@@ -154,10 +153,31 @@ export default {
                     paidCostValid : validationCost.valid
                 });
         },
+        onChangePaidTask(e) {            
+            if(e.value) {   
+                this.$store.commit('updatePaidTask', {
+                    'indexTask' : this.indexTask,
+                    'statusTask' : this.statusTask,                
+                    'paidCost' : '0',
+                    'paidTask' : true
+                })
+                this.$store.commit('updatePaidCostValid', {
+                    paidCostValid : false
+                });                                 
+            } else {
+                this.$store.commit('updatePaidCostValid', {
+                    paidCostValid : true
+                });
+                this.$store.commit('updatePaidTask', {
+                    'indexTask' : this.indexTask,
+                    'statusTask' : this.statusTask,                
+                    'paidCost' : '0',
+                    'paidTask' : false
+                })                 
+            }
+            console.log(this.$store.state.paidCostValid);
+        },        
         onSelectedtypeTask(selected) {
-            console.log(selected.item.togglePaid);
-            this.toggleNewClient = selected.item.toggleNewClient;
-            this.showToggleNewClient = selected.item.toggleNewClient;
             this.$store.commit('updateSelectedtypeTask', {
                 'typeTaskTitle' : selected.item.name,
                 'typeTask' : selected.item.type,
@@ -192,26 +212,6 @@ export default {
                 'newClient' : e.value
             })            
         },
-        onChangePaidTask(e) {
-            if(e.value) {
-                this.$store.commit('updatePaidTask', {
-                    'indexTask' : this.indexTask,
-                    'statusTask' : this.statusTask,                
-                    'paidCost' : this.$store.state[this.statusTask][this.indexTask].paidCost,
-                    'paidTask' : true
-                })                 
-            } else {
-                this.$store.commit('updatePaidCostValid', {
-                    paidCostValid : true
-                });
-                this.$store.commit('updatePaidTask', {
-                    'indexTask' : this.indexTask,
-                    'statusTask' : this.statusTask,                
-                    'paidCost' : '0',
-                    'paidTask' : false
-                })                 
-            }
-        },
         filterResults() {
 
             this.suggestionsDisplay = [];
@@ -236,6 +236,10 @@ export default {
 </script>
 
 <style scoped>
+
+.b-card-container >>> .card-header {
+    cursor: pointer;
+}
 
 .b-card-container >>> input {
     padding: 0.5rem;

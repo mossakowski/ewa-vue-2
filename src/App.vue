@@ -1,8 +1,8 @@
 <template>
     <b-container>
-      <navbar-components/>     
-      <WorkerComponents class="mb-2"/>
-      <time-worker />
+      <TheNavbar/>     
+      <WorkerFormSelect class="mb-2"/>
+      <WorkerTime/>
       
       <div class="accordion mt-2" role="tablist">
         <h2>2. Prace zakończone</h2>
@@ -13,7 +13,7 @@
           :key="$store.state.doneTasks[index].indexTask"
           :indexTask="index"
           statusTask="doneTasks" />
-        <btn-add-accordion stageWork="doneTasks"></btn-add-accordion>
+        <btn-add-task statusTask="doneTasks"></btn-add-task>
       </div>
 
       <div class="accordion mt-2" role="tablist">
@@ -25,9 +25,8 @@
           :key="$store.state.progressTasks[index].indexTask"
           :indexTask="index"
           statusTask="progressTasks" />
-        <btn-add-accordion stageWork="progressTasks"></btn-add-accordion>
+        <btn-add-task statusTask="progressTasks"></btn-add-task>
       </div>
-
     
       <div class="accordion mt-2" role="tablist">
         <h2>4. Prace niezrealizowane</h2>
@@ -38,54 +37,42 @@
             :key="$store.state.unrealizedTasks[index].indexTask"
             :indexTask="index"
             statusTask="unrealizedTasks" />
-        <btn-add-accordion stageWork="unrealizedTasks"></btn-add-accordion>
+        <btn-add-task statusTask="unrealizedTasks"></btn-add-task>
       </div>
 
-      <duty-components></duty-components>
-      <summary-components></summary-components>
+      <TheDuty/>
+
+      <TheSummary/>
   
+      <BtnSendResetRaport/>
 
-
-      <btn-send-reset-raport/>
-
-    <TheFooter />
+      <TheFooter/>
   </b-container>
 </template>
 
 <script>
-import NavbarComponents from './components/Layout/NavbarComponents.vue'
-import WorkerComponents from './components/WorkerInfo/SelectWorker.vue'
-import TimeWorker from './components/WorkerInfo/TimeWorker.vue'
-import AccordionTask from './components/TaskAccordion/AccordionTask.vue'
-import BtnAddAccordion from './components/TaskAccordion/BtnAddTask.vue'
-import BtnSendResetRaport from './components/Btn/BtnSendResetRaport.vue'
-import SummaryComponents from './components/Layout/SummaryComponents.vue'
-import DutyComponents from './components/Duty/DutyComponents.vue'
+import TheNavbar from './components/Layout/TheNavbar.vue'
+import WorkerFormSelect from './components/WorkerInfo/TheWorkerFormSelect.vue'
+import WorkerTime from './components/WorkerInfo/TheWorkerTime.vue'
+import AccordionTask from './components/AccordionTask/AccordionTask.vue'
+import BtnAddTask from './components/AccordionTask/AccordionTaskBtnAddTask.vue'
+import BtnSendResetRaport from './components/Btn/TheBtnSendResetRaport.vue'
+import TheSummary from './components/Layout/TheSummary.vue'
+import TheDuty from './components/Duty/TheDuty.vue'
 import TheFooter from './components/Layout/TheFooter.vue'
 
 export default {
   name: 'App',
   components: {
-    NavbarComponents,
-    WorkerComponents,
-    TimeWorker,
+    TheNavbar,
+    WorkerFormSelect,
+    WorkerTime,
     AccordionTask,
-    BtnAddAccordion,
+    BtnAddTask,
     BtnSendResetRaport,
-    SummaryComponents,
-    DutyComponents,
+    TheSummary,
+    TheDuty,
     TheFooter
   }
 }
 </script>
-
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
-</style>

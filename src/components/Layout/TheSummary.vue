@@ -11,9 +11,3 @@
     <div class="text-danger" v-else>Aby wyświetlić podsumowanie, wybierz pracownika</div>     
   </div>
 </template>
-
-<script>
-export default {
-
-}
-</script>

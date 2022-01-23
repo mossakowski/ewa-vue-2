@@ -28,21 +28,23 @@
                     :width="$store.state.widthHeigthComponents.toggle.width" 
                     :height="$store.state.widthHeigthComponents.toggle.heigth"                     
                     :labels="{checked: 'Tak', unchecked: 'Nie'}"/>
-                    <span v-if="$store.state.dutyProperties.activeHoliday">
-                        <date-picker
-                            @change="onChangeDutyHolidayDateRange"                        
-                            :value="$store.state.dutyProperties.holidayRangeDate"                   
-                            type="date"
-                            class="ml-2"
-                            range
-                            :clearable="false"
-                            :sync="true"
-                            :format="formatDatePicker"
-                            placeholder="Wybierz przedział czasowy">
-                        </date-picker>
-                        <span class="text-danger ml-1" v-if="($store.state.dutyProperties.holidayRangeDate.length === 0 || $store.state.dutyProperties.holidayRangeDate[0] === null || $store.state.dutyProperties.holidayRangeDate[1] === null)">Uzupełnij pole</span>
-                    </span>
+
+                <span v-if="$store.state.dutyProperties.activeHoliday">
+                    <date-picker
+                        @change="onChangeDutyHolidayDateRange"                        
+                        :value="$store.state.dutyProperties.holidayRangeDate"                   
+                        type="date"
+                        class="ml-2"
+                        range
+                        :clearable="false"
+                        :sync="true"
+                        :format="formatDatePicker"
+                        placeholder="Wybierz przedział czasowy">
+                    </date-picker>
+                    <span class="text-danger ml-1" v-if="($store.state.dutyProperties.holidayRangeDate.length === 0 || $store.state.dutyProperties.holidayRangeDate[0] === null || $store.state.dutyProperties.holidayRangeDate[1] === null)">Uzupełnij pole</span>
+                </span>
             </b-col>
+
             <b-col sm="12">
                 Dodatkowy czas pracy z ostatniego dyżuru:
                 <ValidationProvider ref="refValidationTimeInLastDuty" :rules="{required: true, regex: /^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/}" v-slot="{ errors }">  
@@ -85,10 +87,6 @@ export default {
     },
     data() {
         return {
-            dutyWeek: false,
-            dutyHoliday: false,
-            dutyDateRange : [],
-            additionalTimeInLastDuty : '00:00',
             formatTimePicker: 'HH:mm',
             formatDatePicker : 'DD-MM-YYYY'                      
         }
@@ -104,8 +102,7 @@ export default {
             let validationInput = await this.$refs.refValidationTimeInLastDuty.validate();           
             this.$store.commit('updateAdditionalTimeInDuty', {
                 additionalTimeInLastDuty : e.displayTime,
-                additionalTimeInLastDutyValidation : validationInput.valid
-                
+                additionalTimeInLastDutyValidation : validationInput.valid                
             })
         },
         onChangeUpdateDuty(e) {
@@ -127,7 +124,6 @@ export default {
                     dutyHoliday : !this.$store.state.dutyProperties.activeHoliday,
                 })
             }
-            
         }
     }
 }

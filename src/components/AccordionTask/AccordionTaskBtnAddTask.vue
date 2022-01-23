@@ -1,12 +1,12 @@
 <template>
-  <b-button @click="addAccordion">Dodaj temat</b-button>
+  <b-button @click="addAccordion">Dodaj zadanie</b-button>
 </template>
 
 <script>
 export default {
   name: 'BtnAddAccordion',
   props: {
-    stageWork: String
+    statusTask: String
   },
   data() {
     return {
@@ -18,7 +18,7 @@ export default {
       this.$store.commit('addAccordion', {
         indexTask: ++this.countTask,
 
-        stageWork : this.stageWork,
+        statusTask : this.statusTask,
         typeTaskTitle: 'Serwis',
 
         typeTask : 'service',

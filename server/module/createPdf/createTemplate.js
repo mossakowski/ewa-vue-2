@@ -1,7 +1,6 @@
 const moment = require('moment');
 
 module.exports = (dataRaport) => {
-console.log(dataRaport.data.dutyProperties.additionalTimeInLastDuty);
     function convertDateDutyHoliday() {
         let date =  dataRaport.data.dutyProperties.holidayRangeDate;
         console.log(date);
@@ -57,7 +56,7 @@ console.log(dataRaport.data.dutyProperties.additionalTimeInLastDuty);
             let ulEl = ulElArr.join(' - ');
             ulList.push(ulEl);
         }
-        return ulList;
+        return (ulList.length > 0) ? ulList : ['Brak pozycji'];
     }
     let docDefinition = {
         content: [{
@@ -160,7 +159,7 @@ console.log(dataRaport.data.dutyProperties.additionalTimeInLastDuty);
             },
             {
                 text: 'Instalacje',
-                margin: [0, 15, 0, 0],
+                margin: [0, 0, 0, 0],
                 fontSize: 16,
                 bold: true
             },

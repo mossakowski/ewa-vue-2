@@ -1,31 +1,35 @@
 <template>
     <div>
-        <b-row>
-            <b-col md="4">
+        <b-row class="mb-1">
+            <b-col lg="2" md="3">
                 <label>Rozpoczęcie pracy: </label>
+            </b-col>
+            <b-col md="2">
                 <ValidationProvider :rules="{required: true, regex: /^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/}" v-slot="{ errors }"> 
                     <VueTimepicker
                         :value="$store.state.timeDateWork.startWork"                
                         @change="onChangeStartWork"
-                        class="ml-1"
                         hour-interval="1"
                         minute-interval="5"
                         autocomplete="on"
                         :input-width="inputWidth"
-                        auto-scroll
+                        auto-scroll                        
                         hide-clear-button>
                     </VueTimepicker>
                     <br>
                     <span class="text-danger">{{ errors[0] }}</span>
                 </ValidationProvider>                
             </b-col>
-            <b-col md="4">
+        </b-row>
+        <b-row class="mb-1">
+            <b-col lg="2" md="3">
                 <label>Koniec pracy: </label>
+            </b-col>
+            <b-col md="2">
                 <ValidationProvider :rules="{required: true, regex: /^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/}" v-slot="{ errors }"> 
                     <VueTimepicker
                         :value="$store.state.timeDateWork.endWork"
                         @change="onChangeEndWork"
-                        class="ml-1"
                         hour-interval="1"
                         minute-interval="5"         
                         autocomplete="on"
@@ -37,8 +41,12 @@
                     <span class="text-danger">{{ errors[0] }}</span>
                 </ValidationProvider>
             </b-col>
-            <b-col md="4">
+        </b-row>
+        <b-row>
+            <b-col lg="2" md="3">
                 Data:
+            </b-col>
+            <b-col md="2">
                 <ValidationProvider :rules="{required: true}" v-slot="{ errors }">                 
                     <date-picker
                         :value="$store.state.timeDateWork.dateWork"
@@ -46,7 +54,7 @@
                         :format="formatDate"
                         value-type="format"              
                         type="date"
-                        class="ml-2"
+                        style="width:100%"
                         placeholder="Wybierz datę"
                     ></date-picker>
                     <br>
@@ -56,31 +64,31 @@
         </b-row>
 
         <b-row class="mt-2">
-            <b-col md="2">
-            Spóźnienie?
-            <toggle-button
-                id="toggleLate"                
-                :value="$store.state.timeDateWork.late" 
-                @change="onChangeLateovertimeWorker"
-                :width="$store.state.widthHeigthComponents.toggle.width" 
-                :height="$store.state.widthHeigthComponents.toggle.heigth" 
-                :sync="true"
-                :color="toggleColor"
-                :labels="toggleText"/>
+            <b-col md="3">
+                Spóźnienie?
+                <toggle-button
+                    id="toggleLate"                
+                    :value="$store.state.timeDateWork.late" 
+                    @change="onChangeLateovertimeWorker"
+                    :width="$store.state.widthHeigthComponents.toggle.width" 
+                    :height="$store.state.widthHeigthComponents.toggle.heigth" 
+                    :sync="true"
+                    :color="toggleColor"
+                    :labels="toggleText"/>
             </b-col>
-            <b-col md="2">
-            Nadgodziny?
-            <toggle-button
-                id="toggleOvertime"
-                :value="$store.state.timeDateWork.overtime"
-                @change="onChangeLateovertimeWorker"  
-                :width="$store.state.widthHeigthComponents.toggle.width" 
-                :height="$store.state.widthHeigthComponents.toggle.heigth"                 
-                :sync="true"
-                :color="toggleColor"
-                :labels="toggleText" /> 
+            <b-col md="3">
+                Nadgodziny?
+                <toggle-button
+                    id="toggleOvertime"
+                    :value="$store.state.timeDateWork.overtime"
+                    @change="onChangeLateovertimeWorker"  
+                    :width="$store.state.widthHeigthComponents.toggle.width" 
+                    :height="$store.state.widthHeigthComponents.toggle.heigth"                 
+                    :sync="true"
+                    :color="toggleColor"
+                    :labels="toggleText" /> 
             </b-col>
-            <b-col md="2">
+            <b-col md="3">
                 Czas pracy: {{(durationWork === 'undefined:undefined') ? 'Popraw czas' : durationWork}}
             </b-col>               
         </b-row>
@@ -121,7 +129,7 @@ export default {
             formatDate: 'DD-MM-YYYY',
             toggleColor : '#ffc107',
             toggleText : {checked: 'Tak', unchecked: 'Nie'},
-            inputWidth: '100px'
+            inputWidth: '100%'
         }
     },
     methods: {

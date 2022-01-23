@@ -54,11 +54,16 @@ export default new Vuex.Store({
 
     updatePaidCostValid(state, payload) {
       state.paidCostValid = payload.paidCostValid;
+      console.log(state.paidCostValid );
     },
     updateDutyHolidayDateRange(state,payload) {
       state.dutyProperties.holidayRangeDate = [];
-      state.dutyProperties.holidayRangeDate.push(new Date(moment(payload.holidayRangeDateStart).year(),moment(payload.holidayRangeDateStart).month(), moment(payload.holidayRangeDateStart).date()));
-      state.dutyProperties.holidayRangeDate.push(new Date(moment(payload.holidayRangeDateEnd).year(),moment(payload.holidayRangeDateEnd).month(), moment(payload.holidayRangeDateEnd).date()));
+      if(payload.holidayRangeDateStart != '' || payload.holidayRangeDateEnd != '') {
+        state.dutyProperties.holidayRangeDate.push(new Date(moment(payload.holidayRangeDateStart).year(),moment(payload.holidayRangeDateStart).month(), moment(payload.holidayRangeDateStart).date()));
+        state.dutyProperties.holidayRangeDate.push(new Date(moment(payload.holidayRangeDateEnd).year(),moment(payload.holidayRangeDateEnd).month(), moment(payload.holidayRangeDateEnd).date()));
+      } else {
+        state.dutyProperties.holidayRangeDate = [];        
+      }
     },
     updateAdditionalTimeInDuty(state,payload) {
       state.dutyProperties.additionalTimeInLastDuty = payload.additionalTimeInLastDuty;
@@ -142,7 +147,7 @@ export default new Vuex.Store({
     },
 
     addAccordion(state, payload) {
-      state[payload.stageWork].push({
+      state[payload.statusTask].push({
         indexTask : payload.indexTask,
         typeTaskTitle: payload.typeTaskTitle,
         typeTask: payload.typeTask,
@@ -166,6 +171,7 @@ export default new Vuex.Store({
       Vue.set(state[payload.statusTask][payload.indexTask],'typeTask', payload.typeTask);
       state[payload.statusTask][payload.indexTask]['paidTask'] = payload.paidTask;
       state[payload.statusTask][payload.indexTask]['togglePaid'] = payload.togglePaid;
+      state[payload.statusTask][payload.indexTask]['toggleNewClient'] = payload.toggleNewClient;
       Vue.set(state[payload.statusTask][payload.indexTask], 'newClient', payload.newClient);
     },
     updatePaidTask(state, payload) {
@@ -175,7 +181,7 @@ export default new Vuex.Store({
   },
   getters: {
     stateBtnSend: state => {
-      console.log(state.timeDateWork.dateWork + " " +  state.timeDateWork.startWork + " " + state.timeDateWork.endWork + " " + state.selectedWorker + " " + state.emailProperties.validate + " " + state.dutyProperties.additionalTimeInLastDutyValidation + " " + state.paidCostValid)
+      // console.log(state.timeDateWork.dateWork + " " +  state.timeDateWork.startWork + " " + state.timeDateWork.endWork + " " + state.selectedWorker + " " + state.emailProperties.validate + " " + state.dutyProperties.additionalTimeInLastDutyValidation + " " + state.paidCostValid)
       if (state.timeDateWork.dateWork === null || 
           state.timeDateWork.startWork === '' || 
           state.timeDateWork.endWork === '' || 

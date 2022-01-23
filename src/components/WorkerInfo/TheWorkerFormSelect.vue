@@ -1,6 +1,10 @@
 <template>
-  <div>
-      <h2>1. Wybierz informacje o pracowniku</h2>
+  <div>  
+      <b-row>
+          <b-col>
+            <h2>1. Wybierz informacje o pracowniku</h2>
+          </b-col>
+      </b-row>
       <b-row>
         <b-col>
             <b-form-group>
@@ -13,6 +17,7 @@
                 </b-form-select>
                 <label v-if="$store.state.selectedWorker === null" class="text-danger">Wybierz pracownika</label>
             </b-form-group>
+            
             <b-form-group>
                 <label>Podaj adres email</label>
                 <ValidationProvider ref="refValidationEmail" rules="email|required" immediate v-slot="{ errors }">
@@ -23,7 +28,6 @@
         </b-col>
       </b-row>
   </div>
-  
 </template>
 
 <script>
