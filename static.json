@@ -1,8 +1,0 @@
-{
-    "root": "./server/views/",
-    "clean_urls": true,
-    "routes": {
-      "/**": "index.html"
-    }
-  }
-  
