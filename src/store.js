@@ -54,7 +54,6 @@ export default new Vuex.Store({
 
     updatePaidCostValid(state, payload) {
       state.paidCostValid = payload.paidCostValid;
-      console.log(state.paidCostValid );
     },
     updateDutyHolidayDateRange(state,payload) {
       state.dutyProperties.holidayRangeDate = [];
@@ -99,9 +98,10 @@ export default new Vuex.Store({
     updateTimeWork(state, payload) {
       state.timeDateWork.startWork = payload.startWork;
       state.timeDateWork.endWork = payload.endWork;
-      // state.timeDateWork.durationWork = payload.durationWork
     },
-
+    updateDurationWork(state, payload) {
+      state.timeDateWork.durationWork = payload.durationWork
+    },
     updateDateWork(state, payload) {
       state.timeDateWork.dateWork = payload.date;
     },
@@ -115,35 +115,50 @@ export default new Vuex.Store({
       state['doneTasks'] = [];
       state['progressTasks'] = [];
       state['unrealizedTasks'] = [];
-
+      
       state['emailProperties'].email = '';
       state['emailProperties'].validate = false;
       
-      state['doneTasks'][0] = {};
+      state['doneTasks'] = [];
 
       state.selectedWorker = null,
-      state['timeDateWork'].startWork = '09:00',
-      state['timeDateWork'].endWork = '17:00',
-      state['timeDateWork'].durationWork = '08:00',
-      state['timeDateWork'].dateWork = moment().format('DD-MM-YYYY'),
-      state['timeDateWork'].late = false,
-      state['timeDateWork'].overtime = false,
+      state['timeDateWork'].startWork = '09:00'
+      state['timeDateWork'].endWork = '17:00';
+      state['timeDateWork'].durationWork = '08:00';
+      state['timeDateWork'].dateWork = moment().format('DD-MM-YYYY');
+      state['timeDateWork'].late = false;
+      state['timeDateWork'].overtime = false;
 
-      state['dutyProperties'].activeWeek = false,
-      state['dutyProperties'].activeHoliday = false,
-      state['dutyProperties'].holidayRangeDate = [],
-      state['dutyProperties'].additionalTimeInLastDuty = '00:00',
+      state['dutyProperties'].activeWeek = false;
+      state['dutyProperties'].activeHoliday = false;
+      state['dutyProperties'].holidayRangeDate = [];
+      state['dutyProperties'].additionalTimeInLastDuty = '00:00';
 
-      state['doneTasks'][0].indexTask = 0,
-      state['doneTasks'][0].typeTaskTitle = 'Serwis',
-      state['doneTasks'][0].typeTask = 'service',
-      state['doneTasks'][0].nameCustomer = '',
-      state['doneTasks'][0].description = '',
-      state['doneTasks'][0].paidCost = '0',
-      state['doneTasks'][0].paidTask = false,
-      state['doneTasks'][0].togglePaid = true,
-      state['doneTasks'][0].newClient = undefined,
-      state['doneTasks'][0].toggleNewClient = false
+      let testobj = {
+        indexTask : 0,
+        typeTaskTitle : 'Serwis',
+        typeTask: 'service',
+        nameCustomer: '',
+        description: '',
+        paidCost: '0',
+        paidTask: false,
+        togglePaid: true,
+        newClient: undefined,
+        toggleNewClient: false
+      }
+      state['doneTasks'].push(testobj);
+      // state['doneTasks'][0].indexTask = 0;
+      // state['doneTasks'][0].typeTaskTitle = 'Serwis';
+      // state['doneTasks'][0].typeTask = 'service';
+      // state['doneTasks'][0].nameCustomer = '';
+      // state['doneTasks'][0].description = '';
+      // state['doneTasks'][0].paidCost = '0';
+      // state['doneTasks'][0].paidTask = false;
+      // Vue.set(state[payload.statusTask][payload.indexTask],'typeTask', payload.typeTask);
+      // Vue.set(state['doneTasks'][0],'paidTask', false),
+      // state['doneTasks'][0].togglePaid = true;
+      // state['doneTasks'][0].newClient = undefined;
+      // state['doneTasks'][0].toggleNewClient = false;
     },
 
     addAccordion(state, payload) {
@@ -175,6 +190,7 @@ export default new Vuex.Store({
       Vue.set(state[payload.statusTask][payload.indexTask], 'newClient', payload.newClient);
     },
     updatePaidTask(state, payload) {
+      console.log(payload);
       state[payload.statusTask][payload.indexTask]['paidCost'] = payload.paidCost;
       state[payload.statusTask][payload.indexTask]['paidTask'] = payload.paidTask;
     }

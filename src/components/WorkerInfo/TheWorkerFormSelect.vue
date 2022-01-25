@@ -21,7 +21,7 @@
             <b-form-group>
                 <label>Podaj adres email</label>
                 <ValidationProvider ref="refValidationEmail" rules="email|required" immediate v-slot="{ errors }">
-                    <b-form-input @keyup="inputEmailWorker" v-model="emailWorker" type="email"></b-form-input>
+                    <b-form-input @keyup="inputEmailWorker" :value="$store.state.emailProperties.email" type="email"></b-form-input>
                     <span class="text-danger">{{ errors[0] }} </span>
                 </ValidationProvider>
             </b-form-group>
@@ -53,7 +53,6 @@ export default {
     },
     data() {
         return {
-            emailWorker : '',
             arrWorkers : [
                 {text : 'Wybierz pracownika', value: null},
                 {text : 'Marian Zakrzewska', value : 'Marian Zakrzewska'},

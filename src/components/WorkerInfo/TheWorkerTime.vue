@@ -89,7 +89,7 @@
                     :labels="toggleText" /> 
             </b-col>
             <b-col md="3">
-                Czas pracy: {{(durationWork === 'undefined:undefined') ? 'Popraw czas' : durationWork}}
+                Czas pracy: {{($store.state.timeDateWork.durationWork === 'undefined:undefined') ? 'Popraw czas' : $store.state.timeDateWork.durationWork}}
             </b-col>               
         </b-row>
     </div>
@@ -124,7 +124,6 @@ export default {
     data(){
         return {
             dateWork : this.$store.state.timeDateWork.dateWork,
-            durationWork : '08:00',
             formatTime : "hh:mm",
             formatDate: 'DD-MM-YYYY',
             toggleColor : '#ffc107',
@@ -157,7 +156,8 @@ export default {
                     late: true,
                     overtime: this.$store.state.timeDateWork.overtime
                 })                
-            }            
+            }
+            this.calcWorkTime();            
         },
         onChangeEndWork(e) {
             let valdiateEndWork = e.displayTime.split(':');
@@ -178,38 +178,31 @@ export default {
                         late: this.$store.state.timeDateWork.late,
                         overtime: true
                         })                        
-                    }                                
+                    }
+                    this.calcWorkTime();                              
             }             
         },
-        onChangeWorkTime() {
-            //Convert to moment format
-            let endWork = moment(this.endWork, this.formatTime)
-            let startWork = moment(this.startWork, this.formatTime)
-
+        calcWorkTime() {
+            //Create moment object           
+            let startWork = moment(this.$store.state.timeDateWork.startWork, this.formatTime);
+            let endWork = moment(this.$store.state.timeDateWork.endWork, this.formatTime);            
             //Calculate duration time
-            let durationWork = moment.duration(endWork.diff(startWork));
-            let hoursWork = parseInt(durationWork.asHours());
-            let minutesWork = parseInt(durationWork.asMinutes()) - hoursWork * 60;
-            this.durationWork = `${moment(hoursWork, 'HH').format('HH')}:${moment(minutesWork, 'mm').format('mm') }`
-            
-            let checkStartWork = this.startWork.split(':')
-            let checkEndWork = this.endWork.split(':')
+            let durationMoments = moment.duration(endWork.diff(startWork));
+            let hoursWork = parseInt(durationMoments.asHours());
+            let minutesWork = parseInt(durationMoments.asMinutes()) - hoursWork * 60;
+  
+            let durationWork = `${moment(hoursWork, 'HH').format('HH')}:${moment(minutesWork, 'mm').format('mm') }`;
 
-            if(checkStartWork[0] === 'HH' || checkStartWork[1] === 'mm' || checkEndWork[0] === 'HH' || checkEndWork[1] === 'mm') {
-                this.$store.commit('updateTimeWork',{
-                    startWork : '',
-                    endWork : '',
-                    durationWork: ''
-                })                
+            if(startWork.isValid() && endWork.isValid()) {
+                this.$store.commit('updateDurationWork',{
+                    durationWork: durationWork
+                }) 
             } else {
-                this.$store.commit('updateTimeWork',{
-                    startWork : this.startWork,
-                    endWork : '17:11',
-                    durationWork: this.durationWork
-                })                
+                this.$store.commit('updateDurationWork',{
+                    durationWork: 'Nie prawidłowy czas'
+                })                 
             }            
-
-            },
+        },
         onChangeLateovertimeWorker(e) {
             if(e.srcEvent.target.parentElement.id === 'toggleLate') {
                 this.$store.commit('updateOvertimeLateWorker', {

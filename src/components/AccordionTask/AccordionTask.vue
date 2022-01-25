@@ -48,8 +48,8 @@
                             max-rows="6"
                         ></b-form-textarea>                
                     </b-form-group>
-                    
-                    <b-form-group v-if="$store.state[this.statusTask][this.indexTask].togglePaid" label="Płatne?">
+
+                    <b-form-group v-if="$store.state[statusTask][indexTask].togglePaid" label="Płatne?">
                         <toggle-button                         
                             :value="$store.state[statusTask][indexTask].paidTask"
                             @change="onChangePaidTask" 
@@ -58,10 +58,10 @@
                             :labels="{checked: 'Tak', unchecked: 'Nie'}"/>             
                     </b-form-group>
 
-                    <b-input-group v-if="$store.state[this.statusTask][this.indexTask].paidTask">
+                    <b-input-group v-if="$store.state[statusTask][indexTask].paidTask">
                         <ValidationProvider ref="refValidationCost" immediate rules="numeric|required" v-slot="{ errors }">
                             Cena:
-                            <b-form-input style="width:100px" v-model="costService" :value="$store.state[statusTask][indexTask].paidCost" @keyup="updatePaidTask($event), validateCost()"></b-form-input>
+                            <b-form-input style="width:100px"  :value="$store.state[statusTask][indexTask].paidCost" @keyup="updatePaidTask($event), validateCost()"></b-form-input>
                             <span class="text-danger">{{ errors[0] }}</span> 
                         </ValidationProvider>
                     </b-input-group>
@@ -153,7 +153,7 @@ export default {
                     paidCostValid : validationCost.valid
                 });
         },
-        onChangePaidTask(e) {            
+        onChangePaidTask(e) {         
             if(e.value) {   
                 this.$store.commit('updatePaidTask', {
                     'indexTask' : this.indexTask,
@@ -175,7 +175,7 @@ export default {
                     'paidTask' : false
                 })                 
             }
-            console.log(this.$store.state.paidCostValid);
+            console.log(e); 
         },        
         onSelectedtypeTask(selected) {
             this.$store.commit('updateSelectedtypeTask', {

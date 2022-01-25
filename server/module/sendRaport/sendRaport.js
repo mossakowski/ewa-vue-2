@@ -17,7 +17,7 @@ module.exports = async (fileName, addressEmail, dateWork, worker) => {
   
   // send mail with defined transport object
   let info = await transporter.sendMail({
-    from: 'RAPORT DZIENNY', // sender address
+    from: 'RAPORT DZIENNY <example@mysystem.com>', // sender address
     to: addressEmail, // list of receivers
     subject: `[RAPORT DZIENNY ${dateWork}] ${worker}`, // Subject line
     attachments: [{
