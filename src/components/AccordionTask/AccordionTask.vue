@@ -22,7 +22,7 @@
 
                     <b-form-group label="Imię i nazwisko klienta/ nazwa firmy/ miejsce:">
                         <b-form-input
-                            @keyup="updateTask($event, indexTask, statusTask, 'nameCustomer')"
+                            @input="updateTask($event, indexTask, statusTask, 'nameCustomer')"
                             type="text"
                             placeholder="Wpisz dane"
                             :value="$store.state[statusTask][indexTask].nameCustomer">
@@ -41,7 +41,7 @@
 
                     <b-form-group label="Opis zdarzenia">
                         <b-form-textarea
-                            @keyup="updateTask($event, indexTask, statusTask, 'description')"
+                            @input="updateTask($event, indexTask, statusTask, 'description')"
                             placeholder="Opisz zdarzenie"
                             :value="$store.state[statusTask][indexTask].description"
                             rows="3"
@@ -61,7 +61,7 @@
                     <b-input-group v-if="$store.state[statusTask][indexTask].paidTask">
                         <ValidationProvider ref="refValidationCost" immediate rules="numeric|required" v-slot="{ errors }">
                             Cena:
-                            <b-form-input style="width:100px"  :value="$store.state[statusTask][indexTask].paidCost" @keyup="updatePaidTask($event), validateCost()"></b-form-input>
+                            <b-form-input style="width:100px"  :value="$store.state[statusTask][indexTask].paidCost" @input="updatePaidTask($event), validateCost()"></b-form-input>
                             <span class="text-danger">{{ errors[0] }}</span> 
                         </ValidationProvider>
                     </b-input-group>
@@ -189,19 +189,19 @@ export default {
             })
 
         },
-        updateTask(e, indexTask, statusTask, propertyObj) {
+        updateTask(value, indexTask, statusTask, propertyObj) {
             this.$store.commit('updateTask', {
-                'text' : e.target.value,
+                'text' : value,
                 'indexTask' : indexTask,
                 'statusTask' : statusTask,
                 'propertyObj' : propertyObj
             })
         },
-        updatePaidTask(e) {
+        updatePaidTask(value) {
             this.$store.commit('updatePaidTask', {
                 'indexTask' : this.indexTask,
                 'statusTask' : this.statusTask,                
-                'paidCost' : e.target.value,
+                'paidCost' : value,
                 'paidTask' : this.$store.state[this.statusTask][this.indexTask].paidTask
             })
         },
