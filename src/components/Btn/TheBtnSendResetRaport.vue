@@ -36,9 +36,11 @@ export default {
                         if(confirmSendRaport) {
                             this.showSpinnerTextSending = true;
                             this.showCheckSendText = false;
-                            this.$socket.client.emit('SEND_RAPORT', { data : this.$store.state, summary: this.$store.getters.calcSummary }, () => {
-                                this.showSpinnerTextSending = false;
-                                this.showCheckSendText = true;
+                            this.$socket.client.emit('SEND_RAPORT', { data : this.$store.state, summary: this.$store.getters.calcSummary }, (res) => {
+                                if(res) {
+                                    this.showSpinnerTextSending = false;
+                                    this.showCheckSendText = true;                                
+                                }
                             })
                         
                         }

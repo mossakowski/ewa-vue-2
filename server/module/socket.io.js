@@ -12,7 +12,7 @@ module.exports = (server) => {
             let fileName = await moduleCreatePdf(templatePdf,dataRaport);
             await moduleSendEmail(fileName, dataRaport.data.emailProperties.email, dataRaport.data.timeDateWork.dateWork, dataRaport.data.selectedWorker);
             await moduleRemovePdf(fileName);
-            callback('');
+            callback(true);
         })
     });
 }
