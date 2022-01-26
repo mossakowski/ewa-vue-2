@@ -21,7 +21,7 @@
             <b-form-group>
                 <label>Podaj adres email</label>
                 <ValidationProvider ref="refValidationEmail" rules="email|required" immediate v-slot="{ errors }">
-                    <b-form-input @keyup="inputEmailWorker" :value="$store.state.emailProperties.email" type="email"></b-form-input>
+                    <b-form-input @input="inputEmailWorker" :value="$store.state.emailProperties.email" type="email"></b-form-input>
                     <span class="text-danger">{{ errors[0] }} </span>
                 </ValidationProvider>
             </b-form-group>
@@ -69,12 +69,12 @@ export default {
                 nameWorker: value
             })
         },
-        async inputEmailWorker(e) {
+        async inputEmailWorker(value) {
             let validationEmail = await this.$refs.refValidationEmail.validate();
             
             this.$store.commit('updateEmailWorker', {
                 validate : validationEmail.valid,
-                email: e.target.value
+                email: value
             })
         }
     }
