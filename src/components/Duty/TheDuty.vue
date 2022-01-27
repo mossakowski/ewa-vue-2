@@ -38,7 +38,7 @@
                         range
                         :clearable="false"
                         :sync="true"
-                        :format="formatDatePicker"
+                        :format="DATE_FULL_FORMAT"
                         placeholder="Wybierz przedział czasowy">
                     </date-picker>
                     <span class="text-danger ml-1" v-if="($store.state.dutyProperties.holidayRangeDate.length === 0 || $store.state.dutyProperties.holidayRangeDate[0] === null || $store.state.dutyProperties.holidayRangeDate[1] === null)">Uzupełnij pole</span>
@@ -71,7 +71,7 @@ import 'vue2-datepicker/index.css';
 import 'vue2-datepicker/locale/pl';
 import { ValidationProvider, extend } from 'vee-validate';
 import { regex } from 'vee-validate/dist/rules';
-
+import { DATE_FULL_FORMAT } from './../../../common/constants/date';
 extend('regex', {
     ...regex,
     message: 'Niepoprawny format!'
@@ -87,8 +87,7 @@ export default {
     },
     data() {
         return {
-            formatTimePicker: 'HH:mm',
-            formatDatePicker : 'DD-MM-YYYY'                      
+            DATE_FULL_FORMAT                   
         }
     },
     methods: {

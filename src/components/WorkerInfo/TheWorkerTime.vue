@@ -51,7 +51,7 @@
                     <date-picker
                         :value="$store.state.timeDateWork.dateWork"
                         @change="onChangeDateWork"
-                        :format="formatDate"
+                        :format="DATE_FULL_FORMAT"
                         value-type="format"              
                         type="date"
                         style="width:100%"
@@ -102,6 +102,8 @@ import moment from 'moment';
 import { ToggleButton } from 'vue-js-toggle-button';
 import { ValidationProvider, extend } from 'vee-validate';
 import { required, regex } from 'vee-validate/dist/rules';
+import { DATE_FULL_FORMAT } from '../../../common/constants/date';
+import { TIME_HOUR_MINUTES_FORMAT, TIME_HOUR_FORMAT, TIME_MINUTES_FORMAT } from '../../../common/constants/time'
 
 extend('required', {
     ...required,
@@ -124,8 +126,7 @@ export default {
     data(){
         return {
             dateWork : this.$store.state.timeDateWork.dateWork,
-            formatTime : "hh:mm",
-            formatDate: 'DD-MM-YYYY',
+            DATE_FULL_FORMAT,
             toggleColor : '#ffc107',
             toggleText : {checked: 'Tak', unchecked: 'Nie'},
             inputWidth: '100%'
@@ -149,9 +150,9 @@ export default {
                 })                
             }
 
-            let startWorkTime = moment(this.$store.state.timeDateWork.startWork, this.formatTime);
+            let startWorkTime = moment(this.$store.state.timeDateWork.startWork, TIME_HOUR_MINUTES_FORMAT);
             //Change value on true in toggle lateWorker when late's worker
-            if(startWorkTime.isAfter(moment('09:00', this.formatTime))) {
+            if(startWorkTime.isAfter(moment('09:00', TIME_HOUR_MINUTES_FORMAT))) {
                 this.$store.commit('updateOvertimeLateWorker', {
                     late: true,
                     overtime: this.$store.state.timeDateWork.overtime
@@ -171,9 +172,9 @@ export default {
                     startWork : this.$store.state.timeDateWork.startWork,
                     endWork : e.displayTime,
                 })
-                    let endWorkTime = moment(this.$store.state.timeDateWork.endWork, this.formatTime)
+                    let endWorkTime = moment(this.$store.state.timeDateWork.endWork, TIME_HOUR_MINUTES_FORMAT)
                     //Change value on true in toggle overtimeWorker when overtime's worker
-                    if(endWorkTime.isAfter(moment('17:00', this.formatTime))) {
+                    if(endWorkTime.isAfter(moment('17:00', TIME_HOUR_MINUTES_FORMAT))) {
                     this.$store.commit('updateOvertimeLateWorker', {
                         late: this.$store.state.timeDateWork.late,
                         overtime: true
@@ -184,14 +185,14 @@ export default {
         },
         calcWorkTime() {
             //Create moment object           
-            let startWork = moment(this.$store.state.timeDateWork.startWork, this.formatTime);
-            let endWork = moment(this.$store.state.timeDateWork.endWork, this.formatTime);            
+            let startWork = moment(this.$store.state.timeDateWork.startWork, TIME_HOUR_MINUTES_FORMAT);
+            let endWork = moment(this.$store.state.timeDateWork.endWork, TIME_HOUR_MINUTES_FORMAT);            
             //Calculate duration time
             let durationMoments = moment.duration(endWork.diff(startWork));
             let hoursWork = parseInt(durationMoments.asHours());
             let minutesWork = parseInt(durationMoments.asMinutes()) - hoursWork * 60;
   
-            let durationWork = `${moment(hoursWork, 'HH').format('HH')}:${moment(minutesWork, 'mm').format('mm') }`;
+            let durationWork = `${moment(hoursWork, TIME_HOUR_FORMAT).format(TIME_HOUR_FORMAT)}:${moment(minutesWork, TIME_MINUTES_FORMAT).format(TIME_MINUTES_FORMAT) }`;
 
             if(startWork.isValid() && endWork.isValid()) {
                 this.$store.commit('updateDurationWork',{
@@ -220,7 +221,7 @@ export default {
     },
     mounted() {
         moment.updateLocale(moment.locale(), { invalidDate: null })
-        this.$store.commit('updateDateWork',{date: moment().format('DD-MM-YYYY')});
+        this.$store.commit('updateDateWork',{date: moment().format(DATE_FULL_FORMAT)});
     }
 }
 </script>

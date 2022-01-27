@@ -8,11 +8,12 @@
 
 <script>
 import moment from 'moment'
+import { DATE_FULL_YEAR_FORMAT } from './../../../common/constants/date'
 export default {
     name: 'TheFooter',
     data() {
         return {
-            currentDate : moment().format('YYYY')
+            currentDate : moment().format(DATE_FULL_YEAR_FORMAT)
         }
     }
 }

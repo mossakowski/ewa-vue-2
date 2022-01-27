@@ -1,11 +1,11 @@
 <template>
     <div class="b-card-container">
         <b-card no-body class="mb-1">
-            <b-card-header v-b-toggle='"accordion-" + statusTask + "-" + indexTask' header-tag="header" class="bg-info hover-pointer text-light p-1 px-3 d-flex align-items-center justify-content-between" role="tab">
+            <b-card-header v-b-toggle='createAccordionId' header-tag="header" class="bg-info hover-pointer text-light p-1 px-3 d-flex align-items-center justify-content-between" role="tab">
                 <span>#{{indexTask +1}} {{$store.state[statusTask][indexTask].typeTaskTitle}}</span>
                 <btn-remove-task :statusTask="statusTask" :idTask="indexTask"></btn-remove-task>
             </b-card-header>
-            <b-collapse :id='"accordion-" + statusTask + "-" + indexTask' visible :accordion="accordionGroupName" role="tabpanel">
+            <b-collapse :id='createAccordionId' visible :accordion="accordionGroupName" role="tabpanel">
                 <b-card-body>
                     <b-form-group label="Rodzaj pracy:">
                             <vue-autosuggest                      
@@ -175,7 +175,6 @@ export default {
                     'paidTask' : false
                 })                 
             }
-            console.log(e); 
         },        
         onSelectedtypeTask(selected) {
             this.$store.commit('updateSelectedtypeTask', {
@@ -227,6 +226,11 @@ export default {
                 })
                 obj.data.length && this.suggestionsDisplay.push(obj);
             })
+        }
+    },
+    computed: {
+        createAccordionId() {
+            return `accordion-${this.statusTask}-${this.indexTask}`;           
         }
     },
     mounted() {

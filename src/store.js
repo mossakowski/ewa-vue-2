@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import moment from 'moment'
+import { DATE_FULL_FORMAT } from './../common/constants/date'
 
 Vue.use(Vuex)
 
@@ -15,7 +16,7 @@ export default new Vuex.Store({
       startWork: '09:00',
       endWork: '17:00',
       durationWork: '08:00',
-      dateWork: moment().format('DD-MM-YYYY'),
+      dateWork: moment().format(DATE_FULL_FORMAT),
       late: false,
       overtime: false
     },
@@ -125,7 +126,7 @@ export default new Vuex.Store({
       state['timeDateWork'].startWork = '09:00'
       state['timeDateWork'].endWork = '17:00';
       state['timeDateWork'].durationWork = '08:00';
-      state['timeDateWork'].dateWork = moment().format('DD-MM-YYYY');
+      state['timeDateWork'].dateWork = moment().format(DATE_FULL_FORMAT);
       state['timeDateWork'].late = false;
       state['timeDateWork'].overtime = false;
 
