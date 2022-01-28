@@ -17,7 +17,7 @@ export default {
     },
     methods: {
         removeTask() {
-            this.$store.commit('removeTask',
+            this.$store.dispatch('removeTask',
                 {'idTask' : this.idTask,
                 'statusTask' : this.statusTask})
         }

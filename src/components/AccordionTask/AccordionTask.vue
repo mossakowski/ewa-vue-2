@@ -149,26 +149,26 @@ export default {
     methods: {
         async validateCost() {
             let validationCost = await this.$refs.refValidationCost.validate();
-                this.$store.commit('updatePaidCostValid', {
+                this.$store.dispatch('updatePaidCostValid', {
                     paidCostValid : validationCost.valid
                 });
         },
         onChangePaidTask(e) {         
             if(e.value) {   
-                this.$store.commit('updatePaidTask', {
+                this.$store.dispatch('updatePaidTask', {
                     'indexTask' : this.indexTask,
                     'statusTask' : this.statusTask,                
                     'paidCost' : '0',
                     'paidTask' : true
                 })
-                this.$store.commit('updatePaidCostValid', {
+                this.$store.dispatch('updatePaidCostValid', {
                     paidCostValid : false
                 });                                 
             } else {
-                this.$store.commit('updatePaidCostValid', {
+                this.$store.dispatch('updatePaidCostValid', {
                     paidCostValid : true
                 });
-                this.$store.commit('updatePaidTask', {
+                this.$store.dispatch('updatePaidTask', {
                     'indexTask' : this.indexTask,
                     'statusTask' : this.statusTask,                
                     'paidCost' : '0',
@@ -177,7 +177,7 @@ export default {
             }
         },        
         onSelectedtypeTask(selected) {
-            this.$store.commit('updateSelectedtypeTask', {
+            this.$store.dispatch('updateSelectedtypeTask', {
                 'typeTaskTitle' : selected.item.name,
                 'typeTask' : selected.item.type,
                 'indexTask' :  this.indexTask,
@@ -189,7 +189,7 @@ export default {
 
         },
         updateTask(value, indexTask, statusTask, propertyObj) {
-            this.$store.commit('updateTask', {
+            this.$store.dispatch('updateTask', {
                 'text' : value,
                 'indexTask' : indexTask,
                 'statusTask' : statusTask,
@@ -197,7 +197,7 @@ export default {
             })
         },
         updatePaidTask(value) {
-            this.$store.commit('updatePaidTask', {
+            this.$store.dispatch('updatePaidTask', {
                 'indexTask' : this.indexTask,
                 'statusTask' : this.statusTask,                
                 'paidCost' : value,
@@ -205,7 +205,7 @@ export default {
             })
         },
         updateNewClient(e) {
-            this.$store.commit('updateNewClient', {
+            this.$store.dispatch('updateNewClient', {
                 'indexTask' : this.indexTask,
                 'statusTask' : this.statusTask,                
                 'newClient' : e.value

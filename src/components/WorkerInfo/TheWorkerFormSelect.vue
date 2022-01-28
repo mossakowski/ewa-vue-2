@@ -65,14 +65,14 @@ export default {
     },
     methods: {
         onChangeSelectedWorker(value) {            
-            this.$store.commit('updateSelectedWorker',{
+            this.$store.dispatch('updateSelectedWorker',{
                 nameWorker: value
             })
         },
         async inputEmailWorker(value) {
             let validationEmail = await this.$refs.refValidationEmail.validate();
             
-            this.$store.commit('updateEmailWorker', {
+            this.$store.dispatch('updateEmailWorker', {
                 validate : validationEmail.valid,
                 email: value
             })

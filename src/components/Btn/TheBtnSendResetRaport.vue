@@ -49,7 +49,7 @@ export default {
         resetRaport() {
             this.showSpinnerTextSending = false;
             this.showCheckSendText = false;
-            this.$store.commit('resetRaport');
+            this.$store.dispatch('resetRaport');
         }        
     }
 }

@@ -52,11 +52,10 @@ export default new Vuex.Store({
     }
   },
   mutations: {
-
-    updatePaidCostValid(state, payload) {
+    UPDATE_PAID_COST_VALID(state, payload) {
       state.paidCostValid = payload.paidCostValid;
     },
-    updateDutyHolidayDateRange(state,payload) {
+    UPDATE_DUTY_HOLIDAY_DATE_RANGE(state,payload) {
       state.dutyProperties.holidayRangeDate = [];
       if(payload.holidayRangeDateStart != '' || payload.holidayRangeDateEnd != '') {
         state.dutyProperties.holidayRangeDate.push(new Date(moment(payload.holidayRangeDateStart).year(),moment(payload.holidayRangeDateStart).month(), moment(payload.holidayRangeDateStart).date()));
@@ -65,54 +64,49 @@ export default new Vuex.Store({
         state.dutyProperties.holidayRangeDate = [];        
       }
     },
-    updateAdditionalTimeInDuty(state,payload) {
+    UPDATE_ADDITIONAL_TIME_IN_DUTY(state,payload) {
       state.dutyProperties.additionalTimeInLastDuty = payload.additionalTimeInLastDuty;
       state.dutyProperties.additionalTimeInLastDutyValidation = payload.additionalTimeInLastDutyValidation;
     },
 
-    updateEmailWorker(state,payload) {
+    UPDATE_EMAIL_WORKER(state,payload) {
       state.emailProperties.validate = payload.validate;
       state.emailProperties.email = payload.email;
     },
 
-    updateNewClient(state, payload) {
+    UPDATE_NEW_CLIENT(state, payload) {
       state[payload.statusTask][payload.indexTask]['newClient'] = payload.newClient;
     },
 
     //Mutations from DutyComponents
-    updateDuty(state, payload) {
+    UPDATE_DUTY(state, payload) {
       state.dutyProperties.activeHoliday = payload.dutyHoliday;
       state.dutyProperties.activeWeek = payload.dutyWeek;    
     },
 
     //Mutations from SelectWorker
-    updateSelectedWorker(state, payload) {
+    UPDATE_SELECTED_WORKER(state, payload) {
       state.selectedWorker = payload.nameWorker
     },
 
     //Mutations from TimeWorker
-    updateOvertimeLateWorker(state, payload) {
+    UPDATE_OVERTIME_LATE_WORKER(state, payload) {
       state.timeDateWork.late = payload.late;
       state.timeDateWork.overtime = payload.overtime;
     },
 
-    updateTimeWork(state, payload) {
+    UPDATE_TIME_WORK(state, payload) {
       state.timeDateWork.startWork = payload.startWork;
       state.timeDateWork.endWork = payload.endWork;
     },
-    updateDurationWork(state, payload) {
+    UPDATE_DURATION_WORK(state, payload) {
       state.timeDateWork.durationWork = payload.durationWork
     },
-    updateDateWork(state, payload) {
+    UPDATE_DATE_WORK(state, payload) {
       state.timeDateWork.dateWork = payload.date;
     },
-
-    updateQueryAutosuggest(state, payload) {
-      state[payload.statusTask][payload.indexTask].query = payload.query
-    },
-
     //Mutations from task
-    resetRaport(state) {
+    RESET_RAPORT(state) {
       state['doneTasks'] = [];
       state['progressTasks'] = [];
       state['unrealizedTasks'] = [];
@@ -135,7 +129,7 @@ export default new Vuex.Store({
       state['dutyProperties'].holidayRangeDate = [];
       state['dutyProperties'].additionalTimeInLastDuty = '00:00';
 
-      let testobj = {
+      let defaultTask = {
         indexTask : 0,
         typeTaskTitle : 'Serwis',
         typeTask: 'service',
@@ -147,22 +141,11 @@ export default new Vuex.Store({
         newClient: undefined,
         toggleNewClient: false
       }
-      state['doneTasks'].push(testobj);
-      // state['doneTasks'][0].indexTask = 0;
-      // state['doneTasks'][0].typeTaskTitle = 'Serwis';
-      // state['doneTasks'][0].typeTask = 'service';
-      // state['doneTasks'][0].nameCustomer = '';
-      // state['doneTasks'][0].description = '';
-      // state['doneTasks'][0].paidCost = '0';
-      // state['doneTasks'][0].paidTask = false;
-      // Vue.set(state[payload.statusTask][payload.indexTask],'typeTask', payload.typeTask);
-      // Vue.set(state['doneTasks'][0],'paidTask', false),
-      // state['doneTasks'][0].togglePaid = true;
-      // state['doneTasks'][0].newClient = undefined;
-      // state['doneTasks'][0].toggleNewClient = false;
+      state['doneTasks'].push(defaultTask);
+
     },
 
-    addAccordion(state, payload) {
+    ADD_ACCORDION(state, payload) {
       state[payload.statusTask].push({
         indexTask : payload.indexTask,
         typeTaskTitle: payload.typeTaskTitle,
@@ -176,13 +159,13 @@ export default new Vuex.Store({
         toggleNewClient : false
       })
     },
-    removeTask(state, payload) {
+    REMOVE_TASK(state, payload) {
       state[payload.statusTask].splice(payload.idTask, 1)
     },
-    updateTask(state, payload) {
+    UPDATE_TASK(state, payload) {
       state[payload.statusTask][payload.indexTask][payload.propertyObj] = payload.text;
     },
-    updateSelectedtypeTask(state, payload) {
+    UPDATE_SELECTED_TYPE_TASK(state, payload) {
       state[payload.statusTask][payload.indexTask]['typeTaskTitle'] = payload.typeTaskTitle;
       Vue.set(state[payload.statusTask][payload.indexTask],'typeTask', payload.typeTask);
       state[payload.statusTask][payload.indexTask]['paidTask'] = payload.paidTask;
@@ -190,8 +173,7 @@ export default new Vuex.Store({
       state[payload.statusTask][payload.indexTask]['toggleNewClient'] = payload.toggleNewClient;
       Vue.set(state[payload.statusTask][payload.indexTask], 'newClient', payload.newClient);
     },
-    updatePaidTask(state, payload) {
-      console.log(payload);
+    UPDATE_PAID_TASK(state, payload) {
       state[payload.statusTask][payload.indexTask]['paidCost'] = payload.paidCost;
       state[payload.statusTask][payload.indexTask]['paidTask'] = payload.paidTask;
     }
@@ -275,5 +257,58 @@ export default new Vuex.Store({
       };
     }
 
+  },
+  actions : {
+    updatePaidCostValid({ commit }, payload) {
+      commit('UPDATE_PAID_COST_VALID', payload);
+    },
+    updatePaidTask({ commit }, payload) {
+      commit('UPDATE_PAID_TASK', payload);
+    },
+    updateSelectedtypeTask({ commit }, payload) {
+      commit('UPDATE_SELECTED_TYPE_TASK', payload);
+    },
+    updateTask({ commit }, payload) {
+      commit('UPDATE_TASK', payload);
+    },
+    updateNewClient({ commit }, payload) {
+      commit('UPDATE_NEW_CLIENT', payload);
+    },
+    addAccordion({ commit }, payload) {
+      commit('ADD_ACCORDION', payload);
+    },
+    removeTask({ commit }, payload) {
+      commit('REMOVE_TASK', payload);
+    },
+    resetRaport({ commit }, payload) {
+      commit('RESET_RAPORT', payload);
+    },
+    updateDutyHolidayDateRange({ commit }, payload) {
+      commit('UPDATE_DUTY_HOLIDAY_DATE_RANGE', payload);
+    },
+    updateDuty({ commit }, payload) {
+      commit('UPDATE_DUTY', payload);
+    },
+    updateAdditionalTimeInDuty({ commit }, payload) {
+      commit('UPDATE_ADDITIONAL_TIME_IN_DUTY',payload);
+    },
+    updateSelectedWorker({ commit }, payload) {
+      commit('UPDATE_SELECTED_WORKER',payload);
+    },
+    updateEmailWorker({ commit }, payload) {
+      commit('UPDATE_EMAIL_WORKER', payload);
+    },
+    updateDateWork({ commit }, payload) {
+      commit('UPDATE_DATE_WORK', payload);
+    },
+    updateTimeWork({ commit }, payload) {
+      commit('UPDATE_TIME_WORK', payload);
+    },
+    updateOvertimeLateWorker({ commit }, payload) {
+      commit('UPDATE_OVERTIME_LATE_WORKER', payload);
+    },
+    updateDurationWork({ commit }, payload) {
+      commit('UPDATE_DURATION_WORK', payload);
+    }
   }
 })

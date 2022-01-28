@@ -134,17 +134,17 @@ export default {
     },
     methods: {
         onChangeDateWork(dateWork) {
-            this.$store.commit('updateDateWork',{date: dateWork});
+            this.$store.dispatch('updateDateWork',{date: dateWork});
         },
         onChangeStartWork(e) {
             let validateStartWork = e.displayTime.split(':');
             if(validateStartWork[0] === 'HH' || validateStartWork[1] === 'mm') {
-                this.$store.commit('updateTimeWork',{
+                this.$store.dispatch('updateTimeWork',{
                     startWork : '',
                     endWork : this.$store.state.timeDateWork.endWork
                 })                
             } else {
-                this.$store.commit('updateTimeWork',{
+                this.$store.dispatch('updateTimeWork',{
                     startWork : e.displayTime,
                     endWork : this.$store.state.timeDateWork.endWork,
                 })                
@@ -153,7 +153,7 @@ export default {
             let startWorkTime = moment(this.$store.state.timeDateWork.startWork, TIME_HOUR_MINUTES_FORMAT);
             //Change value on true in toggle lateWorker when late's worker
             if(startWorkTime.isAfter(moment('09:00', TIME_HOUR_MINUTES_FORMAT))) {
-                this.$store.commit('updateOvertimeLateWorker', {
+                this.$store.dispatch('updateOvertimeLateWorker', {
                     late: true,
                     overtime: this.$store.state.timeDateWork.overtime
                 })                
@@ -163,19 +163,19 @@ export default {
         onChangeEndWork(e) {
             let valdiateEndWork = e.displayTime.split(':');
             if(valdiateEndWork[0] === 'HH' || valdiateEndWork[1] === 'mm') {
-                this.$store.commit('updateTimeWork',{
+                this.$store.dispatch('updateTimeWork',{
                     startWork : this.$store.state.timeDateWork.startWork,
                     endWork : ''
                 })                
             } else {
-                this.$store.commit('updateTimeWork',{
+                this.$store.dispatch('updateTimeWork',{
                     startWork : this.$store.state.timeDateWork.startWork,
                     endWork : e.displayTime,
                 })
                     let endWorkTime = moment(this.$store.state.timeDateWork.endWork, TIME_HOUR_MINUTES_FORMAT)
                     //Change value on true in toggle overtimeWorker when overtime's worker
                     if(endWorkTime.isAfter(moment('17:00', TIME_HOUR_MINUTES_FORMAT))) {
-                    this.$store.commit('updateOvertimeLateWorker', {
+                    this.$store.dispatch('updateOvertimeLateWorker', {
                         late: this.$store.state.timeDateWork.late,
                         overtime: true
                         })                        
@@ -195,24 +195,24 @@ export default {
             let durationWork = `${moment(hoursWork, TIME_HOUR_FORMAT).format(TIME_HOUR_FORMAT)}:${moment(minutesWork, TIME_MINUTES_FORMAT).format(TIME_MINUTES_FORMAT) }`;
 
             if(startWork.isValid() && endWork.isValid()) {
-                this.$store.commit('updateDurationWork',{
+                this.$store.dispatch('updateDurationWork',{
                     durationWork: durationWork
                 }) 
             } else {
-                this.$store.commit('updateDurationWork',{
+                this.$store.dispatch('updateDurationWork',{
                     durationWork: 'Nie prawidłowy czas'
                 })                 
             }            
         },
         onChangeLateovertimeWorker(e) {
             if(e.srcEvent.target.parentElement.id === 'toggleLate') {
-                this.$store.commit('updateOvertimeLateWorker', {
+                this.$store.dispatch('updateOvertimeLateWorker', {
                     late: !this.$store.state.timeDateWork.late,
                     overtime: this.$store.state.timeDateWork.overtime
                 })                
             }
             if(e.srcEvent.target.parentElement.id === 'toggleOvertime') {
-                this.$store.commit('updateOvertimeLateWorker', {
+                this.$store.dispatch('updateOvertimeLateWorker', {
                     late: this.$store.state.timeDateWork.late,
                     overtime: !this.$store.state.timeDateWork.overtime
                 })                
@@ -221,7 +221,7 @@ export default {
     },
     mounted() {
         moment.updateLocale(moment.locale(), { invalidDate: null })
-        this.$store.commit('updateDateWork',{date: moment().format(DATE_FULL_FORMAT)});
+        this.$store.dispatch('updateDateWork',{date: moment().format(DATE_FULL_FORMAT)});
     }
 }
 </script>

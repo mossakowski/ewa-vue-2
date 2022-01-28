@@ -92,33 +92,33 @@ export default {
     },
     methods: {
         onChangeDutyHolidayDateRange(e) {
-            this.$store.commit('updateDutyHolidayDateRange', {
+            this.$store.dispatch('updateDutyHolidayDateRange', {
                 holidayRangeDateStart : moment(e[0]),
                 holidayRangeDateEnd : moment(e[1])
             });            
         },
         async onChangeAdditionalTimeInLastDuty(e) {
             let validationInput = await this.$refs.refValidationTimeInLastDuty.validate();           
-            this.$store.commit('updateAdditionalTimeInDuty', {
+            this.$store.dispatch('updateAdditionalTimeInDuty', {
                 additionalTimeInLastDuty : e.displayTime,
                 additionalTimeInLastDutyValidation : validationInput.valid                
             })
         },
         onChangeUpdateDuty(e) {
             if(e.srcEvent.target.parentElement.id === 'toggleDutyWeek') {
-                this.$store.commit('updateDuty', {
+                this.$store.dispatch('updateDuty', {
                     dutyWeek : !this.$store.state.dutyProperties.activeWeek,
                     dutyHoliday : this.$store.state.dutyProperties.activeHoliday,
                 })                 
             }
             if(e.srcEvent.target.parentElement.id === 'toggleDutyHoliday') {
                 if(!e.value) {
-                    this.$store.commit('updateDutyHolidayDateRange', {
+                    this.$store.dispatch('updateDutyHolidayDateRange', {
                         holidayRangeDateStart : '',
                         holidayRangeDateEnd : ''
                     });                     
                 }
-                this.$store.commit('updateDuty', {
+                this.$store.dispatch('updateDuty', {
                     dutyWeek : this.$store.state.dutyProperties.activeWeek,
                     dutyHoliday : !this.$store.state.dutyProperties.activeHoliday,
                 })
