@@ -26,7 +26,7 @@ export default {
     },
     methods: {
         removeTask() {
-            this.$store.dispatch('removeTask',
+            this.$store.dispatch('accordionTask/removeTask',
                 {'idTask' : this.idTask,
                 'statusTask' : this.statusTask})
         }

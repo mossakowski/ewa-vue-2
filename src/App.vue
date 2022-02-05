@@ -6,11 +6,11 @@
       
       <div class="accordion mt-2" role="tablist">
         <h2>2. Prace zakończone</h2>
-        <p v-if="$store.state.doneTasks.length === 0">Dodaj zadanie</p>
+        <p v-if="accordionTask.doneTasks.length === 0">Dodaj zadanie</p>
         <AccordionTask
           v-else
-          v-for="(item,index) in $store.state.doneTasks" 
-          :key="$store.state.doneTasks[index].indexTask"
+          v-for="(item,index) in accordionTask.doneTasks" 
+          :key="index"
           :indexTask="index"
           statusTask="doneTasks" />
         <btn-add-task statusTask="doneTasks"></btn-add-task>
@@ -18,11 +18,11 @@
 
       <div class="accordion mt-2" role="tablist">
         <h2>3. Prace do dokończena</h2>
-        <p v-if="$store.state.progressTasks.length === 0">Dodaj zadanie</p>      
+        <p v-if="accordionTask.progressTasks.length === 0">Dodaj zadanie</p>      
         <AccordionTask
           v-else
-          v-for="(item,index) in $store.state.progressTasks" 
-          :key="$store.state.progressTasks[index].indexTask"
+          v-for="(item,index) in accordionTask.progressTasks" 
+          :key="accordionTask.progressTasks[index].indexTask"
           :indexTask="index"
           statusTask="progressTasks" />
         <btn-add-task statusTask="progressTasks"></btn-add-task>
@@ -30,11 +30,11 @@
     
       <div class="accordion mt-2" role="tablist">
         <h2>4. Prace niezrealizowane</h2>
-        <p v-if="$store.state.unrealizedTasks.length === 0">Dodaj zadanie</p>
+        <p v-if="accordionTask.unrealizedTasks.length === 0">Dodaj zadanie</p>
           <AccordionTask
             v-else
-            v-for="(item,index) in $store.state.unrealizedTasks" 
-            :key="$store.state.unrealizedTasks[index].indexTask"
+            v-for="(item,index) in accordionTask.unrealizedTasks" 
+            :key="accordionTask.unrealizedTasks[index].indexTask"
             :indexTask="index"
             statusTask="unrealizedTasks" />
         <btn-add-task statusTask="unrealizedTasks"></btn-add-task>
@@ -60,6 +60,7 @@ import BtnSendResetRaport from './components/Btn/TheBtnSendResetRaport.vue'
 import TheSummary from './components/Layout/TheSummary.vue'
 import TheDuty from './components/Duty/TheDuty.vue'
 import TheFooter from './components/Layout/TheFooter.vue'
+import { mapState } from 'vuex' 
 
 export default {
   name: 'App',
@@ -73,6 +74,9 @@ export default {
     TheSummary,
     TheDuty,
     TheFooter
-  }
+  },
+  computed: mapState({
+    accordionTask : state => state.accordionTask
+  })
 }
 </script>

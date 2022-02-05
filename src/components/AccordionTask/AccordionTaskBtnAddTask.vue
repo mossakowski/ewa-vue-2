@@ -15,7 +15,7 @@ export default {
   },
   methods : {
     addAccordion() {
-      this.$store.dispatch('addAccordion', {
+      this.$store.dispatch('accordionTask/addAccordion', {
         indexTask: ++this.countTask,
 
         statusTask : this.statusTask,

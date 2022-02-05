@@ -1,7 +1,8 @@
 <template>
     <b-row>
         <b-col>
-            <b-button :disabled="$store.getters.stateBtnSend" @click="showModalConfirmSendRaport" class="bg-success mr-1 mt-1">
+            {{stateBtnSend}}
+            <b-button :disabled="stateBtnSend" @click="showModalConfirmSendRaport" class="bg-success mr-1 mt-1">
                 Wyślij raport!  
                 <b-spinner v-if="showSpinnerTextSending" small variant="light" label="Spinning"></b-spinner>
                 <span v-if="showSpinnerTextSending" class="ml-1">Wysyłam...</span>
@@ -9,12 +10,13 @@
                 <span v-if="showCheckSendText" class="ml-1">Wysłano!</span>                
             </b-button>
             <b-button class="bg-danger mr-1 mt-1" @click="resetRaport">Zresetuj cały raport</b-button>
-            <span class="text-danger">{{($store.getters.stateBtnSend) ? 'Popraw wprowadzone dane!' : ''}}</span>
+            <span class="text-danger">{{(stateBtnSend) ? 'Popraw wprowadzone dane!' : ''}}</span>
         </b-col>
     </b-row>
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 export default {
     name: 'BtnSendResetRaport',
     data() {
@@ -22,6 +24,11 @@ export default {
             showSpinnerTextSending : false,
             showCheckSendText : false
         }
+    },
+    computed: {
+        ...mapGetters({
+            stateBtnSend : 'stateBtnSend'
+        })
     },
     methods : {
         showModalConfirmSendRaport() {
@@ -49,7 +56,7 @@ export default {
         resetRaport() {
             this.showSpinnerTextSending = false;
             this.showCheckSendText = false;
-            this.$store.dispatch('resetRaport');
+            this.$store.dispatch('accordionTask/resetRaport');
         }        
     }
 }

@@ -2,7 +2,7 @@
     <div class="b-card-container">
         <b-card no-body class="mb-1">
             <b-card-header v-b-toggle='createAccordionId' header-tag="header" class="bg-info hover-pointer text-light p-1 px-3 d-flex align-items-center justify-content-between" role="tab">
-                <span>#{{indexTask +1}} {{$store.state[statusTask][indexTask].typeTaskTitle}}</span>
+                <span>#{{indexTask +1}} {{accordionTask[statusTask][indexTask].typeTaskTitle}}</span>
                 <btn-remove-task :statusTask="statusTask" :idTask="indexTask"></btn-remove-task>
             </b-card-header>
             <b-collapse :id='createAccordionId' visible :accordion="accordionGroupName" role="tabpanel">
@@ -25,13 +25,13 @@
                             @input="updateTask($event, indexTask, statusTask, 'nameCustomer')"
                             type="text"
                             placeholder="Wpisz dane"
-                            :value="$store.state[statusTask][indexTask].nameCustomer">
+                            :value="accordionTask[statusTask][indexTask].nameCustomer">
                         </b-form-input>
                     </b-form-group>
 
-                    <b-form-group v-if="$store.state[statusTask][indexTask].toggleNewClient" label="Nowy klient?">
+                    <b-form-group v-if="accordionTask[statusTask][indexTask].toggleNewClient" label="Nowy klient?">
                         <toggle-button
-                            :value="$store.state[statusTask][indexTask].newClient"
+                            :value="accordionTask[statusTask][indexTask].newClient"
                             @change="updateNewClient" 
                             :width="$store.state.widthHeigthComponents.toggle.width" 
                             :height="$store.state.widthHeigthComponents.toggle.heigth" 
@@ -43,25 +43,25 @@
                         <b-form-textarea
                             @input="updateTask($event, indexTask, statusTask, 'description')"
                             placeholder="Opisz zdarzenie"
-                            :value="$store.state[statusTask][indexTask].description"
+                            :value="accordionTask[statusTask][indexTask].description"
                             rows="3"
                             max-rows="6"
                         ></b-form-textarea>                
                     </b-form-group>
 
-                    <b-form-group v-if="$store.state[statusTask][indexTask].togglePaid" label="Płatne?">
+                    <b-form-group v-if="accordionTask[statusTask][indexTask].togglePaid" label="Płatne?">
                         <toggle-button                         
-                            :value="$store.state[statusTask][indexTask].paidTask"
-                            @change="updatePaidTask" 
+                            :value="accordionTask[statusTask][indexTask].paidTask"
+                            @change="onChangePaidTask" 
                             :width="$store.state.widthHeigthComponents.toggle.width" 
                             :height="$store.state.widthHeigthComponents.toggle.heigth" 
                             :labels="{checked: 'Tak', unchecked: 'Nie'}"/>             
                     </b-form-group>
 
-                    <b-input-group v-if="$store.state[statusTask][indexTask].paidTask">
+                    <b-input-group v-if="accordionTask[statusTask][indexTask].paidTask">
                         <ValidationProvider ref="refValidationCost" immediate rules="numeric|required" v-slot="{ errors }">
                             Cena:
-                            <b-form-input style="width:100px"  :value="$store.state[statusTask][indexTask].paidCost" @input="updateCostTask($event), validateCost()"></b-form-input>
+                            <b-form-input style="width:100px"  :value="accordionTask[statusTask][indexTask].paidCost" @input="updatePaidTask($event), validateCost()"></b-form-input>
                             <span class="text-danger">{{ errors[0] }}</span> 
                         </ValidationProvider>
                     </b-input-group>
@@ -78,6 +78,7 @@ import { VueAutosuggest } from "vue-autosuggest";
 import typeTasksArr from './typeTasksArr'
 import { ValidationProvider, extend } from 'vee-validate';
 import { numeric, required } from 'vee-validate/dist/rules';
+import { mapState } from 'vuex';
 
 extend('numeric', {
     ...numeric,
@@ -154,30 +155,30 @@ export default {
                 }
             }        
         }
-    },
+    },  
     methods: {
         async validateCost() {
             let validationCost = await this.$refs.refValidationCost.validate();
-                this.$store.dispatch('updatePaidCostValid', {
+                this.$store.dispatch('accordionTask/updatePaidCostValid', {
                     paidCostValid : validationCost.valid
                 });
         },
         updatePaidTask(e) {         
             if(e.value) {   
-                this.$store.dispatch('updatePaidTask', {
+                this.$store.dispatch('accordionTask/updatePaidTask', {
                     'indexTask' : this.indexTask,
                     'statusTask' : this.statusTask,                
                     'paidCost' : '0',
                     'paidTask' : true
                 })
-                this.$store.dispatch('updatePaidCostValid', {
+                this.$store.dispatch('accordionTask/updatePaidCostValid', {
                     paidCostValid : false
                 });                                 
             } else {
-                this.$store.dispatch('updatePaidCostValid', {
+                this.$store.dispatch('accordionTask/updatePaidCostValid', {
                     paidCostValid : true
                 });
-                this.$store.dispatch('updatePaidTask', {
+                this.$store.dispatch('accordionTask/updatePaidTask', {
                     'indexTask' : this.indexTask,
                     'statusTask' : this.statusTask,                
                     'paidCost' : '0',
@@ -198,24 +199,24 @@ export default {
             });
 
         },
-        updateTask(value, indexTask, statusTask, propertysuggestionItem) {
-            this.$store.dispatch('updateTask', {
+        updateTask(value, indexTask, statusTask, propertyObj) {
+            this.$store.dispatch('accordionTask/updateTask', {
                 'text' : value,
                 'indexTask' : indexTask,
                 'statusTask' : statusTask,
                 'propertysuggestionItem' : propertysuggestionItem
             })
         },
-        updateCostTask(value) {
-            this.$store.dispatch('updatePaidTask', {
+        updatePaidTask(value) {
+            this.$store.dispatch('accordionTask/updatePaidTask', {
                 'indexTask' : this.indexTask,
                 'statusTask' : this.statusTask,                
                 'paidCost' : value,
-                'paidTask' : this.$store.state[this.statusTask][this.indexTask].paidTask
+                'paidTask' : this.accordionTask[this.statusTask][this.indexTask].paidTask
             })
         },
         updateNewClient(e) {
-            this.$store.dispatch('updateNewClient', {
+            this.$store.dispatch('accordionTask/updateNewClient', {
                 'indexTask' : this.indexTask,
                 'statusTask' : this.statusTask,                
                 'newClient' : e.value
@@ -239,7 +240,10 @@ export default {
     computed: {
         createAccordionId() {
             return `accordion-${this.statusTask}-${this.indexTask}`;           
-        }
+        },
+        ...mapState([
+            'accordionTask'
+            ]),        
     },
     mounted() {
         this.suggestionsDisplay = this.suggestions;

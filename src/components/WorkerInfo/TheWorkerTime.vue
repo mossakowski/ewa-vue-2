@@ -7,7 +7,7 @@
             <b-col md="2">
                 <ValidationProvider :rules="{required: true, regex: /^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/}" v-slot="{ errors }"> 
                     <VueTimepicker
-                        :value="$store.state.timeDateWork.startWork"                
+                        :value="workerInfo.timeDateWork.startWork"                
                         @change="updateStartWork"
                         hour-interval="1"
                         minute-interval="5"
@@ -28,7 +28,7 @@
             <b-col md="2">
                 <ValidationProvider :rules="{required: true, regex: /^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/}" v-slot="{ errors }"> 
                     <VueTimepicker
-                        :value="$store.state.timeDateWork.endWork"
+                        :value="workerInfo.timeDateWork.endWork"
                         @change="updateEndWork"
                         hour-interval="1"
                         minute-interval="5"         
@@ -49,7 +49,7 @@
             <b-col md="2">
                 <ValidationProvider :rules="{required: true}" v-slot="{ errors }">                 
                     <date-picker
-                        :value="$store.state.timeDateWork.dateWork"
+                        :value="workerInfo.timeDateWork.dateWork"
                         @change="updateDateWork"
                         :format="DATE_FULL_FORMAT"
                         value-type="format"              
@@ -68,7 +68,7 @@
                 Spóźnienie?
                 <toggle-button
                     id="toggleLate"                
-                    :value="$store.state.timeDateWork.late" 
+                    :value="workerInfo.timeDateWork.late" 
                     @change="updateLateOvertimeWorker"
                     :width="$store.state.widthHeigthComponents.toggle.width" 
                     :height="$store.state.widthHeigthComponents.toggle.heigth" 
@@ -80,7 +80,7 @@
                 Nadgodziny?
                 <toggle-button
                     id="toggleOvertime"
-                    :value="$store.state.timeDateWork.overtime"
+                    :value="workerInfo.timeDateWork.overtime"
                     @change="updateLateOvertimeWorker"  
                     :width="$store.state.widthHeigthComponents.toggle.width" 
                     :height="$store.state.widthHeigthComponents.toggle.heigth"                 
@@ -89,7 +89,7 @@
                     :labels="toggleText" /> 
             </b-col>
             <b-col md="3">
-                Czas pracy: {{($store.state.timeDateWork.durationWork === 'undefined:undefined') ? 'Popraw czas' : $store.state.timeDateWork.durationWork}}
+                Czas pracy: {{(workerInfo.timeDateWork.durationWork === 'undefined:undefined') ? 'Popraw czas' : workerInfo.timeDateWork.durationWork}}
             </b-col>               
         </b-row>
     </div>
@@ -104,6 +104,7 @@ import { ValidationProvider, extend } from 'vee-validate';
 import { required, regex } from 'vee-validate/dist/rules';
 import { DATE_FULL_FORMAT } from '../../../common/constants/date';
 import { TIME_HOUR_MINUTES_FORMAT, TIME_HOUR_FORMAT, TIME_MINUTES_FORMAT } from '../../../common/constants/time'
+import { mapState } from 'vuex';
 
 extend('required', {
     ...required,
@@ -125,37 +126,39 @@ export default {
     },
     data(){
         return {
-            dateWork : this.$store.state.timeDateWork.dateWork,
             DATE_FULL_FORMAT,
             toggleColor : '#ffc107',
             toggleText : {checked: 'Tak', unchecked: 'Nie'},
             inputWidth: '100%'
         }
     },
+    computed: mapState({
+        workerInfo : state => state.workerInfo,
+    }),        
     methods: {
         updateDateWork(dateWork) {
-            this.$store.dispatch('updateDateWork',{date: dateWork});
+            this.$store.dispatch('workerInfo/updateDateWork',{date: dateWork});
         },
         updateStartWork(e) {
             let validateStartWork = e.displayTime.split(':');
             if(validateStartWork[0] === 'HH' || validateStartWork[1] === 'mm') {
-                this.$store.dispatch('updateTimeWork',{
+                this.$store.dispatch('workerInfo/updateTimeWork',{
                     startWork : '',
-                    endWork : this.$store.state.timeDateWork.endWork
+                    endWork : this.workerInfo.timeDateWork.endWork
                 })                
             } else {
-                this.$store.dispatch('updateTimeWork',{
+                this.$store.dispatch('workerInfo/updateTimeWork',{
                     startWork : e.displayTime,
-                    endWork : this.$store.state.timeDateWork.endWork,
+                    endWork : this.workerInfo.timeDateWork.endWork,
                 })                
             }
 
-            let startWorkTime = moment(this.$store.state.timeDateWork.startWork, TIME_HOUR_MINUTES_FORMAT);
+            let startWorkTime = moment(this.workerInfo.timeDateWork.startWork, TIME_HOUR_MINUTES_FORMAT);
             //Change value on true in toggle lateWorker when late's worker
             if(startWorkTime.isAfter(moment('09:00', TIME_HOUR_MINUTES_FORMAT))) {
-                this.$store.dispatch('updateOvertimeLateWorker', {
+                this.$store.dispatch('workerInfo/updateOvertimeLateWorker', {
                     late: true,
-                    overtime: this.$store.state.timeDateWork.overtime
+                    overtime: this.workerInfo.timeDateWork.overtime
                 })                
             }
             this.calcWorkTime();            
@@ -163,20 +166,20 @@ export default {
         updateEndWork(e) {
             let valdiateEndWork = e.displayTime.split(':');
             if(valdiateEndWork[0] === 'HH' || valdiateEndWork[1] === 'mm') {
-                this.$store.dispatch('updateTimeWork',{
-                    startWork : this.$store.state.timeDateWork.startWork,
+                this.$store.dispatch('workerInfo/updateTimeWork',{
+                    startWork : this.workerInfo.timeDateWork.startWork,
                     endWork : ''
                 })                
             } else {
-                this.$store.dispatch('updateTimeWork',{
-                    startWork : this.$store.state.timeDateWork.startWork,
+                this.$store.dispatch('workerInfo/updateTimeWork',{
+                    startWork : this.workerInfo.timeDateWork.startWork,
                     endWork : e.displayTime,
                 })
-                    let endWorkTime = moment(this.$store.state.timeDateWork.endWork, TIME_HOUR_MINUTES_FORMAT)
+                    let endWorkTime = moment(this.workerInfo.timeDateWork.endWork, TIME_HOUR_MINUTES_FORMAT)
                     //Change value on true in toggle overtimeWorker when overtime's worker
                     if(endWorkTime.isAfter(moment('17:00', TIME_HOUR_MINUTES_FORMAT))) {
-                    this.$store.dispatch('updateOvertimeLateWorker', {
-                        late: this.$store.state.timeDateWork.late,
+                    this.$store.dispatch('workerInfo/updateOvertimeLateWorker', {
+                        late: this.workerInfo.timeDateWork.late,
                         overtime: true
                         })                        
                     }
@@ -185,8 +188,8 @@ export default {
         },
         calcWorkTime() {
             //Create moment object           
-            let startWork = moment(this.$store.state.timeDateWork.startWork, TIME_HOUR_MINUTES_FORMAT);
-            let endWork = moment(this.$store.state.timeDateWork.endWork, TIME_HOUR_MINUTES_FORMAT);            
+            let startWork = moment(this.workerInfo.timeDateWork.startWork, TIME_HOUR_MINUTES_FORMAT);
+            let endWork = moment(this.workerInfo.timeDateWork.endWork, TIME_HOUR_MINUTES_FORMAT);            
             //Calculate duration time
             let durationMoments = moment.duration(endWork.diff(startWork));
             let hoursWork = parseInt(durationMoments.asHours());
@@ -195,33 +198,33 @@ export default {
             let durationWork = `${moment(hoursWork, TIME_HOUR_FORMAT).format(TIME_HOUR_FORMAT)}:${moment(minutesWork, TIME_MINUTES_FORMAT).format(TIME_MINUTES_FORMAT) }`;
 
             if(startWork.isValid() && endWork.isValid()) {
-                this.$store.dispatch('updateDurationWork',{
+                this.$store.dispatch('workerInfo/updateDurationWork',{
                     durationWork: durationWork
                 }) 
             } else {
-                this.$store.dispatch('updateDurationWork',{
+                this.$store.dispatch('workerInfo/updateDurationWork',{
                     durationWork: 'Nie prawidłowy czas'
                 })                 
             }            
         },
         updateLateOvertimeWorker(e) {
             if(e.srcEvent.target.parentElement.id === 'toggleLate') {
-                this.$store.dispatch('updateOvertimeLateWorker', {
-                    late: !this.$store.state.timeDateWork.late,
-                    overtime: this.$store.state.timeDateWork.overtime
+                this.$store.dispatch('workerInfo/updateOvertimeLateWorker', {
+                    late: !this.workerInfo.timeDateWork.late,
+                    overtime: this.workerInfo.timeDateWork.overtime
                 })                
             }
             if(e.srcEvent.target.parentElement.id === 'toggleOvertime') {
-                this.$store.dispatch('updateOvertimeLateWorker', {
-                    late: this.$store.state.timeDateWork.late,
-                    overtime: !this.$store.state.timeDateWork.overtime
+                this.$store.dispatch('workerInfo/updateOvertimeLateWorker', {
+                    late: this.workerInfo.timeDateWork.late,
+                    overtime: !this.workerInfo.timeDateWork.overtime
                 })                
             }
         },
     },
     mounted() {
         moment.updateLocale(moment.locale(), { invalidDate: null })
-        this.$store.dispatch('updateDateWork',{date: moment().format(DATE_FULL_FORMAT)});
+        this.$store.dispatch('workerInfo/updateDateWork',{date: moment().format(DATE_FULL_FORMAT)});
     }
 }
 </script>

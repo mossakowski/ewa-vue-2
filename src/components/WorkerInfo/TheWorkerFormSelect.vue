@@ -10,18 +10,18 @@
             <b-form-group>
                 <label>Wybierz pracownika</label>
                 <b-form-select 
-                    :class="($store.state.selectedWorker === null) ? 'border-danger' : ''" 
-                    :value="$store.state.selectedWorker" 
+                    :class="(workerInfo.selectedWorker === null) ? 'border-danger' : ''" 
+                    :value="workerInfo.selectedWorker" 
                     :options="arrWorkers"
                     @change="updateSelectedWorker">                
                 </b-form-select>
-                <label v-if="$store.state.selectedWorker === null" class="text-danger">Wybierz pracownika</label>
+                <label v-if="workerInfo.selectedWorker === null" class="text-danger">Wybierz pracownika</label>
             </b-form-group>
             
             <b-form-group>
                 <label>Podaj adres email</label>
                 <ValidationProvider ref="refValidationEmail" rules="email|required" immediate v-slot="{ errors }">
-                    <b-form-input @input="inputEmailWorker" :value="$store.state.emailProperties.email" type="email"></b-form-input>
+                    <b-form-input @input="inputEmailWorker" :value="workerInfo.emailProperties.email" type="email"></b-form-input>
                     <span class="text-danger">{{ errors[0] }} </span>
                 </ValidationProvider>
             </b-form-group>
@@ -34,6 +34,7 @@
 import { ValidationProvider } from 'vee-validate';
 import { email,required } from 'vee-validate/dist/rules';
 import { extend } from 'vee-validate';
+import { mapState } from 'vuex';
 
 extend('required', {
     ...required,
@@ -63,20 +64,23 @@ export default {
             ]
         }
     },
+    computed: mapState({
+        workerInfo : state => state.workerInfo
+    }),      
     methods: {
         updateSelectedWorker(value) {            
-            this.$store.dispatch('updateSelectedWorker',{
+            this.$store.dispatch('workerInfo/updateSelectedWorker',{
                 nameWorker: value
             })
         },
         async inputEmailWorker(value) {
             let validationEmail = await this.$refs.refValidationEmail.validate();
             
-            this.$store.dispatch('updateEmailWorker', {
+            this.$store.dispatch('workerInfo/updateEmailWorker', {
                 validate : validationEmail.valid,
                 email: value
             })
         }
-    }
+    }  
 }
 </script>
