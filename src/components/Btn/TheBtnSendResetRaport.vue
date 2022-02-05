@@ -1,7 +1,6 @@
 <template>
     <b-row>
         <b-col>
-            {{stateBtnSend}}
             <b-button :disabled="stateBtnSend" @click="showModalConfirmSendRaport" class="bg-success mr-1 mt-1">
                 Wyślij raport!  
                 <b-spinner v-if="showSpinnerTextSending" small variant="light" label="Spinning"></b-spinner>

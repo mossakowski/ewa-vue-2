@@ -50,7 +50,7 @@
                 <ValidationProvider ref="refValidationTimeInLastDuty" :rules="{required: true, regex: /^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/}" v-slot="{ errors }">  
                     <VueTimepicker
                         :value="duty.additionalTimeInLastDuty"                 
-                        @change="onChangeAdditionalTimeInLastDuty"  
+                        @change="updateAdditionalTimeInLastDuty"  
                         input-width="85px"
                         minute-interval="5" 
                         hide-clear-button>

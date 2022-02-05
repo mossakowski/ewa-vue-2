@@ -7,7 +7,7 @@
             </b-card-header>
             <b-collapse :id='createAccordionId' visible :accordion="accordionGroupName" role="tabpanel">
                 <b-card-body>
-                    <b-form-group label="Rodzaj pracy:">
+                    <b-form-group label="Rodzaj pracy:"> {{query}}
                             <vue-autosuggest                      
                                 @input="filterResults"      
                                 v-model="query"
@@ -52,7 +52,7 @@
                     <b-form-group v-if="accordionTask[statusTask][indexTask].togglePaid" label="Płatne?">
                         <toggle-button                         
                             :value="accordionTask[statusTask][indexTask].paidTask"
-                            @change="onChangePaidTask" 
+                            @change="updatePaidTask" 
                             :width="$store.state.widthHeigthComponents.toggle.width" 
                             :height="$store.state.widthHeigthComponents.toggle.heigth" 
                             :labels="{checked: 'Tak', unchecked: 'Nie'}"/>             
@@ -113,7 +113,6 @@ export default {
     },
     data() {
         return {
-            costService : null,
             accordionGroupName: `my-accordion-${this.statusTask}`,
             query: 'Serwis',
             selected: null,
@@ -162,7 +161,7 @@ export default {
                 this.$store.dispatch('accordionTask/updatePaidCostValid', {
                     paidCostValid : validationCost.valid
                 });
-        },
+        },    
         updatePaidTask(e) {         
             if(e.value) {   
                 this.$store.dispatch('accordionTask/updatePaidTask', {
@@ -188,7 +187,7 @@ export default {
         },        
         updateSelectedTypeTask({item: { newClient, toggleNewClient,togglePaid, typeTask, nameTask }}) {
             console.log(nameTask);
-            this.$store.dispatch('updateSelectedtypeTask', {
+            this.$store.dispatch('accordionTask/updateSelectedTypeTask', {
                 'typeTaskTitle' : nameTask,
                 'typeTask' : typeTask,
                 'indexTask' :  this.indexTask,
@@ -199,20 +198,12 @@ export default {
             });
 
         },
-        updateTask(value, indexTask, statusTask, propertyObj) {
+        updateTask(value, indexTask, statusTask, propertySuggestionItem) {
             this.$store.dispatch('accordionTask/updateTask', {
                 'text' : value,
                 'indexTask' : indexTask,
                 'statusTask' : statusTask,
-                'propertysuggestionItem' : propertysuggestionItem
-            })
-        },
-        updatePaidTask(value) {
-            this.$store.dispatch('accordionTask/updatePaidTask', {
-                'indexTask' : this.indexTask,
-                'statusTask' : this.statusTask,                
-                'paidCost' : value,
-                'paidTask' : this.accordionTask[this.statusTask][this.indexTask].paidTask
+                'propertysuggestionItem' : propertySuggestionItem
             })
         },
         updateNewClient(e) {
