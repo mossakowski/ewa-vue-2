@@ -283,7 +283,7 @@ export default new Vuex.Store({
     resetRaport({ commit }, payload) {
       commit('RESET_RAPORT', payload);
     },
-    updateDutyHolidayDateRange({ commit }, payload) {
+    updateDateRangeDutyHoliday({ commit }, payload) {
       commit('UPDATE_DUTY_HOLIDAY_DATE_RANGE', payload);
     },
     updateDuty({ commit }, payload) {

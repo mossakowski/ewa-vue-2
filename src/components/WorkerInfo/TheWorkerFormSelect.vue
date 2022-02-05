@@ -13,7 +13,7 @@
                     :class="($store.state.selectedWorker === null) ? 'border-danger' : ''" 
                     :value="$store.state.selectedWorker" 
                     :options="arrWorkers"
-                    @change="onChangeSelectedWorker">                
+                    @change="updateSelectedWorker">                
                 </b-form-select>
                 <label v-if="$store.state.selectedWorker === null" class="text-danger">Wybierz pracownika</label>
             </b-form-group>
@@ -64,7 +64,7 @@ export default {
         }
     },
     methods: {
-        onChangeSelectedWorker(value) {            
+        updateSelectedWorker(value) {            
             this.$store.dispatch('updateSelectedWorker',{
                 nameWorker: value
             })

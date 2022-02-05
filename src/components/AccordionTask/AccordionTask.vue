@@ -15,7 +15,7 @@
                                 :inputProps="inputProps"
                                 :sectionConfigs="sectionConfigs">
                                     <div slot-scope="{suggestion}" style="display: flex; align-items: center;">
-                                        <div style="{ display: 'flex', color: 'navyblue'}">{{suggestion.item.name}}</div>
+                                        <div style="{ display: 'flex', color: 'navyblue'}">{{suggestion.item.nameTask}}</div>
                                     </div>      
                             </vue-autosuggest>                                        
                     </b-form-group>
@@ -52,7 +52,7 @@
                     <b-form-group v-if="$store.state[statusTask][indexTask].togglePaid" label="Płatne?">
                         <toggle-button                         
                             :value="$store.state[statusTask][indexTask].paidTask"
-                            @change="onChangePaidTask" 
+                            @change="updatePaidTask" 
                             :width="$store.state.widthHeigthComponents.toggle.width" 
                             :height="$store.state.widthHeigthComponents.toggle.heigth" 
                             :labels="{checked: 'Tak', unchecked: 'Nie'}"/>             
@@ -61,7 +61,7 @@
                     <b-input-group v-if="$store.state[statusTask][indexTask].paidTask">
                         <ValidationProvider ref="refValidationCost" immediate rules="numeric|required" v-slot="{ errors }">
                             Cena:
-                            <b-form-input style="width:100px"  :value="$store.state[statusTask][indexTask].paidCost" @input="updatePaidTask($event), validateCost()"></b-form-input>
+                            <b-form-input style="width:100px"  :value="$store.state[statusTask][indexTask].paidCost" @input="updateCostTask($event), validateCost()"></b-form-input>
                             <span class="text-danger">{{ errors[0] }}</span> 
                         </ValidationProvider>
                     </b-input-group>
@@ -98,8 +98,17 @@ export default {
         ValidationProvider
     },
     props: {
-        indexTask: Number,
-        statusTask: String
+        indexTask: {
+            type : Number,
+            require: true,
+        },
+        statusTask: {
+            type: String,
+            require: true,
+            validation : function(value) {
+                return ['doneTasks', 'progressTasks', 'unrealizedTasks'].indexOf(value) !== -1;
+            }
+        }
     },
     data() {
         return {
@@ -119,28 +128,28 @@ export default {
                 limit: 6,
                 label: "Instalacje",
                 onSelected: selected => {
-                    this.onSelectedtypeTask(selected)
+                    this.updateSelectedTypeTask(selected)
                     }
                 },
                 networkBulding: {
                     limit: 6,
                     label: "Budowa sieci",
                     onSelected: selected => {
-                        this.onSelectedtypeTask(selected)
+                        this.updateSelectedTypeTask(selected)
                         }
                 },
                 office: {
                     limit: 6,
                     label: "Biuro",
                     onSelected: selected => {
-                        this.onSelectedtypeTask(selected)
+                        this.updateSelectedTypeTask(selected)
                         }
                 },
                 serwis: {
                     limit: 6,
                     label: "Serwis",
                     onSelected: selected => {
-                        this.onSelectedtypeTask(selected)
+                        this.updateSelectedTypeTask(selected)
                         }
                 }
             }        
@@ -153,7 +162,7 @@ export default {
                     paidCostValid : validationCost.valid
                 });
         },
-        onChangePaidTask(e) {         
+        updatePaidTask(e) {         
             if(e.value) {   
                 this.$store.dispatch('updatePaidTask', {
                     'indexTask' : this.indexTask,
@@ -176,27 +185,28 @@ export default {
                 })                 
             }
         },        
-        onSelectedtypeTask(selected) {
+        updateSelectedTypeTask({item: { newClient, toggleNewClient,togglePaid, typeTask, nameTask }}) {
+            console.log(nameTask);
             this.$store.dispatch('updateSelectedtypeTask', {
-                'typeTaskTitle' : selected.item.name,
-                'typeTask' : selected.item.type,
+                'typeTaskTitle' : nameTask,
+                'typeTask' : typeTask,
                 'indexTask' :  this.indexTask,
                 'statusTask' : this.statusTask,
-                'togglePaid' : selected.item.togglePaid,
-                'toggleNewClient' : selected.item.toggleNewClient,
-                'newClient' : selected.item.newClient
-            })
+                'togglePaid' : togglePaid,
+                'toggleNewClient' : toggleNewClient,
+                'newClient' : newClient
+            });
 
         },
-        updateTask(value, indexTask, statusTask, propertyObj) {
+        updateTask(value, indexTask, statusTask, propertysuggestionItem) {
             this.$store.dispatch('updateTask', {
                 'text' : value,
                 'indexTask' : indexTask,
                 'statusTask' : statusTask,
-                'propertyObj' : propertyObj
+                'propertysuggestionItem' : propertysuggestionItem
             })
         },
-        updatePaidTask(value) {
+        updateCostTask(value) {
             this.$store.dispatch('updatePaidTask', {
                 'indexTask' : this.indexTask,
                 'statusTask' : this.statusTask,                
@@ -212,19 +222,17 @@ export default {
             })            
         },
         filterResults() {
-
             this.suggestionsDisplay = [];
             this.suggestions.filter(itemSuggestions => {
-                let obj = {};                
-                obj.name = itemSuggestions.name;
-                obj.data = [];
-                
+                let suggestionItem = {};                
+                suggestionItem.name = itemSuggestions.name;
+                suggestionItem.data = [];    
                 itemSuggestions.data.filter(item => {
-                    if(item.name.toLowerCase().indexOf(this.query.toLowerCase()) > -1) {
-                        obj['data'].push(item)
+                    if(item.nameTask.toLowerCase().indexOf(this.query.toLowerCase()) > -1) {
+                        suggestionItem['data'].push(item)
                     }
                 })
-                obj.data.length && this.suggestionsDisplay.push(obj);
+                suggestionItem.data.length && this.suggestionsDisplay.push(suggestionItem);
             })
         }
     },
@@ -239,80 +247,82 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="scss">
 
-.b-card-container >>> .card-header {
-    cursor: pointer;
-}
+.b-card-container {
+    .card-header {
+        cursor: pointer;
+    }
+    input {
+        padding: 0.5rem;
+        border-radius: 10px;
+        width: 100%;
+    }
+    ul {
+        width: 100%;
+        color: rgba(30, 39, 46,1.0);
+        list-style: none;
+        margin: 0;
+        padding: 0.5rem 0 .5rem 0;
+    }
+    li {
+        margin: 0 0 0 0;
+        border-radius: 5px;
+        padding: 0.75rem 0 0.75rem 0.75rem;
+        display: flex;
+        align-items: center;
+    }
 
-.b-card-container >>> input {
-    padding: 0.5rem;
-    border-radius: 10px;
-    width: 100%;
+    .autosuggest__results {
+        border-radius: solid 1px #ced4da;
+    }
+
+
+    .autosuggest__results-before:hover {
+        cursor: default;
+    }
+    .autosuggest__results-before {
+        color: rgb(128, 128, 128);
+        margin: 0 0 0 0;
+        border-radius: 5px;
+        padding: 0.75rem 0 0.75rem 0.35rem;
+        display: flex;
+        align-items: center;
+    }
+
+    li:hover {
+        cursor: pointer;
+    }
+
+    .form-control {
+        width: 100%;
+    }
+
+    .b-card-container {
+        display: flex;
+        justify-content: center;
+        border-radius: 10px;
+    }
+    
+    #autosuggest-autosuggest__results{
+        position: absolute;
+        z-index: 9999;
+        background: #fff;
+        width: 100%;
+        border-radius: 10px;
+        border-left: solid 1px #ced4da;
+        border-right: solid 1px #ced4da;
+    }
+
+    #autosuggest { 
+        position: relative;
+        width: 100%; 
+        display: block;
+    }
+
+    .autosuggest__results-item--highlighted {
+    background-color: rgba(51, 217, 178,0.2);
+    }
 }
  
-.b-card-container >>> ul {
-    width: 100%;
-    color: rgba(30, 39, 46,1.0);
-    list-style: none;
-    margin: 0;
-    padding: 0.5rem 0 .5rem 0;
-}
-.b-card-container >>> li {
-    margin: 0 0 0 0;
-    border-radius: 5px;
-    padding: 0.75rem 0 0.75rem 0.75rem;
-    display: flex;
-    align-items: center;
-}
-
-.b-card-container >>> .autosuggest__results {
-    border-radius: solid 1px #ced4da;
-}
-
-
-.b-card-container >>> .autosuggest__results-before:hover {
-    cursor: default;
-}
-.b-card-container >>> .autosuggest__results-before {
-    color: rgb(128, 128, 128);
-    margin: 0 0 0 0;
-    border-radius: 5px;
-    padding: 0.75rem 0 0.75rem 0.35rem;
-    display: flex;
-    align-items: center;
-}
-
-.b-card-container >>> li:hover {
-    cursor: pointer;
-}
-
-.b-card-container >>> .form-control {
-    width: 100%;
-}
-
-.b-card-container >>> .b-card-container {
-    display: flex;
-    justify-content: center;
-    border-radius: 10px;
-}
- 
-.b-card-container >>> #autosuggest-autosuggest__results{
-    position: absolute;
-    z-index: 9999;
-    background: #fff;
-    width: 100%;
-    border-radius: 10px;
-    border-left: solid 1px #ced4da;
-    border-right: solid 1px #ced4da;
-}
-
-.b-card-container >>> #autosuggest { 
-    position: relative;
-    width: 100%; 
-    display: block;
-}
-.b-card-container  >>> .autosuggest__results-item--highlighted {
-  background-color: rgba(51, 217, 178,0.2);
-}
 </style> 

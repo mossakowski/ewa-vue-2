@@ -12,7 +12,7 @@
                     :value="$store.state.dutyProperties.activeWeek"
                     :sync="true"
                     id="toggleDutyWeek"
-                    @change="onChangeUpdateDuty"
+                    @change="updateDutyWorker"
                     :width="$store.state.widthHeigthComponents.toggle.width" 
                     :height="$store.state.widthHeigthComponents.toggle.heigth"                     
                     :labels="{checked: 'Tak', unchecked: 'Nie'}"/>
@@ -24,14 +24,14 @@
                     :value="$store.state.dutyProperties.activeHoliday"
                     :sync="true"
                     id="toggleDutyHoliday"
-                    @change="onChangeUpdateDuty"
+                    @change="updateDutyWorker"
                     :width="$store.state.widthHeigthComponents.toggle.width" 
                     :height="$store.state.widthHeigthComponents.toggle.heigth"                     
                     :labels="{checked: 'Tak', unchecked: 'Nie'}"/>
 
                 <span v-if="$store.state.dutyProperties.activeHoliday">
                     <date-picker
-                        @change="onChangeDutyHolidayDateRange"                        
+                        @change="updateDateRangeDutyHoliday"                        
                         :value="$store.state.dutyProperties.holidayRangeDate"                   
                         type="date"
                         class="ml-2"
@@ -50,7 +50,7 @@
                 <ValidationProvider ref="refValidationTimeInLastDuty" :rules="{required: true, regex: /^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/}" v-slot="{ errors }">  
                     <VueTimepicker
                         :value="$store.state.dutyProperties.additionalTimeInLastDuty"                 
-                        @change="onChangeAdditionalTimeInLastDuty"  
+                        @change="updateAdditionalTimeInLastDuty"  
                         input-width="85px"
                         minute-interval="5" 
                         hide-clear-button>
@@ -91,20 +91,20 @@ export default {
         }
     },
     methods: {
-        onChangeDutyHolidayDateRange(e) {
-            this.$store.dispatch('updateDutyHolidayDateRange', {
+        updateDateRangeDutyHoliday(e) {
+            this.$store.dispatch('updateDateRangeDutyHoliday', {
                 holidayRangeDateStart : moment(e[0]),
                 holidayRangeDateEnd : moment(e[1])
             });            
         },
-        async onChangeAdditionalTimeInLastDuty(e) {
+        async updateAdditionalTimeInLastDuty(e) {
             let validationInput = await this.$refs.refValidationTimeInLastDuty.validate();           
             this.$store.dispatch('updateAdditionalTimeInDuty', {
                 additionalTimeInLastDuty : e.displayTime,
                 additionalTimeInLastDutyValidation : validationInput.valid                
             })
         },
-        onChangeUpdateDuty(e) {
+        updateDutyWorker(e) {
             if(e.srcEvent.target.parentElement.id === 'toggleDutyWeek') {
                 this.$store.dispatch('updateDuty', {
                     dutyWeek : !this.$store.state.dutyProperties.activeWeek,
@@ -113,7 +113,7 @@ export default {
             }
             if(e.srcEvent.target.parentElement.id === 'toggleDutyHoliday') {
                 if(!e.value) {
-                    this.$store.dispatch('updateDutyHolidayDateRange', {
+                    this.$store.dispatch('updateDateRangeDutyHoliday', {
                         holidayRangeDateStart : '',
                         holidayRangeDateEnd : ''
                     });                     

@@ -8,7 +8,7 @@
                 <ValidationProvider :rules="{required: true, regex: /^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/}" v-slot="{ errors }"> 
                     <VueTimepicker
                         :value="$store.state.timeDateWork.startWork"                
-                        @change="onChangeStartWork"
+                        @change="updateStartWork"
                         hour-interval="1"
                         minute-interval="5"
                         autocomplete="on"
@@ -29,7 +29,7 @@
                 <ValidationProvider :rules="{required: true, regex: /^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/}" v-slot="{ errors }"> 
                     <VueTimepicker
                         :value="$store.state.timeDateWork.endWork"
-                        @change="onChangeEndWork"
+                        @change="updateEndWork"
                         hour-interval="1"
                         minute-interval="5"         
                         autocomplete="on"
@@ -50,7 +50,7 @@
                 <ValidationProvider :rules="{required: true}" v-slot="{ errors }">                 
                     <date-picker
                         :value="$store.state.timeDateWork.dateWork"
-                        @change="onChangeDateWork"
+                        @change="updateDateWork"
                         :format="DATE_FULL_FORMAT"
                         value-type="format"              
                         type="date"
@@ -69,7 +69,7 @@
                 <toggle-button
                     id="toggleLate"                
                     :value="$store.state.timeDateWork.late" 
-                    @change="onChangeLateovertimeWorker"
+                    @change="updateLateOvertimeWorker"
                     :width="$store.state.widthHeigthComponents.toggle.width" 
                     :height="$store.state.widthHeigthComponents.toggle.heigth" 
                     :sync="true"
@@ -81,7 +81,7 @@
                 <toggle-button
                     id="toggleOvertime"
                     :value="$store.state.timeDateWork.overtime"
-                    @change="onChangeLateovertimeWorker"  
+                    @change="updateLateOvertimeWorker"  
                     :width="$store.state.widthHeigthComponents.toggle.width" 
                     :height="$store.state.widthHeigthComponents.toggle.heigth"                 
                     :sync="true"
@@ -133,10 +133,10 @@ export default {
         }
     },
     methods: {
-        onChangeDateWork(dateWork) {
+        updateDateWork(dateWork) {
             this.$store.dispatch('updateDateWork',{date: dateWork});
         },
-        onChangeStartWork(e) {
+        updateStartWork(e) {
             let validateStartWork = e.displayTime.split(':');
             if(validateStartWork[0] === 'HH' || validateStartWork[1] === 'mm') {
                 this.$store.dispatch('updateTimeWork',{
@@ -160,7 +160,7 @@ export default {
             }
             this.calcWorkTime();            
         },
-        onChangeEndWork(e) {
+        updateEndWork(e) {
             let valdiateEndWork = e.displayTime.split(':');
             if(valdiateEndWork[0] === 'HH' || valdiateEndWork[1] === 'mm') {
                 this.$store.dispatch('updateTimeWork',{
@@ -204,7 +204,7 @@ export default {
                 })                 
             }            
         },
-        onChangeLateovertimeWorker(e) {
+        updateLateOvertimeWorker(e) {
             if(e.srcEvent.target.parentElement.id === 'toggleLate') {
                 this.$store.dispatch('updateOvertimeLateWorker', {
                     late: !this.$store.state.timeDateWork.late,
@@ -225,3 +225,13 @@ export default {
     }
 }
 </script>
+
+<style lang="scss">
+nav {
+  ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+}    
+</style>

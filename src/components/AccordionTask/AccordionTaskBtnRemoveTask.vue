@@ -12,8 +12,17 @@
 export default {
     name: 'BtnRemoveTask',
     props: {
-        statusTask: String,
-        idTask: Number
+        statusTask: {
+            type: String,
+            require: true,
+            validation : function(value) {
+                return ['doneTasks', 'progressTasks', 'unrealizedTasks'].indexOf(value) !== -1;
+            }
+        },
+        idTask: {
+            type: Number,
+            require: true,
+        } 
     },
     methods: {
         removeTask() {
