@@ -8,16 +8,18 @@
             <b-collapse :id='createAccordionId' visible :accordion="accordionGroupName" role="tabpanel">
                 <b-card-body>
                     <b-form-group label="Rodzaj pracy:"> {{query}}
-                            <vue-autosuggest                      
-                                @input="filterResults"      
-                                v-model="query"
-                                :suggestions="suggestionsDisplay"
-                                :inputProps="inputProps"
-                                :sectionConfigs="sectionConfigs">
-                                    <div slot-scope="{suggestion}" style="display: flex; align-items: center;">
-                                        <div style="{ display: 'flex', color: 'navyblue'}">{{suggestion.item.nameTask}}</div>
-                                    </div>      
-                            </vue-autosuggest>                                        
+                        <vue-autosuggest
+                            :id="createAutosuggestId"
+                            class="autosuggest"                      
+                            @input="filterResults"      
+                            v-model="query"
+                            :suggestions="suggestionsDisplay"
+                            :inputProps="inputProps"
+                            :sectionConfigs="sectionConfigs">
+                                <div slot-scope="{suggestion}" style="display: flex; align-items: center;">
+                                    <div style="{ display: 'flex', color: 'navyblue'}">{{suggestion.item.name}}</div>
+                                </div>      
+                        </vue-autosuggest>                                        
                     </b-form-group>
 
                     <b-form-group label="Imię i nazwisko klienta/ nazwa firmy/ miejsce:">
@@ -32,9 +34,9 @@
                     <b-form-group v-if="accordionTask[statusTask][indexTask].toggleNewClient" label="Nowy klient?">
                         <toggle-button
                             :value="accordionTask[statusTask][indexTask].newClient"
-                            @change="updateNewClient" 
-                            :width="$store.state.widthHeigthComponents.toggle.width" 
-                            :height="$store.state.widthHeigthComponents.toggle.heigth" 
+                            @change="updateNewClient"
+                            :width="constants.toggle.width" 
+                            :height="constants.toggle.heigth"                              
                             :sync="true"
                             :labels="{checked: 'Tak', unchecked: 'Nie'}"/> 
                     </b-form-group>
@@ -53,8 +55,8 @@
                         <toggle-button                         
                             :value="accordionTask[statusTask][indexTask].paidTask"
                             @change="updatePaidTask" 
-                            :width="$store.state.widthHeigthComponents.toggle.width" 
-                            :height="$store.state.widthHeigthComponents.toggle.heigth" 
+                            :width="constants.toggle.width" 
+                            :height="constants.toggle.heigth" 
                             :labels="{checked: 'Tak', unchecked: 'Nie'}"/>             
                     </b-form-group>
 
@@ -149,6 +151,7 @@ export default {
                     limit: 6,
                     label: "Serwis",
                     onSelected: selected => {
+                        console.log(selected);
                         this.updateSelectedTypeTask(selected)
                         }
                 }
@@ -185,10 +188,10 @@ export default {
                 })                 
             }
         },        
-        updateSelectedTypeTask({item: { newClient, toggleNewClient,togglePaid, typeTask, nameTask }}) {
-            console.log(nameTask);
+        updateSelectedTypeTask({item: { newClient, toggleNewClient,togglePaid, typeTask, name }}) {
+            console.log(name);
             this.$store.dispatch('accordionTask/updateSelectedTypeTask', {
-                'typeTaskTitle' : nameTask,
+                'typeTaskTitle' : name,
                 'typeTask' : typeTask,
                 'indexTask' :  this.indexTask,
                 'statusTask' : this.statusTask,
@@ -220,7 +223,7 @@ export default {
                 suggestionItem.name = itemSuggestions.name;
                 suggestionItem.data = [];    
                 itemSuggestions.data.filter(item => {
-                    if(item.nameTask.toLowerCase().indexOf(this.query.toLowerCase()) > -1) {
+                    if(item.name.toLowerCase().indexOf(this.query.toLowerCase()) > -1) {
                         suggestionItem['data'].push(item)
                     }
                 })
@@ -232,8 +235,12 @@ export default {
         createAccordionId() {
             return `accordion-${this.statusTask}-${this.indexTask}`;           
         },
+        createAutosuggestId() {
+            return `autosuggest-${this.statusTask}-${this.indexTask}`;           
+        },        
         ...mapState([
-            'accordionTask'
+            'accordionTask',
+            'constants'
             ]),        
     },
     mounted() {
@@ -243,81 +250,71 @@ export default {
 </script>
 
 <style lang="scss">
-
-.b-card-container {
-    .card-header {
-        cursor: pointer;
-    }
-    input {
-        padding: 0.5rem;
-        border-radius: 10px;
-        width: 100%;
-    }
-    ul {
-        width: 100%;
-        color: rgba(30, 39, 46,1.0);
-        list-style: none;
-        margin: 0;
-        padding: 0.5rem 0 .5rem 0;
-    }
-    li {
-        margin: 0 0 0 0;
-        border-radius: 5px;
-        padding: 0.75rem 0 0.75rem 0.75rem;
-        display: flex;
-        align-items: center;
-    }
-
-    .autosuggest__results {
-        border-radius: solid 1px #ced4da;
-    }
-
-
-    .autosuggest__results-before:hover {
-        cursor: default;
-    }
-    .autosuggest__results-before {
-        color: rgb(128, 128, 128);
-        margin: 0 0 0 0;
-        border-radius: 5px;
-        padding: 0.75rem 0 0.75rem 0.35rem;
-        display: flex;
-        align-items: center;
-    }
-
-    li:hover {
-        cursor: pointer;
-    }
-
-    .form-control {
-        width: 100%;
-    }
-
     .b-card-container {
-        display: flex;
-        justify-content: center;
-        border-radius: 10px;
-    }
-    
-    #autosuggest-autosuggest__results{
-        position: absolute;
-        z-index: 9999;
-        background: #fff;
-        width: 100%;
-        border-radius: 10px;
-        border-left: solid 1px #ced4da;
-        border-right: solid 1px #ced4da;
-    }
+        .card-header {
+            cursor: pointer;
+        }
+        .form-control {
+            width: 100%;
+        }   
+        .autosuggest { 
+            position: relative;
+            width: 100%; 
+            display: block;
+            input {
+                padding: 0.5rem;
+                border-radius: 10px;
+                width: 100%;
+            }
+            ul {
+                width: 100%;
+                color: rgba(30, 39, 46,1.0);
+                list-style: none;
+                margin: 0;
+                padding: 0.5rem 0 .5rem 0;
+            }
+            li {
+                margin: 0 0 0 0;
+                border-radius: 5px;
+                padding: 0.75rem 0 0.75rem 0.75rem;
+                display: flex;
+                align-items: center;
+            }
 
-    #autosuggest { 
-        position: relative;
-        width: 100%; 
-        display: block;
-    }
+            .autosuggest__results {
+                border-radius: solid 1px #ced4da;
+            }
 
-    .autosuggest__results-item--highlighted {
-    background-color: rgba(51, 217, 178,0.2);
+            .autosuggest__results-before:hover {
+                cursor: default;
+            }
+            .autosuggest__results-before {
+                color: rgb(128, 128, 128);
+                margin: 0 0 0 0;
+                border-radius: 5px;
+                padding: 0.75rem 0 0.75rem 0.35rem;
+                display: flex;
+                align-items: center;
+            }
+
+            li:hover {
+                cursor: pointer;
+            }
+
+            #autosuggest-autosuggest__results{
+                position: absolute;
+                z-index: 9999;
+                background: #fff;
+                width: 100%;
+                border-radius: 10px;
+                border-left: solid 1px #ced4da;
+                border-right: solid 1px #ced4da;
+            }
+
+            .autosuggest__results-item--highlighted {
+                background-color: rgba(51, 217, 178,0.2);
+            } 
+        }
     }
-}
  
 </style> 

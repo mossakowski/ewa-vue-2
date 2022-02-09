@@ -31,6 +31,7 @@ const actions = {
     },
        
     updateSelectedTypeTask({ commit }, payload){
+      console.log(payload);
         commit('UPDATE_SELECTED_TYPE_TASK', payload);
     },
        
@@ -135,7 +136,6 @@ const mutations = {
             state[payload.statusTask][payload.indexTask]['togglePaid'] = payload.togglePaid;
             state[payload.statusTask][payload.indexTask]['toggleNewClient'] = payload.toggleNewClient;
             state[payload.statusTask][payload.indexTask]['newClient'] = payload.newClient;
-            console.log(state.doneTasks);
           },
            
     UPDATE_PAID_TASK(state, payload){

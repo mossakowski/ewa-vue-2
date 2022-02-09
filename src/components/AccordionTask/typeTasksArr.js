@@ -1,7 +1,7 @@
 export default [{
         name: 'serwis',
         data: [{
-                nameTask: 'Serwis',
+                name: 'Serwis',
                 typeTask: 'service',
                 togglePaid: true,
                 toggleNewClient: false,
@@ -10,7 +10,7 @@ export default [{
                 paidCost: '0'
             },
             {
-                nameTask: 'Awaria',
+                name: 'Awaria',
                 typeTask: 'accident',
                 togglePaid: true,
                 toggleNewClient: false,
@@ -19,7 +19,7 @@ export default [{
                 paidCost: '0'
             },
             {
-                nameTask: 'Przedłużenie umowy',
+                name: 'Przedłużenie umowy',
                 typeTask: 'service',
                 togglePaid: true,
                 toggleNewClient: false,
@@ -32,7 +32,7 @@ export default [{
     {
         name: 'instalacje',
         data: [{
-                nameTask: 'Instalacja Światłowodowa',
+                name: 'Instalacja Światłowodowa',
                 typeTask: 'installation-fiber',
                 togglePaid: true,
                 toggleNewClient: true,
@@ -41,7 +41,7 @@ export default [{
                 paidCost: '0'
             },
             {
-                nameTask: 'Instalacja Radiowa',
+                name: 'Instalacja Radiowa',
                 typeTask: 'installation-radio',
                 togglePaid: true,
                 toggleNewClient: true,
@@ -50,7 +50,7 @@ export default [{
                 paidCost: '0'
             },
             {
-                nameTask: 'Instalacja Blok',
+                name: 'Instalacja Blok',
                 typeTask: 'installation-fiber',
                 togglePaid: true,
                 toggleNewClient: true,
@@ -59,7 +59,7 @@ export default [{
                 paidCost: '0'
             },
             {
-                nameTask: 'Instalacja Zbiorcza',
+                name: 'Instalacja Zbiorcza',
                 typeTask: 'installation-fiber',
                 togglePaid: true,
                 toggleNewClient: true,
@@ -68,7 +68,7 @@ export default [{
                 paidCost: '0'
             },
             {
-                nameTask: 'Instalacja TV',
+                name: 'Instalacja TV',
                 typeTask: 'installation-fiber',
                 togglePaid: true,
                 toggleNewClient: false,
@@ -81,7 +81,7 @@ export default [{
     {
         name: 'networkBulding',
         data: [{
-                nameTask: 'Budowa sieci',
+                name: 'Budowa sieci',
                 typeTask: 'network-bulding',
                 togglePaid: false,
                 toggleNewClient: false,
@@ -90,7 +90,7 @@ export default [{
                 paidCost: undefined
             },
             {
-                nameTask: 'Przebudowa sieci',
+                name: 'Przebudowa sieci',
                 typeTask: 'network-bulding',
                 togglePaid: false,
                 toggleNewClient: false,
@@ -99,7 +99,7 @@ export default [{
                 paidCost: undefined
             },
             {
-                nameTask: 'Wywiad techniczny (napisz czy są możliwości)',
+                name: 'Wywiad techniczny (napisz czy są możliwości)',
                 typeTask: 'network-bulding',
                 togglePaid: false,
                 toggleNewClient: false,
@@ -112,7 +112,7 @@ export default [{
     {
         name: 'office',
         data: [{
-                nameTask: 'Prace biurowe',
+                name: 'Prace biurowe',
                 typeTask: 'office-working',
                 togglePaid: false,
                 toggleNewClient: false,
@@ -121,7 +121,7 @@ export default [{
                 paidCost: undefined
             },
             {
-                nameTask: 'Sprzątanie',
+                name: 'Sprzątanie',
                 typeTask: 'office-working',
                 togglePaid: false,
                 toggleNewClient: false,
@@ -130,7 +130,7 @@ export default [{
                 paidCost: undefined
             },
             {
-                nameTask: 'Inne',
+                name: 'Inne',
                 typeTask: 'office-working',
                 togglePaid: false,
                 toggleNewClient: false,

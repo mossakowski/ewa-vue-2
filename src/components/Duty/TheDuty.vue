@@ -13,8 +13,8 @@
                     :sync="true"
                     id="toggleDutyWeek"
                     @change="updateDutyWorker"
-                    :width="$store.state.widthHeigthComponents.toggle.width" 
-                    :height="$store.state.widthHeigthComponents.toggle.heigth"                     
+                    :width="constants.toggle.width" 
+                    :height="constants.toggle.heigth"                     
                     :labels="{checked: 'Tak', unchecked: 'Nie'}"/>
             </b-col>
 
@@ -25,14 +25,15 @@
                     :sync="true"
                     id="toggleDutyHoliday"
                     @change="updateDutyWorker"
-                    :width="$store.state.widthHeigthComponents.toggle.width" 
-                    :height="$store.state.widthHeigthComponents.toggle.heigth"                     
+                    :width="constants.toggle.width" 
+                    :height="constants.toggle.heigth"                     
                     :labels="{checked: 'Tak', unchecked: 'Nie'}"/>
 
                 <span v-if="duty.activeHoliday">
                     <date-picker
-                        @change="onChangeDutyHolidayDateRange"                        
-                        :value="duty.holidayRangeDate"                   
+                        @change="updateDutyHolidayDateRange"                        
+                        :value="duty.holidayRangeDate"
+                        value-type="format"                   
                         type="date"
                         class="ml-2"
                         range
@@ -63,7 +64,6 @@
 </template>
 
 <script>
-import moment from 'moment'
 import { ToggleButton } from 'vue-js-toggle-button'
 import VueTimepicker from 'vue2-timepicker/src/vue-timepicker.vue'
 import DatePicker from 'vue2-datepicker';
@@ -93,19 +93,14 @@ export default {
         }
     },
     computed: mapState({
-        duty : state => state.duty
+        duty : state => state.duty,
+        constants : state => state.constants
     }),      
     methods: {
-        updateDateRangeDutyHoliday(e) {
-            this.$store.dispatch('updateDateRangeDutyHoliday', {
-                holidayRangeDateStart : moment(e[0]),
-                holidayRangeDateEnd : moment(e[1])
-            })
-        },
-        onChangeDutyHolidayDateRange(e) {
+        updateDutyHolidayDateRange(e) {
             this.$store.dispatch('duty/updateDutyHolidayDateRange', {
-                holidayRangeDateStart : moment(e[0]),
-                holidayRangeDateEnd : moment(e[1])
+                holidayRangeDateStart : e[0],
+                holidayRangeDateEnd : e[1]
             });            
         },
         async updateAdditionalTimeInLastDuty(e) {

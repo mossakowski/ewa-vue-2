@@ -1,5 +1,3 @@
-import moment from 'moment';
-
 const state = () => ({
     activeWeek: false,
     activeHoliday: false,
@@ -10,8 +8,14 @@ const state = () => ({
 
 const actions = {
     updateDutyHolidayDateRange({ commit }, payload){
+      if(payload.holidayRangeDateStart != '' || payload.holidayRangeDateEnd != '') {
         commit('UPDATE_DUTY_HOLIDAY_DATE_RANGE', payload);
-      },
+      } else {
+        payload.holidayRangeDateStart = '';
+        payload.holidayRangeDateEnd = '';
+        commit('UPDATE_DUTY_HOLIDAY_DATE_RANGE',payload);        
+      }
+    },
     
     updateAdditionalTimeInDuty({ commit }, payload){
         commit('UPDATE_ADDITIONAL_TIME_IN_DUTY',payload);
@@ -23,14 +27,10 @@ const actions = {
 }
 
 const mutations = {
+  
     UPDATE_DUTY_HOLIDAY_DATE_RANGE(state,payload){
-        state.holidayRangeDate = [];
-        if(payload.holidayRangeDateStart != '' || payload.holidayRangeDateEnd != '') {
-          state.holidayRangeDate.push(new Date(moment(payload.holidayRangeDateStart).year(),moment(payload.holidayRangeDateStart).month(), moment(payload.holidayRangeDateStart).date()));
-          state.holidayRangeDate.push(new Date(moment(payload.holidayRangeDateEnd).year(),moment(payload.holidayRangeDateEnd).month(), moment(payload.holidayRangeDateEnd).date()));
-        } else {
-          state.holidayRangeDate = [];        
-        }
+        state.holidayRangeDate.push(payload.holidayRangeDateStart);
+        state.holidayRangeDate.push(payload.holidayRangeDateEnd);
       },
     
     UPDATE_ADDITIONAL_TIME_IN_DUTY(state,payload){
