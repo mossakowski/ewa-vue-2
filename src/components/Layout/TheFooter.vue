@@ -8,7 +8,7 @@
 </template>
 
 <script>
-import { getYearAdapter } from '../../../common/adapters/adapterDate';
+import { getYear as getYearAdapter } from '../../../common/adapters/adapterDate';
 export default {
     name: 'TheFooter',
     computed: {

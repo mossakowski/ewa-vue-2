@@ -29,6 +29,7 @@ const actions = {
 const mutations = {
   
     UPDATE_DUTY_HOLIDAY_DATE_RANGE(state,payload){
+        state.holidayRangeDate = [];
         state.holidayRangeDate.push(payload.holidayRangeDateStart);
         state.holidayRangeDate.push(payload.holidayRangeDateEnd);
       },

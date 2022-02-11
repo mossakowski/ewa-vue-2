@@ -1,5 +1,4 @@
-import { DATE_FULL_FORMAT } from './../../../common/constants/date';
-import moment from 'moment';
+import { getFullDate } from './../../../common/adapters/adapterDate';
 
 const state = () => ({
     selectedWorker: null,
@@ -11,7 +10,7 @@ const state = () => ({
       startWork: '09:00',
       endWork: '17:00',
       durationWork: '08:00',
-      dateWork: moment().format(DATE_FULL_FORMAT),
+      dateWork: getFullDate(),
       late: false,
       overtime: false
     }

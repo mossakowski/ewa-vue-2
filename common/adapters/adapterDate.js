@@ -1,15 +1,15 @@
 const { DateTime } = require("luxon");
-import { DATE_FULL_YEAR_FORMAT, DATE_FULL_FORMAT_LUXON } from '../constants/date';
+import { DATE_FULL_YEAR_FORMAT, DATE_FULL_FORMAT } from '../constants/date';
 
-function getYearAdapter() {
+function getYear() {
     return DateTime.now().toFormat(DATE_FULL_YEAR_FORMAT);
 }
 
-function parseDateToObject(date) {
-    console.log(DateTime.fromISO(date).toFormat(DATE_FULL_FORMAT_LUXON));
+function getFullDate() {
+    return DateTime.now().toFormat(DATE_FULL_FORMAT);
 }
 
 export {
-    getYearAdapter,
-    parseDateToObject
+    getYear,
+    getFullDate
 }

@@ -31,7 +31,6 @@ const actions = {
     },
        
     updateSelectedTypeTask({ commit }, payload){
-      console.log(payload);
         commit('UPDATE_SELECTED_TYPE_TASK', payload);
     },
        

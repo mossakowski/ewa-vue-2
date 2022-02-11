@@ -1,0 +1,3 @@
+const COLOR_TOGGLE_CHECKED = '#ffc107';
+
+export { COLOR_TOGGLE_CHECKED }
