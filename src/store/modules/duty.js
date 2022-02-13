@@ -23,11 +23,21 @@ const actions = {
     
     updateDuty({ commit }, payload){
         commit('UPDATE_DUTY', payload);
-      },    
+      },
+    resetRaport({ commit}) {
+      commit('RESET_RAPORT');
+    }    
 }
 
 const mutations = {
   
+    RESET_RAPORT(state) {
+      state.activeWeek = false;
+      state.activeHoliday = false;
+      state.holidayRangeDate = [];
+      state.additionalTimeInLastDuty = '00:00';      
+    },
+
     UPDATE_DUTY_HOLIDAY_DATE_RANGE(state,payload){
         state.holidayRangeDate = [];
         state.holidayRangeDate.push(payload.holidayRangeDateStart);

@@ -1,6 +1,5 @@
 <template>
     <span v-if="showDatePicker">
-        {{duty.holidayRangeDate}}
         <date-picker
             @change="updateValueDateRange"                        
             :value="duty.holidayRangeDate"

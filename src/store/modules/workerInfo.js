@@ -39,10 +39,27 @@ const actions = {
       
     updateDateWork({ commit }, payload){
         commit('UPDATE_DATE_WORK', payload);
-    },    
+    },
+    
+    resetRaport({ commit }) {
+        commit('RESET_RAPORT');
+    }
 }
 
 const mutations = {
+    RESET_RAPORT(state) {
+        state['emailProperties'].email = '';
+        state['emailProperties'].validate = false;
+        
+        state.selectedWorker = null,
+        state['timeDateWork'].startWork = '09:00'
+        state['timeDateWork'].endWork = '17:00';
+        state['timeDateWork'].durationWork = '08:00';
+        state['timeDateWork'].dateWork = getFullDate();
+        state['timeDateWork'].late = false;
+        state['timeDateWork'].overtime = false;        
+    },
+
     UPDATE_EMAIL_WORKER(state, payload){
         state.emailProperties.validate = payload.validate;
         state.emailProperties.email = payload.email;

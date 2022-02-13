@@ -10,16 +10,21 @@
         <b-row>
             <b-col sm="12">
                 Dyżur tygodniowy:
-                <ToggleButton 
-                    :valueToggleProp="duty.activeWeek" 
-                    @updateValueToggle="updateDutyWeekWorker"/>            
+                <toggle-button
+                    :valueToggleProp="duty.activeWeek"
+                    :key="duty.activeWeek" 
+                    @updateValueToggle="updateDutyWeekWorker">            
+                </toggle-button>
             </b-col>
 
             <b-col sm="12">
                 Dyżur świąteczny:
-                <ToggleButton 
-                    :valueToggleProp="duty.activeHoliday" 
-                    @updateValueToggle="updateDutyHolidayWorker"/>
+                <toggle-button 
+                    :valueToggleProp="duty.activeHoliday"
+                    :key="duty.activeHoliday" 
+                    @updateValueToggle="updateDutyHolidayWorker">
+                </toggle-button>
+                
                 <form-date-range-picker
                     @updateValueDateRange="updateDutyHolidayDateRange">
                 </form-date-range-picker>
@@ -28,7 +33,7 @@
             <b-col sm="12">
                 Dodatkowy czas pracy z ostatniego dyżuru:
                 <form-time-picker
-                    valueTimepicker="00:00"
+                    :valueTimepicker="duty.additionalTimeInLastDuty"
                     @updateValueForm="updateAdditionalTimeInLastDuty">
                 </form-time-picker>
             </b-col> 

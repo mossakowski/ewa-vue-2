@@ -1,6 +1,3 @@
-import moment from 'moment';
-import { DATE_FULL_FORMAT } from './../../../common/constants/date';
-
 const state = () => ({
     doneTasks: [
         {
@@ -69,24 +66,8 @@ const mutations = {
         state['progressTasks'] = [];
         state['unrealizedTasks'] = [];
         
-        state['emailProperties'].email = '';
-        state['emailProperties'].validate = false;
-        
-        state['doneTasks'] = [];
-    
-        state.selectedWorker = null,
-        state['timeDateWork'].startWork = '09:00'
-        state['timeDateWork'].endWork = '17:00';
-        state['timeDateWork'].durationWork = '08:00';
-        state['timeDateWork'].dateWork = moment().format(DATE_FULL_FORMAT);
-        state['timeDateWork'].late = false;
-        state['timeDateWork'].overtime = false;
-    
-        state['dutyProperties'].activeWeek = false;
-        state['dutyProperties'].activeHoliday = false;
-        state['dutyProperties'].holidayRangeDate = [];
-        state['dutyProperties'].additionalTimeInLastDuty = '00:00';
-    
+        state.paidCostValid = true;
+
         let defaultTask = {
           indexTask : 0,
           typeTaskTitle : 'Serwis',
@@ -120,12 +101,12 @@ const mutations = {
       
          
     REMOVE_TASK(state, payload){
-        state[payload.statusTask].splice(payload.idTask, 1)
-        },
+        state[payload.statusTask].splice(payload.idTask, 1);
+      },
     
            
     UPDATE_TASK(state, payload){
-            state[payload.statusTask][payload.indexTask][payload.propertyObj] = payload.text;
+          state[payload.statusTask][payload.indexTask][payload.propertySuggestionItem] = payload.text;
         },
            
     UPDATE_SELECTED_TYPE_TASK(state, payload){

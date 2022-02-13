@@ -1,15 +1,4 @@
-const moment = require('moment');
-
 module.exports = (dataRaport) => {
-    function convertDateDutyHoliday() {
-        let date =  dataRaport.data.dutyProperties.holidayRangeDate;
-        console.log(date);
-        if(date[0] === null || date.length === 0) {
-            return '';
-        } else {
-            return `${moment(date[0]).format('DD-MM-YYYY')} - ${moment(date[1]).format('DD-MM-YYYY')}`;
-        }
-    }
     function newClientInfo(item) {
         let clientStatus;
         switch(item) {
@@ -35,9 +24,9 @@ module.exports = (dataRaport) => {
     }
 
     function createListTask(dataRaport, statusTask) {
-        
+        console.log(dataRaport.data.duty.holidayRangeDate);
         let ulList = [];
-        for(let item of dataRaport.data[statusTask]) {
+        for(let item of dataRaport.data.accordionTask[statusTask]) {
             let ulElArr = [];
             for(let [property, value] of Object.entries(item)) {
                 if(property != 'typeTask' && property != 'indexTask' && property != 'togglePaid' && property != 'toggleNewClient' && property != 'paidTask') {
@@ -85,15 +74,15 @@ module.exports = (dataRaport) => {
                             }
                         ],
                         [{
-                                text: dataRaport.data.selectedWorker,
+                                text: dataRaport.data.workerInfo.selectedWorker,
                                 alignment: 'center'
                             },
                             {
-                                text: `${dataRaport.data.timeDateWork.startWork} - ${dataRaport.data.timeDateWork.endWork} (${dataRaport.data.timeDateWork.durationWork}) ${(dataRaport.data.timeDateWork.late) ? 'SPÓŹNIENIE!' : ''} ${(dataRaport.data.timeDateWork.overtime) ? 'NADGODZINY!' : ''}` ,
+                                text: `${dataRaport.data.workerInfo.timeDateWork.startWork} - ${dataRaport.data.workerInfo.timeDateWork.endWork} (${dataRaport.data.workerInfo.timeDateWork.durationWork}) ${(dataRaport.data.workerInfo.timeDateWork.late) ? 'SPÓŹNIENIE!' : ''} ${(dataRaport.data.workerInfo.timeDateWork.overtime) ? 'NADGODZINY!' : ''}` ,
                                 italics: true,
                                 alignment: 'center'
                             }, {
-                                text: dataRaport.data.timeDateWork.dateWork,
+                                text: dataRaport.data.workerInfo.timeDateWork.dateWork,
                                 italics: true,
                                 alignment: 'center'
                             }
@@ -146,8 +135,8 @@ module.exports = (dataRaport) => {
             },
             {
                 ul: [
-                    `Tygodniowy: ${(dataRaport.data.dutyProperties.activeWeek) ? 'TAK' : 'NIE'} ${(dataRaport.data.dutyProperties.additionalTimeInLastDuty === '00:00') ? '' :  '(Dodatkowy czas podczas ostatniego dyżuru: ' + dataRaport.data.dutyProperties.additionalTimeInLastDuty + ')'}`,
-                    `Świąteczny: ${(dataRaport.data.dutyProperties.activeHoliday) ? 'TAK' : 'NIE'} ${convertDateDutyHoliday()} `,
+                    `Tygodniowy: ${(dataRaport.data.duty.activeWeek) ? 'TAK' : 'NIE'} ${(dataRaport.data.duty.additionalTimeInLastDuty === '00:00') ? '' :  '(Dodatkowy czas podczas ostatniego dyżuru: ' + dataRaport.data.duty.additionalTimeInLastDuty + ')'}`,
+                    `Świąteczny: ${(dataRaport.data.duty.activeHoliday) ? `TAK ${dataRaport.data.duty['holidayRangeDate'].join(' - ')}` : 'NIE'} `,
                 ]
             },
 
@@ -190,16 +179,16 @@ module.exports = (dataRaport) => {
                                 alignment: 'center'
                             },
                             {
-                                text: dataRaport.summary['numberNewClientFiber'],
+                                text: dataRaport.summary.fiberInstallation['numberNewClients'],
                                 italics: true,
                                 alignment: 'center'
                             }, {
-                                text: dataRaport.summary['numberCurrentClientFiber'],
+                                text: dataRaport.summary.fiberInstallation['numberCurrentClients'],
                                 italics: true,
                                 alignment: 'center'
                             },
                             {
-                                text: dataRaport.summary['numberInstallationFiber'],
+                                text: dataRaport.summary.fiberInstallation['numberInstallations'],
                                 italics: true,
                                 alignment: 'center'
                             }
@@ -209,16 +198,16 @@ module.exports = (dataRaport) => {
                                 alignment: 'center'
                             },
                             {
-                                text: dataRaport.summary['numberNewClientRadio'],
+                                text: dataRaport.summary.radioInstallation['numberNewClients'],
                                 italics: true,
                                 alignment: 'center'
                             }, {
-                                text: dataRaport.summary['numberCurrentClientRadio'],
+                                text: dataRaport.summary.radioInstallation['numberCurrentClients'],
                                 italics: true,
                                 alignment: 'center'
                             },
                             {
-                                text: dataRaport.summary['numberInstallationRadio'],
+                                text: dataRaport.summary.radioInstallation['numberInstallations'],
                                 italics: true,
                                 alignment: 'center'
                             }
@@ -251,7 +240,7 @@ module.exports = (dataRaport) => {
                                 alignment: 'center'
                             },
                             {
-                                text: dataRaport.summary['numberService'],
+                                text: dataRaport.summary.services,
                                 italics: true,
                                 alignment: 'center'
                             },
@@ -261,7 +250,7 @@ module.exports = (dataRaport) => {
                                 alignment: 'center'
                             },
                             {
-                                text: dataRaport.summary['numberAccident'],
+                                text: dataRaport.summary.accidents,
                                 italics: true,
                                 alignment: 'center'
                             },
@@ -271,7 +260,7 @@ module.exports = (dataRaport) => {
                                 alignment: 'center'
                             },
                             {
-                                text: dataRaport.summary['numberNetworkBulding'],
+                                text: dataRaport.summary.networkBulding,
                                 italics: true,
                                 alignment: 'center'
                             },

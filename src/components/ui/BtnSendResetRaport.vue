@@ -26,8 +26,15 @@ export default {
     },
     computed: {
         ...mapGetters({
-            stateBtnSend : 'stateBtnSend'
-        })
+            stateBtnSend : 'stateBtnSend',
+        }),
+        ...mapGetters('accordionTask', {
+            calcSummaryFiberInstallations: 'calcSummaryFiberInstallations',
+            calcSummaryRadioInstallations : 'calcSummaryRadioInstallations',
+            calcSummaryServices : 'calcSummaryServices',
+            calcSummaryAccidents : 'calcSummaryAccidents',
+            calcSummaryNetworkBulding : 'calcSummaryNetworkBulding'
+        }),        
     },
     methods : {
         showModalConfirmSendRaport() {
@@ -42,7 +49,16 @@ export default {
                         if(confirmSendRaport) {
                             this.showSpinnerTextSending = true;
                             this.showCheckSendText = false;
-                            this.$socket.client.emit('SEND_RAPORT', { data : this.$store.state, summary: this.$store.getters.calcSummary }, (res) => {
+                            this.$socket.client.emit('SEND_RAPORT', { 
+                                data : this.$store.state,
+                                summary: {
+                                    'services' : this.calcSummaryServices,
+                                    'fiberInstallation' : this.calcSummaryFiberInstallations,
+                                    'radioInstallation' : this.calcSummaryRadioInstallations,
+                                    'accidents' : this.calcSummaryAccidents,
+                                    'networkBulding' : this.calcSummaryNetworkBulding
+                                } 
+                                }, (res) => {
                                 if(res) {
                                     this.showSpinnerTextSending = false;
                                     this.showCheckSendText = true;                                
@@ -56,6 +72,8 @@ export default {
             this.showSpinnerTextSending = false;
             this.showCheckSendText = false;
             this.$store.dispatch('accordionTask/resetRaport');
+            this.$store.dispatch('workerInfo/resetRaport');
+            this.$store.dispatch('duty/resetRaport');
         }        
     }
 }

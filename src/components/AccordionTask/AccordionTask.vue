@@ -128,11 +128,12 @@ export default {
             }
         },        
         updateTask(value, indexTask, statusTask, propertySuggestionItem) {
+            console.log(propertySuggestionItem);
             this.$store.dispatch('accordionTask/updateTask', {
                 'text' : value,
                 'indexTask' : indexTask,
                 'statusTask' : statusTask,
-                'propertysuggestionItem' : propertySuggestionItem
+                'propertySuggestionItem' : propertySuggestionItem
             })
         },
         updateNewClient(value) {

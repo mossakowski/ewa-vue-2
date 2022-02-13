@@ -51,7 +51,7 @@ export default {
                 limit: 6,
                 label: "Instalacje",
                 onSelected: selected => {
-                    this.updateSelectedTypeTask(selected)
+                        this.updateSelectedTypeTask(selected)
                     }
                 },
                 networkBulding: {
@@ -59,22 +59,21 @@ export default {
                     label: "Budowa sieci",
                     onSelected: selected => {
                         this.updateSelectedTypeTask(selected)
-                        }
+                    }
                 },
                 office: {
                     limit: 6,
                     label: "Biuro",
                     onSelected: selected => {
                         this.updateSelectedTypeTask(selected)
-                        }
+                    }
                 },
                 serwis: {
                     limit: 6,
                     label: "Serwis",
                     onSelected: selected => {
-                        console.log(selected);
                         this.updateSelectedTypeTask(selected)
-                        }
+                    }
                 }
             }             
         }
